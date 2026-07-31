@@ -63,6 +63,13 @@ function App() {
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [calendarTarget, setCalendarTarget] = useState({ type: 'depart', index: null }) // type: 'depart'|'return'|'multi', index: row index for multi
+  const [activeDropdown, setActiveDropdown] = useState(null); // { type: 'from' | 'to', index: number | 'single' }
+  const popularCities = [
+    "Lahore", "Islamabad", "Karachi", "Multan",
+    "Sialkot", "Peshawar", "Jeddah", "Riyadh",
+    "Dubai", "Faisalabad", "Dammam", "Al Madinah",
+    "Doha", "Muscat", "Abu Dhabi", "Sharjah"
+  ];
   
   // Calendar UI navigation
   const [currentYear, setCurrentYear] = useState(2026)
@@ -76,6 +83,7 @@ function App() {
       if (calendarRef.current && !calendarRef.current.contains(event.target)) {
         setIsCalendarOpen(false);
       }
+      setActiveDropdown(null);
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -523,7 +531,13 @@ function App() {
                     <div className="flex flex-1 items-center bg-slate-50 border border-slate-200 hover:border-[#0000CD]/40 focus-within:border-[#0000CD]/60 rounded-[12px] transition-all relative w-full shadow-sm group">
                       
                       {/* FROM */}
-                      <div className="flex-1 px-4 py-2.5 relative cursor-text group-hover:bg-white rounded-l-[12px]">
+                      <div 
+                        className="flex-1 px-4 py-2.5 relative cursor-text group-hover:bg-white rounded-l-[12px]"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveDropdown({ type: 'from', index: tripType === 'multi-city' ? index : 'single' });
+                        }}
+                      >
                         <div className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Where from?</div>
                         <input 
                           type="text" 
@@ -532,6 +546,42 @@ function App() {
                           onChange={(e) => tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', e.target.value) : setFromCity(e.target.value)}
                           className="bg-transparent text-sm font-extrabold text-slate-800 w-full focus:outline-none placeholder-slate-300" 
                         />
+                        {/* FROM Dropdown */}
+                        <AnimatePresence>
+                          {activeDropdown?.type === 'from' && activeDropdown?.index === (tripType === 'multi-city' ? index : 'single') && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 10 }}
+                              onClick={(e) => e.stopPropagation()}
+                              className="absolute top-[110%] left-0 w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
+                            >
+                              <div className="text-sm font-bold text-slate-800 mb-3 px-1">Popular cities</div>
+                              <div className="grid grid-cols-4 gap-x-2 gap-y-2">
+                                {popularCities.map((city, idx) => (
+                                  <motion.div
+                                    key={city}
+                                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    transition={{ delay: idx * 0.02, duration: 0.25, ease: "easeOut" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', city) : setFromCity(city);
+                                      setActiveDropdown(null);
+                                    }}
+                                    className={`px-2 py-2 text-[13px] cursor-pointer rounded-lg transition-colors flex items-center ${
+                                      (tripType === 'multi-city' ? flight.from : fromCity) === city
+                                        ? 'bg-[#0000CD]/10 text-[#0000CD] font-bold shadow-[0_4px_12px_rgba(0,0,205,0.15)] ring-1 ring-white'
+                                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                    }`}
+                                  >
+                                    {city}
+                                  </motion.div>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                       
                       {/* Swap Button (Interlocking) */}
@@ -557,7 +607,13 @@ function App() {
                       <div className="w-[1px] h-8 bg-slate-200 hidden lg:block"></div>
 
                       {/* TO */}
-                      <div className="flex-1 px-4 py-2.5 relative cursor-text group-hover:bg-white rounded-r-[12px] lg:pl-6">
+                      <div 
+                        className="flex-1 px-4 py-2.5 relative cursor-text group-hover:bg-white rounded-r-[12px] lg:pl-6"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveDropdown({ type: 'to', index: tripType === 'multi-city' ? index : 'single' });
+                        }}
+                      >
                         <div className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Where to?</div>
                         <input 
                           type="text" 
@@ -566,6 +622,42 @@ function App() {
                           onChange={(e) => tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', e.target.value) : setToCity(e.target.value)}
                           className="bg-transparent text-sm font-extrabold text-slate-800 w-full focus:outline-none placeholder-slate-300" 
                         />
+                        {/* TO Dropdown */}
+                        <AnimatePresence>
+                          {activeDropdown?.type === 'to' && activeDropdown?.index === (tripType === 'multi-city' ? index : 'single') && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 10 }}
+                              onClick={(e) => e.stopPropagation()}
+                              className="absolute top-[110%] left-0 lg:left-6 w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
+                            >
+                              <div className="text-sm font-bold text-slate-800 mb-3 px-1">Popular cities</div>
+                              <div className="grid grid-cols-4 gap-x-2 gap-y-2">
+                                {popularCities.map((city, idx) => (
+                                  <motion.div
+                                    key={city}
+                                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    transition={{ delay: idx * 0.02, duration: 0.25, ease: "easeOut" }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', city) : setToCity(city);
+                                      setActiveDropdown(null);
+                                    }}
+                                    className={`px-2 py-2 text-[13px] cursor-pointer rounded-lg transition-colors flex items-center ${
+                                      (tripType === 'multi-city' ? flight.to : toCity) === city
+                                        ? 'bg-[#0000CD]/10 text-[#0000CD] font-bold shadow-[0_4px_12px_rgba(0,0,205,0.15)] ring-1 ring-white'
+                                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                    }`}
+                                  >
+                                    {city}
+                                  </motion.div>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                     </div>
 
