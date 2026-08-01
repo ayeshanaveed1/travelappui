@@ -13,3 +13,35 @@ body {
   padding: 0;
   overflow-x: hidden;
 }
+
+
+
+
+/* Global Component Styles (Requested Optimization) */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition-all duration-300 bg-[#E11D48] text-white shadow-[0_8px_24px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(225,29,72,0.4)] active:scale-95 cursor-pointer;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition-all duration-300 text-[#E11D48] bg-white hover:bg-rose-50 border border-slate-200 hover:border-[#E11D48]/30 active:scale-95 cursor-pointer;
+  }
+
+  .card-base {
+    @apply flex h-full cursor-pointer flex-col overflow-hidden rounded-[24px] border border-slate-100 bg-white text-left shadow-[0_10px_35px_rgba(0,0,0,0.03)] transition-all duration-300 hover:-translate-y-1.5 hover:border-rose-100 hover:shadow-[0_22px_55px_rgba(225,29,72,0.12)];
+  }
+}
+
+/* Guaranteed Standard CSS Marquee Animation */
+@keyframes rawMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 12px)); }
+}
+
+.custom-marquee {
+  animation: rawMarquee 30s linear infinite;
+}
+
+.custom-marquee:hover {
+  animation-play-state: paused !important;
+}

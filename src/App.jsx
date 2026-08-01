@@ -27,9 +27,32 @@ import {
   Award,
   Smartphone,
   User,
-  Plus
+  Plus,
+  Sparkles,
+  Globe2,
+  Compass,
+  FileText
 } from 'lucide-react'
 import heroVideo from './assets/create_a_video_for_my_website (1).mp4'
+import RegisterPage from './RegisterPage';
+import heroImg from './assets/Gemini_Generated_Image_hxqmh7hxqmh7hxqm.png'
+import FeaturedHotels from './FeaturedHotels';
+import FeaturedFlights from './FeaturedFlights';
+import FeaturedTours from './FeaturedTours';
+import Footer from './Footer';
+import SettingsModal from './components/SettingsModal';
+import SignInModal from './components/SignInModal';
+
+const Flag = ({ code, className }) => {
+  if (!code) return null;
+  return (
+    <img 
+      src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`} 
+      alt={`${code} flag`} 
+      className={className} 
+    />
+  );
+}
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -39,6 +62,54 @@ function App() {
   const [country, setCountry] = useState('United States')
   const [activeCategory, setActiveCategory] = useState('flights')
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false)
+  const [isRegisterPageOpen, setIsRegisterPageOpen] = useState(false)
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
+  const [settingsTab, setSettingsTab] = useState('Languages') // 'Languages' or 'Currency'
+  const [selectedLanguage, setSelectedLanguage] = useState({ name: 'English (Pakistan)', code: 'PK', isGlobe: false })
+  const [selectedCurrency, setSelectedCurrency] = useState({ code: 'PKR', symbol: 'Rs' })
+
+  const languagesList = [
+    { name: 'English (Pakistan)', code: 'PK' },
+    { name: '繁體中文', code: 'TW' },
+    { name: '日本語', code: 'JP' },
+    { name: '한국어', code: 'KR' },
+    { name: 'ภาษาไทย', code: 'TH' },
+    { name: 'Українська', code: 'UA' },
+    { name: 'العربية', code: 'SA', isGlobe: true },
+    { name: 'Bahasa Indonesia', code: 'ID' },
+    { name: 'Bahasa Melayu', code: 'MY' },
+    { name: 'Dansk', code: 'DK' },
+    { name: 'Deutsch', code: 'DE' },
+    { name: 'English', code: 'GB', isGlobe: true },
+    { name: 'Español', code: 'ES' },
+    { name: 'Français', code: 'FR' },
+    { name: 'Italiano', code: 'IT' },
+    { name: 'Nederlands', code: 'NL' },
+    { name: 'Polski', code: 'PL' },
+    { name: 'Português (Brasil)', code: 'BR' },
+    { name: 'Suomi', code: 'FI' },
+    { name: 'Svenska', code: 'SE' },
+    { name: 'Tiếng Việt', code: 'VN' },
+    { name: 'Türkçe', code: 'TR' },
+    { name: 'Ελληνικά', code: 'GR' },
+    { name: 'Русский', code: 'RU' }
+  ];
+
+  const currenciesList = [
+    { code: 'USD', name: 'US Dollar', symbol: '$' },
+    { code: 'EUR', name: 'Euro', symbol: '€' },
+    { code: 'GBP', name: 'British Pound', symbol: '£' },
+    { code: 'PKR', name: 'Pakistani Rupee', symbol: 'Rs' },
+    { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
+    { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
+    { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
+    { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
+    { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
+    { code: 'HKD', name: 'Hong Kong Dollar', symbol: 'HK$' },
+    { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$' },
+    { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ' }
+  ];
+
   const [tripType, setTripType] = useState('round-trip') // one-way, round-trip, multi-city
   const [isHeartHovered, setIsHeartHovered] = useState(false)
 
@@ -47,6 +118,10 @@ function App() {
   const [toCity, setToCity] = useState('')
   const [directOnly, setDirectOnly] = useState(false)
   const [passengers, setPassengers] = useState('1 Adult')
+  const [adults, setAdults] = useState(1)
+  const [children, setChildren] = useState(0)
+  const [childAges, setChildAges] = useState([])
+  const [infants, setInfants] = useState(0)
   const [travelClass, setTravelClass] = useState('Economy')
   const [paymentType, setPaymentType] = useState('5 Payment Types')
 
@@ -116,6 +191,17 @@ function App() {
     { id: 'packages', label: 'Packages', icon: Briefcase },
     { id: 'cruises', label: 'Cruises', icon: Ship },
   ]
+
+    const servicesDropdown = [
+    { title: 'Tours', subtitle: 'Booking', icon: Compass },
+    { title: 'Cars', subtitle: 'Booking', icon: Car },
+    { title: 'Visa', subtitle: 'Booking', icon: FileText },
+    { title: 'Flights', subtitle: 'Booking', icon: Plane },
+    { title: 'Umrah', subtitle: 'Booking', icon: Building2 },
+    { title: 'Esim', subtitle: 'Booking', icon: Smartphone },
+    { title: 'Ferries', subtitle: 'Booking', icon: Ship },
+    { title: 'Stays', subtitle: 'Booking', icon: BedDouble },
+  ];
 
   const sidebarSections = [
     [
@@ -234,11 +320,11 @@ function App() {
               initial={{ opacity: 0, scaleX: 0.8 }}
               animate={{ opacity: 1, scaleX: 1 }}
               transition={{ duration: 0.2 }}
-              className="absolute inset-0 bg-blue-50" 
+              className="absolute inset-0 bg-rose-50" 
             />
           )}
-          {isDepart && returnDate && <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-blue-50" />}
-          {isReturn && departDate && <div className="absolute left-0 top-0 bottom-0 w-1/2 bg-blue-50" />}
+          {isDepart && returnDate && <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-rose-50" />}
+          {isReturn && departDate && <div className="absolute left-0 top-0 bottom-0 w-1/2 bg-rose-50" />}
           
           {/* Magical Flight Animation using layoutId */}
           {((!returnDate && isDepart) || (returnDate && isReturn)) && (
@@ -247,7 +333,7 @@ function App() {
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, type: 'spring', bounce: 0.3 }}
-              className="absolute -top-3 -right-2 text-[#0000CD] z-30 drop-shadow-[0_4px_8px_rgba(0,0,205,0.4)] pointer-events-none"
+              className="absolute -top-3 -right-2 text-[#E11D48] z-30 drop-shadow-[0_4px_8px_rgba(225,29,72,0.4)] pointer-events-none"
             >
               <motion.div
                 animate={{ y: [0, -3, 0] }}
@@ -264,8 +350,8 @@ function App() {
             whileTap={{ scale: 0.9 }}
             className={`relative w-9 h-9 text-sm font-bold rounded-full flex items-center justify-center transition-all cursor-pointer z-10 ${
               isDepart || isReturn 
-                ? 'bg-[#0000CD] text-white shadow-[0_4px_12px_rgba(0,0,205,0.4)] ring-[3px] ring-white' 
-                : 'hover:bg-blue-50 text-slate-700 hover:text-[#0000CD]'
+                ? 'bg-[#E11D48] text-white shadow-[0_4px_12px_rgba(225,29,72,0.4)] ring-[3px] ring-white' 
+                : 'hover:bg-rose-50 text-slate-700 hover:text-[#E11D48]'
             }`}
           >
             {d}
@@ -292,170 +378,152 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-[#0000CD] selection:text-white flex relative">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-[#E11D48] selection:text-white flex relative">
+      {isRegisterPageOpen && <RegisterPage onClose={() => setIsRegisterPageOpen(false)} />}
+
       
-      {/* Fixed Expandable Sidebar */}
-      <div 
-        className={`fixed top-0 left-0 h-full bg-[#f2f3f5] border-r border-slate-200 z-50 transition-all duration-300 ease-in-out flex flex-col ${
-          isSidebarOpen ? 'w-[260px] shadow-[10px_0_30px_rgba(0,0,0,0.1)]' : 'w-16 shadow-none'
-        }`}
-        onMouseEnter={() => setIsSidebarOpen(true)}
-        onMouseLeave={() => setIsSidebarOpen(false)}
-      >
-        <div className="flex flex-col h-full overflow-hidden">
-          {/* Sidebar Header with Hamburger */}
-          <div className="h-[72px] flex items-center px-3 border-b border-slate-200/60 shrink-0">
-            <button className="w-10 h-10 flex items-center justify-center rounded-lg text-slate-500 hover:text-[#0000CD] hover:bg-slate-200/80 hover:scale-110 transition-all duration-200 cursor-pointer focus:outline-none shrink-0 group">
-              <Menu size={24} className="transition-transform group-hover:scale-110" />
-            </button>
-          </div>
+      {/* Main Content Wrapper */}
+      <div className="flex-1 w-full min-w-0 flex flex-col min-h-screen">
 
-          <div className="flex-1 flex flex-col py-2">
-            {sidebarSections.map((section, idx) => (
-              <div key={idx} className={`flex flex-col py-2 ${idx !== 0 ? 'border-t border-slate-200/60' : ''}`}>
-                {section.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <button 
-                      key={item.id} 
-                      className="flex items-center h-12 w-full px-5 hover:bg-white text-slate-600 hover:text-[#0000CD] transition-colors relative group focus:outline-none cursor-pointer"
-                    >
-                      <div className="min-w-[24px] flex items-center justify-center text-slate-500 group-hover:text-[#0000CD]">
-                        <Icon size={20} className="transition-transform group-hover:scale-110" />
-                      </div>
-                      <span className={`ml-4 text-[13px] font-bold whitespace-nowrap transition-all duration-300 ${isSidebarOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'}`}>
-                        {item.label}
-                      </span>
-                      {item.badge && (
-                        <span className={`absolute right-4 px-1.5 py-0.5 bg-red-500 text-white text-[9px] font-black uppercase tracking-wider rounded transition-all duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-                          {item.badge}
-                        </span>
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Wrapper (shifted for fixed sidebar) */}
-      <div className="flex-1 ml-16 w-[calc(100%-4rem)] min-w-0">
-
-      {/* Hero section with video background (Strictly 530px tall) */}
-      <header className="relative w-full h-[530px] flex flex-col z-10">
+      {/* Hero section with video background (Dynamic height) */}
+      <header className="relative w-full min-h-[600px] flex flex-col z-10 transition-all duration-500 pb-12">
         <div className="absolute inset-0 overflow-hidden">
           <video 
             className="absolute inset-0 w-full h-full object-cover object-top"
             src={heroVideo}
+            poster={heroImg}
             autoPlay
             loop
             muted
             playsInline
           />
-          {/* Extremely light overlay tint to keep video very bright */}
-          <div className="absolute inset-0 bg-black/20 z-10" />
+          {/* Overlay gradient to ensure text readability over the video */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10" />
         </div>
 
-        {/* Floating Navbar */}
-        <nav className="relative z-50 px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full shrink-0">
+        {/* Solid Navbar matching screenshot */}
+        <nav className="relative z-50 px-8 py-4 flex items-center justify-between mx-auto w-full shrink-0 bg-[#EBEBEB] shadow-sm border-b border-slate-200/60">
           {/* Left side: Logo */}
           <div className="flex items-center gap-4">
-            <span className="text-2xl font-black tracking-widest text-[#0000CD] drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] cursor-pointer">
-              TRAVEL<span className="text-white">IQ</span>
+            <span className="text-2xl font-black tracking-[0.15em] text-[#E11D48] cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+              TRAVEL<span className="text-slate-900 tracking-[0.15em]">IQ</span>
             </span>
           </div>
 
+          {/* Center side: Links (Little big as requested) */}
+          <div className="hidden md:flex items-center gap-12">
+            
+            {/* Services Dropdown */}
+            <div className="relative group py-4">
+              <a href="#" className="text-[15px] font-extrabold tracking-wide text-slate-700 group-hover:text-[#E11D48] transition-colors flex items-center gap-1.5 relative">
+                Services
+                <ChevronDown size={16} className="text-slate-500 group-hover:text-[#E11D48] transition-transform duration-300 group-hover:rotate-180" strokeWidth={3} />
+                <span className="absolute left-1/2 -bottom-[16px] w-0 h-[3px] bg-[#E11D48] transition-all duration-300 ease-out group-hover:w-full group-hover:left-0 rounded-full"></span>
+              </a>
+
+              {/* Hover Dropdown Menu */}
+              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[750px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                <div className="bg-white rounded-[20px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-slate-100 p-5">
+                  <div className="grid grid-cols-3 gap-3">
+                    {servicesDropdown.map((item, idx) => {
+                      const Icon = item.icon;
+                      return (
+                        <a key={idx} href="#" className="flex items-center gap-4 p-3.5 rounded-[14px] hover:bg-slate-50 transition-colors group/item relative overflow-hidden">
+                          {/* Animated background on hover */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-rose-50/0 via-rose-50/50 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity duration-300"></div>
+                          
+                          <div className="w-[46px] h-[46px] rounded-[12px] bg-slate-100 text-slate-600 flex justify-center items-center group-hover/item:bg-[#E11D48] group-hover/item:text-white transition-all duration-300 shadow-sm group-hover/item:shadow-[0_4px_12px_rgba(225,29,72,0.3)] z-10 shrink-0">
+                            <Icon size={22} strokeWidth={2} />
+                          </div>
+                          
+                          <div className="flex flex-col z-10">
+                            <span className="font-extrabold text-slate-800 text-[15px] group-hover/item:text-[#E11D48] transition-colors">
+                              {item.title}
+                            </span>
+                            <span className="font-bold text-slate-400 text-[12px]">
+                              {item.subtitle}
+                            </span>
+                          </div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Other Links */}
+            {['Blog', 'About Us'].map(link => (
+              <div key={link} className="relative group py-4">
+                <a href="#" className="text-[15px] font-extrabold tracking-wide text-slate-700 group-hover:text-[#E11D48] transition-colors relative">
+                  {link}
+                  <span className="absolute left-1/2 -bottom-[16px] w-0 h-[3px] bg-[#E11D48] transition-all duration-300 ease-out group-hover:w-full group-hover:left-0 rounded-full"></span>
+                </a>
+              </div>
+            ))}
+          </div>
+
           {/* Right side: Actions */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Currency selector */}
-            <div className="relative group/select">
-              <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-semibold hover:bg-white/20 transition-colors shadow-sm cursor-pointer">
-                <span>{currency}</span>
-                <ChevronDown size={14} className="opacity-80 cursor-pointer" />
-              </button>
-              <div className="absolute right-0 mt-2 w-28 bg-white border border-slate-200 rounded-lg shadow-xl py-1 opacity-0 scale-95 pointer-events-none group-hover/select:opacity-100 group-hover/select:scale-100 group-hover/select:pointer-events-auto transition-all duration-200 z-30">
-                <button onClick={() => setCurrency('USD')} className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-[#0000CD] transition-colors cursor-pointer">USD ($)</button>
-                <button onClick={() => setCurrency('EUR')} className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-[#0000CD] transition-colors cursor-pointer">EUR (€)</button>
-                <button onClick={() => setCurrency('GBP')} className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-[#0000CD] transition-colors cursor-pointer">GBP (£)</button>
-              </div>
-            </div>
-
-            {/* Language & Region selector */}
-            <div className="relative group/lang">
-              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-semibold hover:bg-white/20 transition-colors shadow-sm cursor-pointer">
-                <Globe size={16} className="text-white cursor-pointer" />
-                <span>{language} ({region})</span>
-                <ChevronDown size={14} className="opacity-80 cursor-pointer" />
-              </button>
-              <div className="absolute right-0 mt-2 w-36 bg-white border border-slate-200 rounded-lg shadow-xl py-1 opacity-0 scale-95 pointer-events-none group-hover/lang:opacity-100 group-hover/lang:scale-100 group-hover/lang:pointer-events-auto transition-all duration-200 z-30">
-                <button onClick={() => { setLanguage('EN'); setRegion('US') }} className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-[#0000CD] transition-colors cursor-pointer">English (US)</button>
-                <button onClick={() => { setLanguage('EN'); setRegion('UK') }} className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-[#0000CD] transition-colors cursor-pointer">English (UK)</button>
-                <button onClick={() => { setLanguage('FR'); setRegion('FR') }} className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-[#0000CD] transition-colors cursor-pointer">Français (FR)</button>
-              </div>
-            </div>
-
-            {/* Country selector */}
-            <div className="relative group/country">
-              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-semibold hover:bg-white/20 transition-colors shadow-sm cursor-pointer">
-                <MapPin size={16} className="text-white cursor-pointer" />
-                <span>{country}</span>
-                <ChevronDown size={14} className="opacity-80 cursor-pointer" />
-              </button>
-              <div className="absolute right-0 mt-2 w-36 bg-white border border-slate-200 rounded-lg shadow-xl py-1 opacity-0 scale-95 pointer-events-none group-hover/country:opacity-100 group-hover/country:scale-100 group-hover/country:pointer-events-auto transition-all duration-200 z-50">
-                <button onClick={() => setCountry('United States')} className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-[#0000CD] transition-colors cursor-pointer">United States</button>
-                <button onClick={() => setCountry('United Kingdom')} className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-[#0000CD] transition-colors cursor-pointer">United Kingdom</button>
-                <button onClick={() => setCountry('France')} className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-[#0000CD] transition-colors cursor-pointer">France</button>
-              </div>
-            </div>
-
-            {/* Pulsing Heart Icon */}
-            <motion.button
-              onMouseEnter={() => setIsHeartHovered(true)}
-              onMouseLeave={() => setIsHeartHovered(false)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white transition-colors shadow-sm cursor-pointer flex items-center justify-center shrink-0"
-              aria-label="Favorite items list"
+          <div className="flex items-center gap-3 sm:gap-5">
+            
+            {/* Currency Button */}
+            <button 
+              onClick={() => { setIsSettingsModalOpen(true); setSettingsTab('Currency'); }}
+              className="flex items-center gap-1 px-2 py-2 bg-transparent hover:bg-slate-200/70 text-slate-800 font-extrabold text-[15px] rounded-[10px] transition-all cursor-pointer"
             >
-              <div className="relative w-[18px] h-[18px] flex items-center justify-center shrink-0 cursor-pointer">
-                <motion.div
-                  animate={{ scale: isHeartHovered ? [1, 1.25, 1] : 1 }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                  className="cursor-pointer"
-                >
-                  <Heart size={18} fill={isHeartHovered ? "currentColor" : "none"} className="cursor-pointer transition-colors" />
-                </motion.div>
-              </div>
-            </motion.button>
+              {selectedCurrency.code}
+            </button>
 
-            {/* Login button */}
+            {/* Language Button */}
+            <button 
+              onClick={() => { setIsSettingsModalOpen(true); setSettingsTab('Languages'); }}
+              className="flex items-center gap-1 px-2 py-2 bg-transparent hover:bg-slate-200/70 text-slate-700 font-bold text-[14px] rounded-[10px] transition-all cursor-pointer"
+            >
+              <div className="w-[24px] h-[24px] rounded-full overflow-hidden flex items-center justify-center shrink-0 border border-slate-300 shadow-sm bg-white">
+                {selectedLanguage.isGlobe ? (
+                  <Globe2 size={16} className="text-blue-600" strokeWidth={2.5} />
+                ) : (
+                  <Flag code={selectedLanguage.code} className="w-full h-full object-cover" />
+                )}
+              </div>
+            </button>
+
+            {/* Sign In Button */}
             <button 
               onClick={() => setIsSignInModalOpen(true)}
-              className="px-5 py-1.5 rounded-lg bg-[#0000CD] hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-[#0000CD]/30 active:scale-95 transition-all cursor-pointer"
+              className="px-6 py-2.5 rounded-none bg-[#D4D6DB] hover:bg-slate-300 text-slate-800 font-extrabold text-[15px] transition-all cursor-pointer shadow-sm"
             >
               Sign In
             </button>
+
+            {/* Register Button */}
+            <button 
+              onClick={() => setIsRegisterPageOpen(true)}
+              className="px-6 py-2.5 rounded-none bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[15px] shadow-[0_4px_14px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer"
+            >
+              Register
+            </button>
+            
           </div>
         </nav>
 
-        {/* Main Content Wrapper to perfectly center everything inside the 530px video height */}
-        <div className="relative z-20 flex-1 flex flex-col items-center justify-center w-full pb-2">
+        {/* Main Content Wrapper */}
+        <div className="relative z-20 flex-1 flex flex-col items-center justify-center w-full pb-8 pt-10">
           
           {/* Hero Content overlaid on video */}
-          <div className="flex flex-col items-center justify-center text-center px-4">
+          <div className="flex flex-col items-center justify-center text-center px-4 mb-10">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="text-3xl sm:text-5xl lg:text-[54px] font-black tracking-tight w-full sm:whitespace-nowrap text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]"
+              className="text-3xl sm:text-5xl lg:text-[54px] font-black tracking-tighter w-full sm:whitespace-nowrap text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
             >
-              Find the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-white to-blue-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">perfect flight</span> from 100s of sites.
+              Find the <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-rose-500 to-rose-700">perfect flight</span> from 100s of sites.
             </motion.h1>
+          </div>
             
-            {/* Category Icons Selection */}
-            <div className="flex justify-center items-center gap-6 sm:gap-10 mt-4">
+          {/* Category Icons Selection */}
+          <div className="w-full max-w-[1000px] flex justify-start items-center gap-4 sm:gap-6 z-30 px-4 mb-2 mx-auto">
             {categories.map((cat) => {
               const IconComponent = cat.icon;
               const isSel = activeCategory === cat.id;
@@ -465,15 +533,15 @@ function App() {
                   onClick={() => setActiveCategory(cat.id)}
                   className="flex flex-col items-center gap-2 group cursor-pointer focus:outline-none"
                 >
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 cursor-pointer ${
+                  <div className={`w-[60px] h-[60px] rounded-[16px] flex items-center justify-center transition-all duration-200 cursor-pointer ${
                     isSel 
-                      ? 'bg-[#0000CD] text-white scale-110 shadow-lg shadow-[#0000CD]/40 -translate-y-1' 
-                      : 'bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-sm group-hover:bg-white/20 group-hover:-translate-y-2 group-hover:scale-110 group-hover:shadow-[0_10px_25px_rgba(255,255,255,0.2)]'
+                      ? 'bg-[#E11D48] text-white shadow-sm' 
+                      : 'bg-[#eaeaec] text-slate-800 shadow-sm hover:bg-[#dfdfdf]'
                   }`}>
-                    <IconComponent size={24} className="stroke-[2.5] cursor-pointer" />
+                    <IconComponent size={24} className="stroke-[2.5] fill-none" />
                   </div>
-                  <span className={`text-[12px] font-bold tracking-wide transition-colors cursor-pointer drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] ${
-                    isSel ? 'text-white' : 'text-slate-200 group-hover:text-white'
+                  <span className={`text-[14px] transition-all duration-200 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] ${
+                    isSel ? 'font-bold' : 'font-medium'
                   }`}>
                     {cat.label}
                   </span>
@@ -481,308 +549,366 @@ function App() {
               );
             })}
           </div>
-        </div>
 
           {/* Detailed Modern Search Panel */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="max-w-5xl mx-auto px-4 sm:px-6 w-full mt-2 relative"
+            className="max-w-5xl mx-auto px-4 sm:px-6 w-full mt-2 relative z-50"
           >
-            {/* Animated glowing blob behind panel */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#0000CD]/40 via-blue-400/20 to-[#0000CD]/40 rounded-[2.5rem] blur-xl opacity-70 animate-pulse mix-blend-overlay"></div>
             
-            <div className="bg-white/20 backdrop-blur-2xl border border-white/50 p-1.5 rounded-[2rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] relative z-10">
-              <div className="bg-white/95 rounded-[1.6rem] p-5 shadow-inner relative">
-                {/* Subtle shine effect on top edge of inner panel */}
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent opacity-80" />
+            
+            <div className="bg-white border border-slate-100 p-1.5 rounded-[2rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] relative z-10">
+              <div className="bg-white rounded-[1.6rem] p-5 relative">
+                
+                
               
-              {/* Top row: Trip Type Selector Pills */}
-              <div className="flex flex-wrap items-center gap-2 mb-6">
-                {[
-                  { id: 'one-way', label: 'One-way' },
-                  { id: 'round-trip', label: 'Round-trip' },
-                  { id: 'multi-city', label: 'Multi-city' }
-                ].map((t) => {
-                  const isActive = tripType === t.id;
-                  return (
-                    <button
-                      key={t.id}
-                      onClick={() => setTripType(t.id)}
-                      className={`px-4 py-2 rounded-full text-sm font-bold transition-all cursor-pointer ${
-                        isActive 
-                          ? 'bg-[#0000CD]/10 text-[#0000CD]' 
-                          : 'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-800'
-                      }`}
-                    >
-                      {t.label}
-                    </button>
-                  )
-                })}
+              {/* Top row: Trip Type Selector & Direct Flights */}
+              <div className="flex flex-wrap items-center gap-6 mb-4 px-2">
+                <div className="flex items-center gap-5">
+                  {[
+                    { id: 'round-trip', label: 'Return' },
+                    { id: 'one-way', label: 'One-way' },
+                    { id: 'multi-city', label: 'Multi-city' }
+                  ].map((t) => {
+                    const isActive = tripType === t.id;
+                    return (
+                      <label key={t.id} className="flex items-center gap-2 cursor-pointer group">
+                        <div className={`w-4 h-4 rounded-full border-[1.5px] flex items-center justify-center transition-colors ${isActive ? 'border-[#E11D48]' : 'border-slate-400 group-hover:border-[#E11D48]'}`}>
+                          {isActive && <div className="w-2 h-2 rounded-full bg-[#E11D48]" />}
+                        </div>
+                        <span className={`text-[13px] transition-colors ${isActive ? 'text-slate-800 font-bold' : 'text-slate-600 group-hover:text-slate-800'}`}>{t.label}</span>
+                        <input type="radio" className="hidden" checked={isActive} onChange={() => setTripType(t.id)} />
+                      </label>
+                    )
+                  })}
+                </div>
+                
+                {/* Separator */}
+                <div className="w-[1px] h-4 bg-slate-300"></div>
+
+              {/* Direct Flights Only */}
+              <div className="flex items-center">
+                <label className="flex items-center gap-2 cursor-pointer group text-[14px] font-medium text-[#1E5285] select-none">
+                  <div className={`flex items-center justify-center w-[18px] h-[18px] rounded-[4px] border-[1.5px] transition-colors ${directOnly ? 'border-[#1E5285] bg-[#1E5285]' : 'border-[#8B9DB1] group-hover:border-[#1E5285]'}`}>
+                    <input 
+                      type="checkbox" 
+                      checked={directOnly}
+                      onChange={(e) => setDirectOnly(e.target.checked)}
+                      className="hidden" 
+                    />
+                    {directOnly && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
+                  </div>
+                  <span className="transition-colors">Direct</span>
+                </label>
+              </div>
               </div>
 
               {/* Core Search Fields Row(s) */}
               <div className="space-y-3 relative z-30">
                 {(tripType === 'multi-city' ? multiCityFlights : [{ id: 'single', from: fromCity, to: toCity, date: departDate }]).map((flight, index) => (
-                  <div key={flight.id} className="relative flex flex-col lg:flex-row items-center gap-3">
+                  <div key={flight.id} className="relative flex items-stretch gap-0">
                     
-                    {/* FROM / TO Connected Block */}
-                    <div className="flex flex-1 items-center bg-slate-50 border border-slate-200 hover:border-[#0000CD]/40 focus-within:border-[#0000CD]/60 rounded-[12px] transition-all relative w-full shadow-sm group">
-                      
-                      {/* FROM */}
-                      <div 
-                        className="flex-1 px-4 py-2.5 relative cursor-text group-hover:bg-white rounded-l-[12px]"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setActiveDropdown({ type: 'from', index: tripType === 'multi-city' ? index : 'single' });
-                        }}
-                      >
-                        <div className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Where from?</div>
-                        <input 
-                          type="text" 
-                          placeholder="Origin city" 
-                          value={tripType === 'multi-city' ? flight.from : fromCity}
-                          onChange={(e) => tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', e.target.value) : setFromCity(e.target.value)}
-                          className="bg-transparent text-sm font-extrabold text-slate-800 w-full focus:outline-none placeholder-slate-300" 
-                        />
-                        {/* FROM Dropdown */}
-                        <AnimatePresence>
-                          {activeDropdown?.type === 'from' && activeDropdown?.index === (tripType === 'multi-city' ? index : 'single') && (
-                            <motion.div
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: 10 }}
-                              onClick={(e) => e.stopPropagation()}
-                              className="absolute top-[110%] left-0 w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
-                            >
-                              <div className="text-sm font-bold text-slate-800 mb-3 px-1">Popular cities</div>
-                              <div className="grid grid-cols-4 gap-x-2 gap-y-2">
-                                {popularCities.map((city, idx) => (
-                                  <motion.div
-                                    key={city}
-                                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    transition={{ delay: idx * 0.02, duration: 0.25, ease: "easeOut" }}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', city) : setFromCity(city);
-                                      setActiveDropdown(null);
-                                    }}
-                                    className={`px-2 py-2 text-[13px] cursor-pointer rounded-lg transition-colors flex items-center ${
-                                      (tripType === 'multi-city' ? flight.from : fromCity) === city
-                                        ? 'bg-[#0000CD]/10 text-[#0000CD] font-bold shadow-[0_4px_12px_rgba(0,0,205,0.15)] ring-1 ring-white'
-                                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                                    }`}
-                                  >
-                                    {city}
-                                  </motion.div>
-                                ))}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
+                    {/* Multi-city Row Number */}
+                    {tripType === 'multi-city' && (
+                      <div className="w-8 bg-[#E11D48] text-white flex items-center justify-center rounded-l-[4px] font-bold text-sm shrink-0 shadow-sm mr-2">
+                        {index + 1}
                       </div>
+                    )}
+
+                    <div className="flex flex-col lg:flex-row items-center gap-2 flex-1">
                       
-                      {/* Swap Button (Interlocking) */}
-                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden lg:flex">
-                        <button 
-                          onClick={() => {
-                            if (tripType === 'multi-city') {
-                              const temp = flight.from;
-                              handleUpdateMultiCity(index, 'from', flight.to);
-                              handleUpdateMultiCity(index, 'to', temp);
-                            } else {
-                              const temp = fromCity;
-                              setFromCity(toCity);
-                              setToCity(temp);
-                            }
+                      {/* FROM / TO Connected Block */}
+                      <div className="flex flex-1 items-center bg-slate-50 border border-slate-200 hover:border-[#E11D48]/50 focus-within:border-[#E11D48]/60 rounded-[4px] transition-all relative w-full shadow-sm group">
+                        
+                        {/* FROM */}
+                        <div 
+                          className="flex-1 px-4 py-3 relative cursor-text group-hover:bg-white rounded-l-[4px]"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveDropdown({ type: 'from', index: tripType === 'multi-city' ? index : 'single' });
                           }}
-                          className="w-8 h-8 rounded-full bg-white border border-slate-200 shadow-sm hover:shadow flex items-center justify-center text-slate-400 hover:text-[#0000CD] hover:border-[#0000CD]/30 active:scale-95 transition-all cursor-pointer group/swap"
                         >
-                          <ArrowLeftRight size={14} className="group-hover/swap:rotate-180 transition-transform duration-300" />
-                        </button>
-                      </div>
-
-                      <div className="w-[1px] h-8 bg-slate-200 hidden lg:block"></div>
-
-                      {/* TO */}
-                      <div 
-                        className="flex-1 px-4 py-2.5 relative cursor-text group-hover:bg-white rounded-r-[12px] lg:pl-6"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setActiveDropdown({ type: 'to', index: tripType === 'multi-city' ? index : 'single' });
-                        }}
-                      >
-                        <div className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Where to?</div>
-                        <input 
-                          type="text" 
-                          placeholder="Destination city" 
-                          value={tripType === 'multi-city' ? flight.to : toCity}
-                          onChange={(e) => tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', e.target.value) : setToCity(e.target.value)}
-                          className="bg-transparent text-sm font-extrabold text-slate-800 w-full focus:outline-none placeholder-slate-300" 
-                        />
-                        {/* TO Dropdown */}
-                        <AnimatePresence>
-                          {activeDropdown?.type === 'to' && activeDropdown?.index === (tripType === 'multi-city' ? index : 'single') && (
-                            <motion.div
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: 10 }}
-                              onClick={(e) => e.stopPropagation()}
-                              className="absolute top-[110%] left-0 lg:left-6 w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
-                            >
-                              <div className="text-sm font-bold text-slate-800 mb-3 px-1">Popular cities</div>
-                              <div className="grid grid-cols-4 gap-x-2 gap-y-2">
-                                {popularCities.map((city, idx) => (
-                                  <motion.div
-                                    key={city}
-                                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    transition={{ delay: idx * 0.02, duration: 0.25, ease: "easeOut" }}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', city) : setToCity(city);
-                                      setActiveDropdown(null);
-                                    }}
-                                    className={`px-2 py-2 text-[13px] cursor-pointer rounded-lg transition-colors flex items-center ${
-                                      (tripType === 'multi-city' ? flight.to : toCity) === city
-                                        ? 'bg-[#0000CD]/10 text-[#0000CD] font-bold shadow-[0_4px_12px_rgba(0,0,205,0.15)] ring-1 ring-white'
-                                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                                    }`}
-                                  >
-                                    {city}
-                                  </motion.div>
-                                ))}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    </div>
-
-                    {/* DATES field (Connected block for round-trip, single for others) */}
-                    <div className="flex-[0.8] w-full lg:w-auto">
-                      {tripType === 'round-trip' ? (
-                        <div className="flex items-center bg-slate-50 border border-slate-200 hover:border-[#0000CD]/40 rounded-[12px] transition-all shadow-sm group">
-                          {/* DEPART */}
-                          <div 
-                            onClick={() => { setCalendarTarget({ type: 'depart', index: null }); setIsCalendarOpen(true); }}
-                            className="flex-1 px-4 py-2.5 flex items-center justify-between cursor-pointer border-r border-slate-200 group-hover:bg-white rounded-l-[12px]"
-                          >
-                            <div>
-                              <div className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Depart</div>
-                              <div className="text-sm font-extrabold text-slate-800">{formatDateString(departDate)}</div>
-                            </div>
-                            <div className="flex gap-1">
-                              <ChevronLeft size={16} className="text-slate-400 hover:text-[#0000CD] transition-colors" onClick={(e) => { e.stopPropagation(); }} />
-                              <ChevronRight size={16} className="text-slate-400 hover:text-[#0000CD] transition-colors" onClick={(e) => { e.stopPropagation(); }} />
-                            </div>
-                          </div>
-                          {/* RETURN */}
-                          <div 
-                            onClick={() => { setCalendarTarget({ type: 'return', index: null }); setIsCalendarOpen(true); }}
-                            className="flex-1 px-4 py-2.5 flex items-center justify-between cursor-pointer group-hover:bg-white rounded-r-[12px]"
-                          >
-                            <div>
-                              <div className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Return</div>
-                              <div className="text-sm font-extrabold text-slate-800">{formatDateString(returnDate)}</div>
-                            </div>
-                            <div className="flex gap-1">
-                              <ChevronLeft size={16} className="text-slate-400 hover:text-[#0000CD] transition-colors" onClick={(e) => { e.stopPropagation(); }} />
-                              <ChevronRight size={16} className="text-slate-400 hover:text-[#0000CD] transition-colors" onClick={(e) => { e.stopPropagation(); }} />
-                            </div>
-                          </div>
+                          <div className="text-[11px] font-semibold text-slate-500 mb-0.5">Leaving from</div>
+                          <input 
+                            type="text" 
+                            placeholder="Origin city" 
+                            value={tripType === 'multi-city' ? flight.from : fromCity}
+                            onChange={(e) => tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', e.target.value) : setFromCity(e.target.value)}
+                            className="bg-transparent text-sm font-bold text-slate-800 w-full focus:outline-none placeholder-slate-300" 
+                          />
+                          {/* FROM Dropdown */}
+                          <AnimatePresence>
+                            {activeDropdown?.type === 'from' && activeDropdown?.index === (tripType === 'multi-city' ? index : 'single') && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                onClick={(e) => e.stopPropagation()}
+                                className="absolute top-[110%] left-0 w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
+                              >
+                                <div className="text-sm font-bold text-slate-800 mb-3 px-1">Popular cities</div>
+                                <div className="grid grid-cols-4 gap-x-2 gap-y-2">
+                                  {popularCities.map((city, idx) => (
+                                    <motion.div
+                                      key={city}
+                                      initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                                      transition={{ delay: idx * 0.02, duration: 0.25, ease: "easeOut" }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', city) : setFromCity(city);
+                                        setActiveDropdown(null);
+                                      }}
+                                      className={`px-2 py-2 text-[13px] cursor-pointer rounded-lg transition-colors flex items-center ${
+                                        (tripType === 'multi-city' ? flight.from : fromCity) === city
+                                          ? 'bg-[#E11D48]/10 text-[#E11D48] font-bold shadow-[0_4px_12px_rgba(225,29,72,0.15)] ring-1 ring-white'
+                                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                      }`}
+                                    >
+                                      {city}
+                                    </motion.div>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
-                      ) : (
+                        
+                        {/* Swap Button */}
+                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden lg:flex">
+                          <button 
+                            onClick={() => {
+                              if (tripType === 'multi-city') {
+                                const temp = flight.from;
+                                handleUpdateMultiCity(index, 'from', flight.to);
+                                handleUpdateMultiCity(index, 'to', temp);
+                              } else {
+                                const temp = fromCity;
+                                setFromCity(toCity);
+                                setToCity(temp);
+                              }
+                            }}
+                            className="w-7 h-7 rounded-full bg-slate-50 border border-slate-200 shadow-sm hover:bg-white flex items-center justify-center text-[#E11D48] transition-all cursor-pointer group/swap z-20"
+                          >
+                            <ArrowLeftRight size={13} className="group-hover/swap:rotate-180 transition-transform duration-300" />
+                          </button>
+                        </div>
+  
+                        <div className="w-[1px] h-8 bg-slate-200 hidden lg:block"></div>
+  
+                        {/* TO */}
+                        <div 
+                          className="flex-1 px-4 py-3 relative cursor-text group-hover:bg-white rounded-r-[4px] lg:pl-6"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveDropdown({ type: 'to', index: tripType === 'multi-city' ? index : 'single' });
+                          }}
+                        >
+                          <div className="text-[11px] font-semibold text-slate-500 mb-0.5">Going to</div>
+                          <input 
+                            type="text" 
+                            placeholder="Destination city" 
+                            value={tripType === 'multi-city' ? flight.to : toCity}
+                            onChange={(e) => tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', e.target.value) : setToCity(e.target.value)}
+                            className="bg-transparent text-sm font-bold text-slate-800 w-full focus:outline-none placeholder-slate-300" 
+                          />
+                          {/* TO Dropdown */}
+                          <AnimatePresence>
+                            {activeDropdown?.type === 'to' && activeDropdown?.index === (tripType === 'multi-city' ? index : 'single') && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                onClick={(e) => e.stopPropagation()}
+                                className="absolute top-[110%] left-0 lg:left-6 w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
+                              >
+                                <div className="text-sm font-bold text-slate-800 mb-3 px-1">Popular cities</div>
+                                <div className="grid grid-cols-4 gap-x-2 gap-y-2">
+                                  {popularCities.map((city, idx) => (
+                                    <motion.div
+                                      key={city}
+                                      initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                                      transition={{ delay: idx * 0.02, duration: 0.25, ease: "easeOut" }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', city) : setToCity(city);
+                                        setActiveDropdown(null);
+                                      }}
+                                      className={`px-2 py-2 text-[13px] cursor-pointer rounded-lg transition-colors flex items-center ${
+                                        (tripType === 'multi-city' ? flight.to : toCity) === city
+                                          ? 'bg-[#E11D48]/10 text-[#E11D48] font-bold shadow-[0_4px_12px_rgba(225,29,72,0.15)] ring-1 ring-white'
+                                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                      }`}
+                                    >
+                                      {city}
+                                    </motion.div>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </div>
+  
+                      {/* DATES Field */}
+                      <div className="flex-[0.8] w-full lg:w-auto">
                         <div 
                           onClick={() => { setCalendarTarget(tripType === 'multi-city' ? { type: 'multi', index } : { type: 'depart', index: null }); setIsCalendarOpen(true); }}
-                          className="flex items-center bg-slate-50 border border-slate-200 hover:border-[#0000CD]/40 rounded-[12px] px-4 py-2.5 transition-all shadow-sm cursor-pointer hover:bg-white justify-between"
+                          className="flex items-center bg-slate-50 border border-slate-200 hover:border-[#E11D48]/50 rounded-[4px] px-4 h-[58px] transition-all shadow-sm cursor-pointer hover:bg-white justify-between"
                         >
-                          <div>
-                            <div className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Depart</div>
-                            <div className="text-sm font-extrabold text-slate-800">{formatDateString(tripType === 'multi-city' ? flight.date : departDate)}</div>
-                          </div>
-                          <div className="flex gap-1">
-                            <ChevronLeft size={16} className="text-slate-400 hover:text-[#0000CD] transition-colors" onClick={(e) => { e.stopPropagation(); }} />
-                            <ChevronRight size={16} className="text-slate-400 hover:text-[#0000CD] transition-colors" onClick={(e) => { e.stopPropagation(); }} />
-                          </div>
+                          {tripType === 'round-trip' ? (
+                            <div className="flex items-center justify-center w-full gap-3 text-[13px] font-bold text-slate-800">
+                              <span>{formatDateString(departDate) || 'Choose date'}</span>
+                              <span className="text-slate-300 font-normal">—</span>
+                              <span>{formatDateString(returnDate) || 'Choose date'}</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-start w-full gap-2 text-[13px] font-bold text-slate-800">
+                              <span className={!(tripType === 'multi-city' ? flight.date : departDate) ? 'text-slate-400' : ''}>
+                                {(tripType === 'multi-city' ? flight.date : departDate) ? formatDateString(tripType === 'multi-city' ? flight.date : departDate) : 'Choose date'}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* PASSENGERS Field */}
+                      {(index === 0 || tripType !== 'multi-city') && (
+                        <div className="flex-[0.6] w-full lg:w-auto relative group/passclass h-[58px]">
+                           <div className="flex items-center justify-between bg-slate-50 border border-slate-200 hover:border-[#E11D48]/50 rounded-[4px] px-4 h-full transition-all shadow-sm cursor-pointer hover:bg-white">
+                             <div className="flex items-center gap-2 text-[13px] font-bold text-slate-800 whitespace-nowrap">
+                               <User size={14} className="text-slate-600" />
+                               <span>{(adults + children + infants)} {(adults + children + infants) === 1 ? 'adult' : 'travelers'} &middot; {travelClass}</span>
+                             </div>
+                             <ChevronDown size={14} className="text-slate-400 group-hover/passclass:rotate-180 transition-transform ml-2" />
+                           </div>
+                           
+                           <div className="absolute right-0 mt-2 w-[340px] bg-[#eaeaec] border border-slate-200 rounded-xl shadow-xl p-0 opacity-0 scale-95 pointer-events-none group-hover/passclass:opacity-100 group-hover/passclass:scale-100 group-hover/passclass:pointer-events-auto transition-all duration-200 z-50 overflow-hidden">
+                             <div className="p-5 pb-4">
+                               <div className="text-[14px] font-bold text-slate-900 mb-4">Travelers</div>
+                               
+                               <div className="flex items-center justify-between mb-4">
+                                 <div>
+                                   <div className="text-[14px] text-slate-700">Adults <span className="text-slate-500">18+</span></div>
+                                 </div>
+                                 <div className="flex items-center gap-3">
+                                   <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
+                                   <span className="w-4 text-center font-bold text-[15px]">{adults}</span>
+                                   <button onClick={() => setAdults(adults + 1)} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
+                                 </div>
+                               </div>
+                               
+                               <div className="flex items-center justify-between mb-4">
+                                 <div>
+                                   <div className="text-[14px] text-slate-700">Children <span className="text-slate-500">0-17</span></div>
+                                 </div>
+                                 <div className="flex items-center gap-3">
+                                   <button onClick={() => {
+                                      const newCount = Math.max(0, children - 1);
+                                      setChildren(newCount);
+                                      setChildAges(prev => prev.slice(0, newCount));
+                                   }} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
+                                   <span className="w-4 text-center font-bold text-[15px]">{children}</span>
+                                   <button onClick={() => {
+                                      const newCount = children + 1;
+                                      setChildren(newCount);
+                                      setChildAges(prev => [...prev, '']);
+                                   }} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
+                                 </div>
+                               </div>
+
+                               {/* Child Ages Dropdowns */}
+                               {children > 0 && (
+                                 <div className="mb-4">
+                                   {childAges.map((age, idx) => (
+                                     <div key={idx} className="flex items-center justify-between mt-3">
+                                       <div className="text-[14px] text-slate-800">Child's age</div>
+                                       <div className="relative">
+                                         <select 
+                                           value={age}
+                                           onChange={(e) => {
+                                             const newAges = [...childAges];
+                                             newAges[idx] = e.target.value;
+                                             setChildAges(newAges);
+                                           }}
+                                           className="appearance-none bg-transparent border border-slate-400/80 rounded-[8px] pl-4 pr-10 py-1.5 text-[14px] text-slate-600 focus:outline-none focus:border-slate-500 cursor-pointer min-w-[70px] shadow-sm transition-colors hover:bg-slate-50"
+                                         >
+                                           <option value="" disabled>Age</option>
+                                           {Array.from({length: 18}).map((_, i) => (
+                                             <option key={i} value={i}>{i}</option>
+                                           ))}
+                                         </select>
+                                         <ChevronDown size={16} strokeWidth={2.5} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-800 pointer-events-none" />
+                                       </div>
+                                     </div>
+                                   ))}
+                                 </div>
+                               )}
+                           
+                               <div className="flex items-center justify-between">
+                                 <div>
+                                   <div className="text-[14px] text-slate-700">Infants on lap <span className="text-slate-500">under 2</span></div>
+                                 </div>
+                                 <div className="flex items-center gap-3">
+                                   <button onClick={() => setInfants(Math.max(0, infants - 1))} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
+                                   <span className="w-4 text-center font-bold text-[15px]">{infants}</span>
+                                   <button onClick={() => setInfants(infants + 1)} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
+                                 </div>
+                               </div>
+                             </div>
+                           
+                             <div className="h-[1px] bg-slate-300 w-full opacity-60"></div>
+                           
+                             <div className="p-5 pt-4">
+                               <div className="text-[14px] font-bold text-slate-900 mb-3">Cabin Class</div>
+                               <div className="flex flex-wrap gap-2">
+                                 {['Economy', 'Premium Economy', 'Business', 'First'].map((opt) => (
+                                   <button 
+                                     key={opt} 
+                                     onClick={() => setTravelClass(opt)} 
+                                     className={`px-3 py-1.5 text-[14px] rounded-lg border transition-all cursor-pointer ${travelClass === opt ? 'border-slate-800 text-slate-800 bg-slate-200/50' : 'border-slate-300 text-slate-700 hover:border-slate-400'}`}
+                                   >
+                                     {opt}
+                                   </button>
+                                 ))}
+                               </div>
+                             </div>
+                           </div>
                         </div>
                       )}
+                      
+                      {tripType === 'multi-city' && index > 0 && (
+                        <div className="flex-[0.6] w-full lg:w-auto flex items-center justify-end pr-2">
+                          <button onClick={() => handleRemoveMultiCityFlight(index)} className="p-2 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition-colors cursor-pointer">
+                            <X size={18} />
+                          </button>
+                        </div>
+                      )}
+
                     </div>
-                    
-                    {/* Multi-city Remove Row Button */}
-                    {tripType === 'multi-city' && index >= 2 && (
-                       <button onClick={() => handleRemoveMultiCityFlight(index)} className="p-1 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition-colors hidden lg:block">
-                         <X size={16} />
-                       </button>
-                    )}
-                    {tripType === 'multi-city' && index < 2 && (
-                       <div className="w-6 hidden lg:block"></div>
-                    )}
                   </div>
                 ))}
               </div>
               
-              {/* Bottom row: Options and Search Button */}
-              <div className="mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4 z-20 relative">
-                <div>
-                  {tripType === 'multi-city' ? (
-                     <button onClick={handleAddMultiCityFlight} className="flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 border-[#0000CD]/20 text-[#0000CD] hover:bg-[#0000CD]/5 font-bold transition-colors cursor-pointer text-sm">
-                       <Plus size={16} strokeWidth={2.5} />
-                       Add flight
-                     </button>
-                  ) : (
-                    <label className="flex items-center gap-2 cursor-pointer group px-1 text-xs font-bold text-slate-500">
-                      <div className="relative flex items-center justify-center w-4 h-4 rounded border-2 border-slate-300 group-hover:border-[#0000CD] transition-colors">
-                        <input 
-                          type="checkbox" 
-                          checked={directOnly}
-                          onChange={(e) => setDirectOnly(e.target.checked)}
-                          className="absolute opacity-0 w-full h-full cursor-pointer z-10" 
-                        />
-                        {directOnly && <div className="w-2 h-2 rounded-sm bg-[#0000CD]" />}
-                      </div>
-                      <span className="group-hover:text-slate-800 transition-colors">Direct flights only</span>
-                    </label>
-                  )}
+              {/* Multi-city Add Row Button */}
+              {tripType === 'multi-city' && (
+                <div className="mt-4 w-full">
+                  <button onClick={handleAddMultiCityFlight} className="w-full flex items-center justify-center gap-2 py-3 rounded-[4px] border border-dashed border-[#E11D48]/40 text-[#E11D48] hover:bg-[#E11D48]/5 hover:border-[#E11D48] font-bold transition-all cursor-pointer text-sm">
+                    <Plus size={16} strokeWidth={2.5} />
+                    Add another flight
+                  </button>
                 </div>
-                
-                <div className="flex flex-wrap items-center gap-4 lg:gap-5 ml-auto">
-                   <div className="relative group/pass">
-                     <button className="flex items-center gap-1 hover:text-[#0000CD] cursor-pointer text-[13px] font-bold text-slate-700">
-                       <span>{passengers}</span>
-                       <ChevronDown size={14} className="transition-transform group-hover/pass:rotate-180" />
-                     </button>
-                     <div className="absolute right-0 mt-2 w-32 bg-white border border-slate-200 rounded-lg shadow-xl py-1 opacity-0 scale-95 pointer-events-none group-hover/pass:opacity-100 group-hover/pass:scale-100 group-hover/pass:pointer-events-auto transition-all duration-200 z-50">
-                       {['1 Adult', '2 Adults', '3 Adults', '4+ Adults'].map((opt) => (
-                         <button key={opt} onClick={() => setPassengers(opt)} className="w-full text-left px-4 py-2 hover:bg-slate-50 hover:text-[#0000CD] cursor-pointer">{opt}</button>
-                       ))}
-                     </div>
-                   </div>
-                   <div className="relative group/class">
-                     <button className="flex items-center gap-1 hover:text-[#0000CD] cursor-pointer text-[13px] font-bold text-slate-700">
-                       <span>{travelClass}</span>
-                       <ChevronDown size={14} className="transition-transform group-hover/class:rotate-180" />
-                     </button>
-                     <div className="absolute right-0 mt-2 w-32 bg-white border border-slate-200 rounded-lg shadow-xl py-1 opacity-0 scale-95 pointer-events-none group-hover/class:opacity-100 group-hover/class:scale-100 group-hover/class:pointer-events-auto transition-all duration-200 z-50">
-                       {['Economy', 'Premium Econ', 'Business', 'First Class'].map((opt) => (
-                         <button key={opt} onClick={() => setTravelClass(opt)} className="w-full text-left px-4 py-2 hover:bg-slate-50 hover:text-[#0000CD] cursor-pointer">{opt}</button>
-                       ))}
-                     </div>
-                   </div>
-                   <div className="relative group/pay">
-                     <button className="flex items-center gap-1 hover:text-[#0000CD] cursor-pointer text-[13px] font-bold text-slate-700">
-                       <span>{paymentType}</span>
-                       <ChevronDown size={14} className="transition-transform group-hover/pay:rotate-180" />
-                     </button>
-                   </div>
-                   
-                   <button className="px-6 py-3 ml-2 bg-[#0000CD] hover:bg-blue-700 text-white font-extrabold text-sm rounded-xl shadow-[0_10px_20px_rgba(0,0,205,0.3)] hover:shadow-[0_15px_30px_rgba(0,0,205,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center cursor-pointer relative overflow-hidden group">
-                     <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
-                     <span className="relative z-10 px-2">Search</span>
-                   </button>
-                </div>
+              )}
+
+              {/* Bottom row: Search Button Area */}
+              <div className="mt-6 flex flex-col md:flex-row md:items-center justify-end gap-3 z-20 relative">
+                 <button className="px-10 py-3 bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[15px] rounded-[4px] shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer relative group">
+                   <Search size={18} strokeWidth={2.5} />
+                   <span>Search</span>
+                 </button>
               </div>
 
               {/* Calendar Dropdown Rendered Here (Floating globally below the panel) */}
@@ -790,11 +916,11 @@ function App() {
                 {isCalendarOpen && (
                   <motion.div
                     ref={calendarRef}
-                    initial={{ opacity: 0, scale: 0.95, y: 10, x: "-50%" }}
-                    animate={{ opacity: 1, scale: 1, y: 0, x: "-50%" }}
-                    exit={{ opacity: 0, scale: 0.95, y: 10, x: "-50%" }}
+                    initial={{ opacity: 0, scale: 0.95, x: "-50%", y: "-45%" }}
+                    animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
+                    exit={{ opacity: 0, scale: 0.95, x: "-50%", y: "-45%" }}
                     transition={{ duration: 0.2 }}
-                    className="absolute left-1/2 top-[100%] mt-4 z-[100] bg-[#f2f3f5] rounded-[24px] shadow-[0_30px_80px_rgba(0,0,0,0.3)] w-auto min-w-[340px] md:min-w-[720px] flex flex-col overflow-hidden cursor-default border border-slate-200"
+                    className="fixed left-1/2 top-1/2 z-[200] bg-[#f2f3f5] rounded-[24px] shadow-[0_50px_100px_rgba(0,0,0,0.5)] w-[95%] max-w-[800px] flex flex-col overflow-hidden cursor-default border border-slate-200"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {/* Header Inputs (Mimicking the underlying fields for context) */}
@@ -802,14 +928,14 @@ function App() {
                       <div className="flex bg-[#e2e8f0]/50 p-2 rounded-t-[24px]">
                          <div 
                            onClick={() => setCalendarTarget({ type: 'depart', index: null })}
-                           className={`flex-1 p-3 mx-1 rounded-[16px] cursor-pointer border-[2px] transition-all duration-300 ${calendarTarget.type === 'depart' ? 'border-[#0000CD] bg-white shadow-sm' : 'border-transparent hover:bg-slate-200/60'}`}
+                           className={`flex-1 p-3 mx-1 rounded-[16px] cursor-pointer border-[2px] transition-all duration-300 ${calendarTarget.type === 'depart' ? 'border-[#E11D48] bg-white shadow-sm' : 'border-transparent hover:bg-slate-200/60'}`}
                          >
                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Depart</div>
                            <div className="text-base font-extrabold text-slate-800">{formatDateString(departDate)}</div>
                          </div>
                          <div 
                            onClick={() => setCalendarTarget({ type: 'return', index: null })}
-                           className={`flex-1 p-3 mx-1 rounded-[16px] cursor-pointer border-[2px] transition-all duration-300 ${calendarTarget.type === 'return' ? 'border-[#0000CD] bg-white shadow-sm' : 'border-transparent hover:bg-slate-200/60'}`}
+                           className={`flex-1 p-3 mx-1 rounded-[16px] cursor-pointer border-[2px] transition-all duration-300 ${calendarTarget.type === 'return' ? 'border-[#E11D48] bg-white shadow-sm' : 'border-transparent hover:bg-slate-200/60'}`}
                          >
                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Return</div>
                            <div className="text-base font-extrabold text-slate-800">{tripType === 'one-way' ? 'One-way' : formatDateString(returnDate)}</div>
@@ -824,7 +950,7 @@ function App() {
                           onClick={() => navigateMonth(-1)} 
                           whileHover={{ scale: 1.1, backgroundColor: '#ffffff' }}
                           whileTap={{ scale: 0.9 }}
-                          className="p-2 rounded-xl text-slate-600 hover:text-[#0000CD] cursor-pointer transition-colors"
+                          className="p-2 rounded-xl text-slate-600 hover:text-[#E11D48] cursor-pointer transition-colors"
                         >
                           <ChevronLeft size={20} />
                         </motion.button>
@@ -842,7 +968,7 @@ function App() {
                           onClick={() => navigateMonth(1)} 
                           whileHover={{ scale: 1.1, backgroundColor: '#ffffff' }}
                           whileTap={{ scale: 0.9 }}
-                          className="p-2 rounded-xl text-slate-600 hover:text-[#0000CD] cursor-pointer transition-colors"
+                          className="p-2 rounded-xl text-slate-600 hover:text-[#E11D48] cursor-pointer transition-colors"
                         >
                           <ChevronRight size={20} />
                         </motion.button>
@@ -882,131 +1008,33 @@ function App() {
         </div>
       </header>
 {/* Main content body */}
-      <main className="max-w-7xl mx-auto px-6 py-12 space-y-20">
-
+      <main className="w-full flex-1 flex flex-col z-10 bg-white">
+        <FeaturedHotels />
+        <FeaturedFlights />
+        <FeaturedTours />
       </main>
 
+            {/* Settings (Language/Currency) Modal */}
+      <SettingsModal 
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        tab={settingsTab}
+        setTab={setSettingsTab}
+        languagesList={languagesList}
+        currenciesList={currenciesList}
+        selectedLanguage={selectedLanguage}
+        setSelectedLanguage={setSelectedLanguage}
+        selectedCurrency={selectedCurrency}
+        setSelectedCurrency={setSelectedCurrency}
+      />
+
       {/* Sign In Modal */}
-      <AnimatePresence>
-        {isSignInModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="relative w-full max-w-[850px] bg-[#f1f5f9] rounded-[24px] shadow-2xl flex flex-col md:flex-row min-h-[480px] overflow-visible"
-            >
-              {/* Close Button */}
-              <button 
-                onClick={() => setIsSignInModalOpen(false)}
-                className="absolute top-4 right-4 z-50 p-2 text-slate-500 hover:text-slate-900 bg-white hover:bg-slate-50 shadow-sm rounded-full transition-colors cursor-pointer"
-              >
-                <X size={20} strokeWidth={2.5} />
-              </button>
+      <SignInModal 
+        isOpen={isSignInModalOpen} 
+        onClose={() => setIsSignInModalOpen(false)} 
+      />
 
-              {/* Left Form Section */}
-              <div className="flex-1 p-6 md:p-10 flex flex-col justify-center relative z-10">
-                {/* Logo */}
-                <div className="text-xl font-black tracking-widest text-[#0000CD] mb-5 flex items-center gap-1.5">
-                  <Menu size={24} className="text-[#0000CD]" />
-                  <span>TRAVEL<span className="text-slate-800">IQ</span></span>
-                </div>
-                
-                {/* Headlines */}
-                <h2 className="text-3xl md:text-[34px] font-black text-slate-900 leading-[1.1] mb-3 tracking-tight">
-                  It's no myth — there's a best time to book
-                </h2>
-                <p className="text-[14px] text-slate-600 mb-5 font-medium max-w-[340px] leading-snug">
-                  Log in or create an account to track prices, compare saved picks and book when the price drops.
-                </p>
-
-                {/* Form */}
-                <div className="space-y-3.5 max-w-[340px]">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-bold text-slate-900">Email</label>
-                    <input 
-                      type="email" 
-                      placeholder="Enter your email"
-                      className="w-full px-3 py-2.5 bg-transparent border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0000CD] focus:ring-1 focus:ring-[#0000CD] transition-colors font-medium text-sm"
-                    />
-                  </div>
-                  
-                  <button className="w-full bg-[#0000CD] hover:bg-blue-700 text-white font-extrabold py-3 rounded-lg transition-colors cursor-pointer shadow-md shadow-[#0000CD]/30 text-sm">
-                    Continue
-                  </button>
-                  
-                  <div className="flex items-center gap-4 my-1.5">
-                    <div className="h-px bg-slate-300 flex-1"></div>
-                    <span className="text-[12px] text-slate-500 font-medium">or</span>
-                    <div className="h-px bg-slate-300 flex-1"></div>
-                  </div>
-
-                  {/* Social Buttons */}
-                  <div className="grid grid-cols-3 gap-3">
-                    <button className="flex justify-center items-center py-2 bg-slate-200/60 hover:bg-slate-300/80 rounded-lg transition-colors cursor-pointer">
-                      <span className="font-extrabold text-slate-700 text-base">G</span>
-                    </button>
-                    <button className="flex justify-center items-center py-2 bg-slate-200/60 hover:bg-slate-300/80 rounded-lg transition-colors cursor-pointer">
-                      <span className="font-extrabold text-slate-700 text-xs">Apple</span>
-                    </button>
-                    <button className="flex justify-center items-center py-2 bg-slate-200/60 hover:bg-slate-300/80 rounded-lg transition-colors cursor-pointer">
-                      <span className="font-extrabold text-[#1877F2] text-base">f</span>
-                    </button>
-                  </div>
-
-                  {/* Remember me */}
-                  <div className="mt-4 flex items-center gap-3">
-                    <div className="relative flex items-center justify-center w-5 h-5 rounded border-2 border-[#0000CD] bg-[#0000CD] transition-colors shrink-0">
-                      <input type="checkbox" defaultChecked className="absolute opacity-0 w-full h-full cursor-pointer z-10" />
-                      <div className="w-2.5 h-2.5 rounded-sm bg-white" />
-                    </div>
-                    <label className="text-[15px] font-bold text-slate-800 cursor-pointer">Remember me</label>
-                  </div>
-
-                  <p className="text-[11px] text-slate-500 leading-relaxed mt-2 max-w-sm">
-                    By continuing, you agree to TravelIQ's <a href="#" className="underline hover:text-slate-800">Terms of Service</a> and acknowledge that you have read our <a href="#" className="underline hover:text-slate-800">Privacy Policy</a>.
-                  </p>
-                </div>
-              </div>
-
-              {/* Right Image Section */}
-              <div className="hidden md:flex md:w-[45%] p-4 pl-0 relative items-stretch justify-center z-0">
-                <img 
-                  src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?q=80&w=800&auto=format&fit=crop" 
-                  alt="Travel Street" 
-                  className="w-full h-[100%] object-cover rounded-[18px] shadow-lg border border-black/5"
-                />
-                {/* Floating Badge (overflows slightly right) */}
-                <div className="absolute top-[50%] -right-6 -translate-y-1/2 w-[85px] h-[85px] bg-[#8be6c5] rounded-full flex items-center justify-center shadow-lg border-[5px] border-[#f1f5f9] z-50">
-                  <div className="relative">
-                    <User size={30} className="text-slate-900" strokeWidth={2.5} />
-                    <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-slate-900 rounded-full border-[1.5px] border-[#8be6c5]"></div>
-                  </div>
-                </div>
-              </div>
-              
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white py-12 text-center text-xs text-slate-500 mt-24">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-[#0000CD] font-bold tracking-widest text-sm cursor-pointer">
-            TRAVEL<span className="text-slate-800">IQ</span>
-          </div>
-          <div className="flex gap-6 cursor-pointer">
-            <a href="#stays" className="hover:text-[#0000CD] transition-colors cursor-pointer">Stays</a>
-            <a href="#flights" className="hover:text-[#0000CD] transition-colors cursor-pointer">Flights</a>
-            <a href="#packages" className="hover:text-[#0000CD] transition-colors cursor-pointer">Packages</a>
-          </div>
-          <div className="text-slate-400">
-            © 2026 TravelIQ. All rights reserved. Built using React and Tailwind CSS.
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       </div>
     </div>
@@ -1014,3 +1042,4 @@ function App() {
 }
 
 export default App
+
