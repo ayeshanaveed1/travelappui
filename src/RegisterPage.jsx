@@ -22,7 +22,7 @@ const RegisterPage = ({ onClose }) => {
       <div className="flex w-full min-h-full">
       {/* Left Column - Form */}
       <div className="w-full lg:w-1/2 min-h-full bg-[#F3F4F6] flex flex-col relative">
-        <div className="p-6 lg:px-12 lg:py-8 w-full max-w-[600px] mx-auto flex-1 flex flex-col">
+        <div className="p-5 sm:p-8 lg:px-12 w-full max-w-[600px] mx-auto flex-1 flex flex-col">
           
           <button 
             onClick={onClose}
@@ -71,7 +71,7 @@ const RegisterPage = ({ onClose }) => {
             </div>
 
             <form className="space-y-4">
-              <div className="grid grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                 <div>
                   <label className="block text-[13px] font-bold text-slate-700 mb-1.5">First Name <span className="text-[#E11D48]">*</span></label>
                   <div className="relative">

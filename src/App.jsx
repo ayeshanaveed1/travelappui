@@ -402,7 +402,7 @@ function App() {
         </div>
 
         {/* Solid Navbar matching screenshot */}
-        <nav className="relative z-50 px-8 py-4 flex items-center justify-between mx-auto w-full shrink-0 bg-[#EBEBEB] shadow-sm border-b border-slate-200/60">
+        <nav className="relative z-50 px-4 sm:px-8 py-4 flex items-center justify-between mx-auto w-full shrink-0 bg-[#EBEBEB] shadow-sm border-b border-slate-200/60">
           {/* Left side: Logo */}
           <div className="flex items-center gap-4">
             <span className="text-2xl font-black tracking-[0.15em] text-[#E11D48] cursor-pointer hover:scale-[1.02] transition-transform duration-300">
@@ -491,7 +491,7 @@ function App() {
             {/* Sign In Button */}
             <button 
               onClick={() => setIsSignInModalOpen(true)}
-              className="px-6 py-2.5 rounded-none bg-[#D4D6DB] hover:bg-slate-300 text-slate-800 font-extrabold text-[15px] transition-all cursor-pointer shadow-sm"
+              className="px-4 py-2 sm:px-6 sm:py-2.5 rounded-none bg-[#D4D6DB] hover:bg-slate-300 text-slate-800 font-extrabold text-[14px] sm:text-[15px] transition-all cursor-pointer shadow-sm"
             >
               Sign In
             </button>
@@ -499,7 +499,7 @@ function App() {
             {/* Register Button */}
             <button 
               onClick={() => setIsRegisterPageOpen(true)}
-              className="px-6 py-2.5 rounded-none bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[15px] shadow-[0_4px_14px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer"
+              className="px-4 py-2 sm:px-6 sm:py-2.5 rounded-none bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[14px] sm:text-[15px] shadow-[0_4px_14px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer"
             >
               Register
             </button>
@@ -523,7 +523,7 @@ function App() {
           </div>
             
           {/* Category Icons Selection */}
-          <div className="w-full max-w-[1000px] flex justify-start items-center gap-4 sm:gap-6 z-30 px-4 mb-2 mx-auto">
+          <div className="w-full max-w-[1000px] flex justify-start sm:justify-center items-center gap-4 sm:gap-6 z-30 px-4 mb-2 mx-auto overflow-x-auto scrollbar-none pb-2 sm:pb-0">
             {categories.map((cat) => {
               const IconComponent = cat.icon;
               const isSel = activeCategory === cat.id;
@@ -620,7 +620,7 @@ function App() {
                     <div className="flex flex-col lg:flex-row items-center gap-2 flex-1">
                       
                       {/* FROM / TO Connected Block */}
-                      <div className="flex flex-1 items-center bg-slate-50 border border-slate-200 hover:border-[#E11D48]/50 focus-within:border-[#E11D48]/60 rounded-[4px] transition-all relative w-full shadow-sm group">
+                      <div className="flex flex-col sm:flex-row flex-1 items-stretch bg-slate-50 border border-slate-200 hover:border-[#E11D48]/50 focus-within:border-[#E11D48]/60 rounded-[4px] transition-all relative w-full shadow-sm group">
                         
                         {/* FROM */}
                         <div 
@@ -696,7 +696,7 @@ function App() {
                           </button>
                         </div>
   
-                        <div className="w-[1px] h-8 bg-slate-200 hidden lg:block"></div>
+                        <div className="w-full h-[1px] sm:w-[1px] sm:h-8 bg-slate-200 block sm:hidden lg:block"></div>
   
                         {/* TO */}
                         <div 

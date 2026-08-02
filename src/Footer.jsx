@@ -10,11 +10,11 @@ const Footer = () => {
       {/* Subtle Glow */}
       <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[600px] -translate-x-1/2 rounded-full bg-[#E11D48]/10 blur-[100px]"></div>
       
-      <div className="relative z-10 mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:py-20">
-        <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+      <div className="relative z-10 mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:py-20">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr] lg:gap-12">
           
           {/* Column 1: Brand & Desc */}
-          <div className="max-w-sm">
+          <div className="max-w-sm sm:col-span-2 lg:col-span-1">
             <a href="/" className="inline-block">
               <span className="text-3xl font-black tracking-widest text-white">
                 TRAVEL<span className="text-[#E11D48]">IQ</span>

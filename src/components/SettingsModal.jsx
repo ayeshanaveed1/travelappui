@@ -36,21 +36,21 @@ const SettingsModal = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="relative w-full max-w-[850px] bg-[#EBEBEB] rounded-[16px] shadow-2xl flex flex-col min-h-[500px] overflow-hidden border border-white/40"
+            className="relative w-full max-w-[850px] bg-[#EBEBEB] rounded-[16px] shadow-2xl flex flex-col min-h-[400px] sm:min-h-[500px] max-h-[90vh] sm:max-h-none overflow-hidden border border-white/40"
           >
             {/* Header / Tabs */}
-            <div className="flex items-center justify-between px-8 border-b border-slate-300/80 bg-[#EBEBEB]">
-              <div className="flex items-center gap-8">
+            <div className="flex items-center justify-between px-4 sm:px-8 border-b border-slate-300/80 bg-[#EBEBEB]">
+              <div className="flex items-center gap-4 sm:gap-8">
                 <button 
                   onClick={() => setTab('Languages')}
-                  className={`py-5 text-[18px] font-extrabold tracking-tight transition-all relative ${tab === 'Languages' ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`py-4 sm:py-5 text-[16px] sm:text-[18px] font-extrabold tracking-tight transition-all relative ${tab === 'Languages' ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Languages
                   {tab === 'Languages' && <div className="absolute bottom-0 left-0 w-full h-[3px] bg-slate-900 rounded-t"></div>}
                 </button>
                 <button 
                   onClick={() => setTab('Currency')}
-                  className={`py-5 text-[18px] font-extrabold tracking-tight transition-all relative ${tab === 'Currency' ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`py-4 sm:py-5 text-[16px] sm:text-[18px] font-extrabold tracking-tight transition-all relative ${tab === 'Currency' ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Currency
                   {tab === 'Currency' && <div className="absolute bottom-0 left-0 w-full h-[3px] bg-slate-900 rounded-t"></div>}
@@ -65,10 +65,10 @@ const SettingsModal = ({
             </div>
 
             {/* Content */}
-            <div className="p-8 overflow-y-auto bg-[#EBEBEB] flex-1">
+            <div className="p-5 sm:p-8 overflow-y-auto bg-[#EBEBEB] flex-1">
               {tab === 'Languages' ? (
                 <div>
-                  <h3 className="text-[15px] font-bold text-slate-900 mb-5">All Languages</h3>
+                  <h3 className="text-[15px] font-bold text-slate-900 mb-4 sm:mb-5">All Languages</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-3">
                     {languagesList.map((lang, idx) => {
                       const isSelected = selectedLanguage.name === lang.name;
@@ -95,7 +95,7 @@ const SettingsModal = ({
                 </div>
               ) : (
                 <div>
-                  <h3 className="text-[15px] font-bold text-slate-900 mb-5">All Currencies</h3>
+                  <h3 className="text-[15px] font-bold text-slate-900 mb-4 sm:mb-5">All Currencies</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3">
                     {currenciesList.map((curr, idx) => {
                       const isSelected = selectedCurrency.code === curr.code;
