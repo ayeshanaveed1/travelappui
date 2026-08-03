@@ -166,17 +166,6 @@ function App() {
     };
   }, []);
 
-  // Lock body scroll when calendar is open
-  useEffect(() => {
-    if (isCalendarOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isCalendarOpen]);
 
   const handleUpdateMultiCity = (index, field, value) => {
     const newFlights = [...multiCityFlights];
@@ -273,6 +262,7 @@ function App() {
       const newFlights = [...multiCityFlights];
       newFlights[calendarTarget.index].date = selected;
       setMultiCityFlights(newFlights);
+      setIsCalendarOpen(false);
       return;
     }
     
@@ -281,12 +271,19 @@ function App() {
       if (returnDate && selected > returnDate) {
         setReturnDate(changeDateByDays(selected, 3));
       }
-      setCalendarTarget({ type: 'return', index: null });
+      if (tripType === 'round-trip') {
+        setCalendarTarget({ type: 'return', index: null });
+      } else {
+        setIsCalendarOpen(false);
+      }
     } else {
       if (departDate && selected < departDate) {
         setDepartDate(selected);
+        setCalendarTarget({ type: 'return', index: null });
+      } else {
+        setReturnDate(selected);
+        setIsCalendarOpen(false);
       }
-      setReturnDate(selected);
     }
   }
 
@@ -398,7 +395,7 @@ function App() {
       <div className="flex-1 w-full min-w-0 flex flex-col min-h-screen">
 
       {/* Hero section with video background (Dynamic height) */}
-      <header className="relative w-full min-h-[600px] flex flex-col z-10 transition-all duration-500 pb-12">
+      <header className="relative w-full min-h-[600px] flex flex-col z-[100] transition-all duration-500 pb-12">
         <div className="absolute inset-0 overflow-hidden">
           <video 
             className="absolute inset-0 w-full h-full object-cover object-top"
@@ -632,7 +629,10 @@ function App() {
                             type="text" 
                             placeholder="Origin city" 
                             value={tripType === 'multi-city' ? flight.from : fromCity}
-                            onChange={(e) => tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', e.target.value) : setFromCity(e.target.value)}
+                            onChange={(e) => {
+                              tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', e.target.value) : setFromCity(e.target.value);
+                              setActiveDropdown({ type: 'from', index: tripType === 'multi-city' ? index : 'single' });
+                            }}
                             className="bg-transparent text-sm font-bold text-slate-800 w-full focus:outline-none placeholder-slate-300" 
                           />
                           {/* FROM Dropdown */}
@@ -645,9 +645,11 @@ function App() {
                                 onClick={(e) => e.stopPropagation()}
                                 className="absolute top-[110%] left-0 w-[300px] sm:w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
                               >
-                                <div className="text-sm font-bold text-slate-800 mb-3 px-1">Popular cities</div>
+                                <div className="text-sm font-bold text-slate-800 mb-3 px-1">
+                                  {(tripType === 'multi-city' ? flight.from : fromCity) ? 'Suggestions' : 'Popular cities'}
+                                </div>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-2">
-                                  {popularCities.map((city, idx) => (
+                                  {popularCities.filter(c => c.toLowerCase().includes((tripType === 'multi-city' ? flight.from : fromCity).toLowerCase())).map((city, idx) => (
                                     <motion.div
                                       key={city}
                                       initial={{ opacity: 0, y: 15, scale: 0.95 }}
@@ -708,7 +710,10 @@ function App() {
                             type="text" 
                             placeholder="Destination city" 
                             value={tripType === 'multi-city' ? flight.to : toCity}
-                            onChange={(e) => tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', e.target.value) : setToCity(e.target.value)}
+                            onChange={(e) => {
+                              tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', e.target.value) : setToCity(e.target.value);
+                              setActiveDropdown({ type: 'to', index: tripType === 'multi-city' ? index : 'single' });
+                            }}
                             className="bg-transparent text-sm font-bold text-slate-800 w-full focus:outline-none placeholder-slate-300" 
                           />
                           {/* TO Dropdown */}
@@ -721,9 +726,11 @@ function App() {
                                 onClick={(e) => e.stopPropagation()}
                                 className="absolute top-[110%] left-0 lg:left-6 w-[300px] sm:w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
                               >
-                                <div className="text-sm font-bold text-slate-800 mb-3 px-1">Popular cities</div>
+                                <div className="text-sm font-bold text-slate-800 mb-3 px-1">
+                                  {(tripType === 'multi-city' ? flight.to : toCity) ? 'Suggestions' : 'Popular cities'}
+                                </div>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-2">
-                                  {popularCities.map((city, idx) => (
+                                  {popularCities.filter(c => c.toLowerCase().includes((tripType === 'multi-city' ? flight.to : toCity).toLowerCase())).map((city, idx) => (
                                     <motion.div
                                       key={city}
                                       initial={{ opacity: 0, y: 15, scale: 0.95 }}
@@ -906,15 +913,62 @@ function App() {
               {activeCategory === 'stays' && (
                 <div className="relative z-30 flex flex-col lg:flex-row items-stretch bg-slate-50 border border-slate-200 hover:border-[#E11D48]/50 focus-within:border-[#E11D48]/60 rounded-[4px] transition-all w-full shadow-sm">
                   {/* Destination */}
-                  <div className="flex-1 lg:flex-[1.2] px-4 py-3 relative cursor-text hover:bg-white rounded-t-[4px] lg:rounded-l-[4px] lg:rounded-tr-none flex items-center gap-3 overflow-hidden">
+                  <div 
+                    className="flex-1 lg:flex-[1.2] px-4 py-3 relative cursor-text hover:bg-white rounded-t-[4px] lg:rounded-l-[4px] lg:rounded-tr-none flex items-center gap-3"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveDropdown({ type: 'stays-to', index: 'single' });
+                    }}
+                  >
                     <MapPin size={22} className="text-slate-500 shrink-0" />
                     <input 
                       type="text" 
                       placeholder="Where to?" 
                       value={toCity}
-                      onChange={(e) => setToCity(e.target.value)}
+                      onChange={(e) => {
+                        setToCity(e.target.value);
+                        setActiveDropdown({ type: 'stays-to', index: 'single' });
+                      }}
                       className="bg-transparent text-[14px] lg:text-[15px] font-bold text-slate-800 w-full focus:outline-none placeholder-slate-400 truncate" 
                     />
+                    {/* TO Dropdown */}
+                    <AnimatePresence>
+                      {activeDropdown?.type === 'stays-to' && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          onClick={(e) => e.stopPropagation()}
+                          className="absolute top-[110%] left-0 w-[300px] sm:w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
+                        >
+                          <div className="text-sm font-bold text-slate-800 mb-3 px-1">
+                            {toCity ? 'Suggestions' : 'Popular cities'}
+                          </div>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-2">
+                            {popularCities.filter(c => c.toLowerCase().includes(toCity.toLowerCase())).map((city, idx) => (
+                              <motion.div
+                                key={city}
+                                initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                transition={{ delay: idx * 0.02, duration: 0.25, ease: "easeOut" }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setToCity(city);
+                                  setActiveDropdown(null);
+                                }}
+                                className={`px-2 py-2 text-[13px] cursor-pointer rounded-lg transition-colors flex items-center ${
+                                  toCity === city
+                                    ? 'bg-[#E11D48]/10 text-[#E11D48] font-bold shadow-[0_4px_12px_rgba(225,29,72,0.15)] ring-1 ring-white'
+                                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                }`}
+                              >
+                                {city}
+                              </motion.div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
 
                   <div className="w-full h-[1px] lg:w-[1px] lg:h-auto lg:my-3 bg-slate-200 block"></div>
@@ -945,125 +999,87 @@ function App() {
                     </div>
                   </div>
                 </div>
+
               )}
 
               {/* Bottom row: Search Button Area */}
-              <div className="mt-6 flex flex-col md:flex-row md:items-center justify-end gap-3 z-20 relative">
-                 <button className="w-full md:w-auto px-10 py-3 bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[15px] rounded-[4px] shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer relative group">
-                   <Search size={18} strokeWidth={2.5} />
-                   <span>Search</span>
-                 </button>
-              </div>
+                <div className="mt-6 flex flex-col md:flex-row md:items-center justify-end gap-3 z-20 relative">
+                  <button className="w-full md:w-auto px-10 py-3 bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[15px] rounded-[4px] shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer relative group">
+                    <Search size={18} strokeWidth={2.5} />
+                    <span>Search</span>
+                  </button>
+                </div>
 
-              {/* Calendar Dropdown Rendered Here (Floating globally below the panel) */}
-              <AnimatePresence>
-                {isCalendarOpen && (
+                {/* Calendar - part of hero section, scrolls with the page */}
+                <AnimatePresence>
+                  {isCalendarOpen && (
                     <motion.div
-                      key="calendar-backdrop"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="fixed inset-0 bg-black/20 z-[190] backdrop-blur-[2px]"
-                      onClick={() => setIsCalendarOpen(false)}
-                    />
-                )}
-                {isCalendarOpen && (
-                    <motion.div
-                      key="calendar-modal"
+                      key="cal-panel"
                       ref={calendarRef}
-                      initial={{ opacity: 0, scale: 0.95, x: "-50%", y: "-45%" }}
-                      animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
-                      exit={{ opacity: 0, scale: 0.95, x: "-50%", y: "-45%" }}
-                      transition={{ duration: 0.2 }}
-                      className="fixed left-1/2 top-1/2 z-[200] bg-[#f2f3f5] rounded-[24px] shadow-[0_50px_100px_rgba(0,0,0,0.5)] w-[95%] max-w-[800px] flex flex-col overflow-y-auto overflow-x-hidden max-h-[90vh] cursor-default border border-slate-200"
+                      initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                      transition={{ duration: 0.18, ease: 'easeOut' }}
                       onClick={(e) => e.stopPropagation()}
+                      className="absolute top-0 left-0 right-0 z-[60] bg-white rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.15),0_4px_16px_rgba(0,0,0,0.08)] border border-slate-200 flex flex-col overflow-hidden"
                     >
-                    {/* Header Inputs (Mimicking the underlying fields for context) */}
-                    {tripType !== 'multi-city' && (
-                      <div className="flex bg-[#e2e8f0]/50 p-2 rounded-t-[24px]">
-                         <div 
-                           onClick={() => setCalendarTarget({ type: 'depart', index: null })}
-                           className={`flex-1 p-3 mx-1 rounded-[16px] cursor-pointer border-[2px] transition-all duration-300 ${calendarTarget.type === 'depart' ? 'border-[#E11D48] bg-white shadow-sm' : 'border-transparent hover:bg-slate-200/60'}`}
-                         >
-                           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Depart</div>
-                           <div className="text-base font-extrabold text-slate-800">{formatDateString(departDate)}</div>
-                         </div>
-                         <div 
-                           onClick={() => setCalendarTarget({ type: 'return', index: null })}
-                           className={`flex-1 p-3 mx-1 rounded-[16px] cursor-pointer border-[2px] transition-all duration-300 ${calendarTarget.type === 'return' ? 'border-[#E11D48] bg-white shadow-sm' : 'border-transparent hover:bg-slate-200/60'}`}
-                         >
-                           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Return</div>
-                           <div className="text-base font-extrabold text-slate-800">{tripType === 'one-way' ? 'One-way' : formatDateString(returnDate)}</div>
-                         </div>
-                      </div>
-                    )}
-                    {/* Calendar Grid Container */}
-                    <div className="p-6 pt-5">
-                      {/* Navigation & Month Labels */}
-                      <div className="flex justify-between items-center mb-6 px-2">
-                        <motion.button 
-                          onClick={() => navigateMonth(-1)} 
-                          whileHover={{ scale: 1.1, backgroundColor: '#ffffff' }}
-                          whileTap={{ scale: 0.9 }}
-                          className="p-2 rounded-xl text-slate-600 hover:text-[#E11D48] cursor-pointer transition-colors"
-                        >
-                          <ChevronLeft size={20} />
-                        </motion.button>
-                        
-                        <div className="flex-1 flex justify-around px-8">
-                          <span className="text-base font-extrabold text-slate-800 tracking-wide text-center">
-                            {monthNames[currentMonth]} {currentYear}
-                          </span>
-                          <span className="text-base font-extrabold text-slate-800 tracking-wide hidden md:block text-center">
-                            {monthNames[(currentMonth + 1) % 12]} {currentMonth === 11 ? currentYear + 1 : currentYear}
-                          </span>
-                        </div>
-
-                        <motion.button 
-                          onClick={() => navigateMonth(1)} 
-                          whileHover={{ scale: 1.1, backgroundColor: '#ffffff' }}
-                          whileTap={{ scale: 0.9 }}
-                          className="p-2 rounded-xl text-slate-600 hover:text-[#E11D48] cursor-pointer transition-colors"
-                        >
-                          <ChevronRight size={20} />
-                        </motion.button>
+                      {/* Top bar: Depart / Return chips + Close */}
+                      <div className="flex items-stretch border-b border-slate-100">
+                        <button onClick={() => setCalendarTarget({ type: 'depart', index: null })} className={`flex-1 text-left px-5 py-4 transition-all ${calendarTarget.type === 'depart' ? 'border-b-[3px] border-[#E11D48]' : 'border-b-[3px] border-transparent hover:bg-slate-50'}`}>
+                          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Depart</div>
+                          <div className={`text-[15px] font-extrabold ${calendarTarget.type === 'depart' ? 'text-[#E11D48]' : 'text-slate-800'}`}>{formatDateString(departDate)}</div>
+                        </button>
+                        <div className="w-px bg-slate-100 my-3" />
+                        {tripType !== 'one-way' && (
+                          <button onClick={() => setCalendarTarget({ type: 'return', index: null })} className={`flex-1 text-left px-5 py-4 transition-all ${calendarTarget.type === 'return' ? 'border-b-[3px] border-[#E11D48]' : 'border-b-[3px] border-transparent hover:bg-slate-50'}`}>
+                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Return</div>
+                            <div className={`text-[15px] font-extrabold ${calendarTarget.type === 'return' ? 'text-[#E11D48]' : 'text-slate-800'}`}>
+                              {returnDate ? formatDateString(returnDate) : <span className="text-slate-300">Select date</span>}
+                            </div>
+                          </button>
+                        )}
+                        <button onClick={() => setIsCalendarOpen(false)} className="px-4 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"><X size={20} /></button>
                       </div>
 
-                      {/* Dual Calendar Views */}
-                      <div className="flex gap-8 justify-between">
-                        {/* Month 1 */}
-                        <div className="flex-1">
-                          <div className="grid grid-cols-7 text-[11px] font-black text-slate-400 uppercase mb-3 text-center">
-                            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                      {/* Calendar body */}
+                      <div className="p-5">
+                        <div className="flex items-center justify-between mb-4">
+                          <motion.button onClick={() => navigateMonth(-1)} whileHover={{ backgroundColor: '#f1f5f9' }} whileTap={{ scale: 0.92 }} className="w-9 h-9 rounded-full flex items-center justify-center text-slate-600 hover:text-[#E11D48] transition-colors cursor-pointer"><ChevronLeft size={20} /></motion.button>
+                          <div className="flex flex-1 justify-around">
+                            <span className="text-[15px] font-extrabold text-slate-800">{monthNames[currentMonth]} {currentYear}</span>
+                            <span className="text-[15px] font-extrabold text-slate-800 hidden md:block">{monthNames[(currentMonth + 1) % 12]} {currentMonth === 11 ? currentYear + 1 : currentYear}</span>
                           </div>
-                          <div className="grid grid-cols-7 gap-y-1">
-                            {renderCalendarDays(currentYear, currentMonth, false)}
-                          </div>
+                          <motion.button onClick={() => navigateMonth(1)} whileHover={{ backgroundColor: '#f1f5f9' }} whileTap={{ scale: 0.92 }} className="w-9 h-9 rounded-full flex items-center justify-center text-slate-600 hover:text-[#E11D48] transition-colors cursor-pointer"><ChevronRight size={20} /></motion.button>
                         </div>
-                        
-                        {/* Month 2 (Desktop Only) */}
-                        <div className="flex-1 hidden md:block">
-                          <div className="grid grid-cols-7 text-[11px] font-black text-slate-400 uppercase mb-3 text-center">
-                            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                        <div className="flex gap-6">
+                          <div className="flex-1">
+                            <div className="grid grid-cols-7 text-[11px] font-bold text-slate-400 uppercase mb-2 text-center"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+                            <div className="grid grid-cols-7 gap-y-1">{renderCalendarDays(currentYear, currentMonth, false)}</div>
                           </div>
-                          <div className="grid grid-cols-7 gap-y-1">
-                            {renderCalendarDays(currentMonth === 11 ? currentYear + 1 : currentYear, (currentMonth + 1) % 12, true)}
+                          <div className="w-px bg-slate-100 hidden md:block" />
+                          <div className="flex-1 hidden md:block">
+                            <div className="grid grid-cols-7 text-[11px] font-bold text-slate-400 uppercase mb-2 text-center"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+                            <div className="grid grid-cols-7 gap-y-1">{renderCalendarDays(currentMonth === 11 ? currentYear + 1 : currentYear, (currentMonth + 1) % 12, true)}</div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              
+
+                      {/* Footer */}
+                      <div className="px-5 pb-4 flex justify-end border-t border-slate-100 pt-3">
+                        <button onClick={() => setIsCalendarOpen(false)} className="px-8 py-2 bg-[#E11D48] hover:bg-rose-600 text-white font-bold text-[14px] rounded-[8px] transition-all cursor-pointer shadow-sm">Done</button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        </div>
-      </header>
-{/* Main content body */}
+          </div>
+        </header>
+
+      {/* Main content body */}
       <main className="w-full flex-1 flex flex-col z-10 bg-white">
         <FeaturedHotels />
         <FeaturedFlights />
