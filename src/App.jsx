@@ -166,6 +166,18 @@ function App() {
     };
   }, []);
 
+  // Lock body scroll when calendar is open
+  useEffect(() => {
+    if (isCalendarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isCalendarOpen]);
+
   const handleUpdateMultiCity = (index, field, value) => {
     const newFlights = [...multiCityFlights];
     newFlights[index][field] = value;
@@ -378,7 +390,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-[#E11D48] selection:text-white flex relative">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-[#E11D48] selection:text-white flex relative overflow-x-hidden">
       {isRegisterPageOpen && <RegisterPage onClose={() => setIsRegisterPageOpen(false)} />}
 
       
@@ -402,10 +414,10 @@ function App() {
         </div>
 
         {/* Solid Navbar matching screenshot */}
-        <nav className="relative z-50 px-4 sm:px-8 py-4 flex items-center justify-between mx-auto w-full shrink-0 bg-[#EBEBEB] shadow-sm border-b border-slate-200/60">
+        <nav className="relative z-50 px-2 sm:px-4 md:px-8 py-3 sm:py-4 flex items-center justify-between mx-auto w-full shrink-0 bg-[#EBEBEB] shadow-sm border-b border-slate-200/60">
           {/* Left side: Logo */}
           <div className="flex items-center gap-4">
-            <span className="text-2xl font-black tracking-[0.15em] text-[#E11D48] cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+            <span className="text-xl sm:text-2xl font-black tracking-[0.15em] text-[#E11D48] cursor-pointer hover:scale-[1.02] transition-transform duration-300">
               TRAVEL<span className="text-slate-900 tracking-[0.15em]">IQ</span>
             </span>
           </div>
@@ -464,12 +476,12 @@ function App() {
           </div>
 
           {/* Right side: Actions */}
-          <div className="flex items-center gap-3 sm:gap-5">
+          <div className="flex items-center gap-1.5 sm:gap-5">
             
             {/* Currency Button */}
             <button 
               onClick={() => { setIsSettingsModalOpen(true); setSettingsTab('Currency'); }}
-              className="flex items-center gap-1 px-2 py-2 bg-transparent hover:bg-slate-200/70 text-slate-800 font-extrabold text-[15px] rounded-[10px] transition-all cursor-pointer"
+              className="flex items-center gap-1 px-1.5 sm:px-2 py-2 bg-transparent hover:bg-slate-200/70 text-slate-800 font-extrabold text-[13px] sm:text-[15px] rounded-[10px] transition-all cursor-pointer"
             >
               {selectedCurrency.code}
             </button>
@@ -491,7 +503,7 @@ function App() {
             {/* Sign In Button */}
             <button 
               onClick={() => setIsSignInModalOpen(true)}
-              className="px-4 py-2 sm:px-6 sm:py-2.5 rounded-none bg-[#D4D6DB] hover:bg-slate-300 text-slate-800 font-extrabold text-[14px] sm:text-[15px] transition-all cursor-pointer shadow-sm"
+              className="px-2 py-1.5 sm:px-6 sm:py-2.5 rounded-none bg-[#D4D6DB] hover:bg-slate-300 text-slate-800 font-extrabold text-[12px] sm:text-[15px] whitespace-nowrap transition-all cursor-pointer shadow-sm"
             >
               Sign In
             </button>
@@ -499,7 +511,7 @@ function App() {
             {/* Register Button */}
             <button 
               onClick={() => setIsRegisterPageOpen(true)}
-              className="px-4 py-2 sm:px-6 sm:py-2.5 rounded-none bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[14px] sm:text-[15px] shadow-[0_4px_14px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer"
+              className="px-2.5 py-1.5 sm:px-6 sm:py-2.5 rounded-none bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[12px] sm:text-[15px] whitespace-nowrap shadow-[0_4px_14px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer"
             >
               Register
             </button>
@@ -523,7 +535,7 @@ function App() {
           </div>
             
           {/* Category Icons Selection */}
-          <div className="w-full max-w-[1000px] flex justify-start sm:justify-center items-center gap-4 sm:gap-6 z-30 px-4 mb-2 mx-auto overflow-x-auto scrollbar-none pb-2 sm:pb-0">
+          <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 flex justify-start items-center gap-3 sm:gap-6 z-30 mb-2 overflow-x-auto scrollbar-none pb-2 sm:pb-0">
             {categories.map((cat) => {
               const IconComponent = cat.icon;
               const isSel = activeCategory === cat.id;
@@ -533,14 +545,14 @@ function App() {
                   onClick={() => setActiveCategory(cat.id)}
                   className="flex flex-col items-center gap-2 group cursor-pointer focus:outline-none"
                 >
-                  <div className={`w-[60px] h-[60px] rounded-[16px] flex items-center justify-center transition-all duration-200 cursor-pointer ${
+                  <div className={`w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] rounded-[16px] flex items-center justify-center transition-all duration-200 cursor-pointer ${
                     isSel 
                       ? 'bg-[#E11D48] text-white shadow-sm' 
                       : 'bg-[#eaeaec] text-slate-800 shadow-sm hover:bg-[#dfdfdf]'
                   }`}>
                     <IconComponent size={24} className="stroke-[2.5] fill-none" />
                   </div>
-                  <span className={`text-[14px] transition-all duration-200 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] ${
+                  <span className={`text-[12px] sm:text-[14px] transition-all duration-200 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] ${
                     isSel ? 'font-bold' : 'font-medium'
                   }`}>
                     {cat.label}
@@ -585,24 +597,7 @@ function App() {
                   })}
                 </div>
                 
-                {/* Separator */}
-                <div className="w-[1px] h-4 bg-slate-300"></div>
 
-              {/* Direct Flights Only */}
-              <div className="flex items-center">
-                <label className="flex items-center gap-2 cursor-pointer group text-[14px] font-medium text-[#1E5285] select-none">
-                  <div className={`flex items-center justify-center w-[18px] h-[18px] rounded-[4px] border-[1.5px] transition-colors ${directOnly ? 'border-[#1E5285] bg-[#1E5285]' : 'border-[#8B9DB1] group-hover:border-[#1E5285]'}`}>
-                    <input 
-                      type="checkbox" 
-                      checked={directOnly}
-                      onChange={(e) => setDirectOnly(e.target.checked)}
-                      className="hidden" 
-                    />
-                    {directOnly && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
-                  </div>
-                  <span className="transition-colors">Direct</span>
-                </label>
-              </div>
               </div>
 
               {/* Core Search Fields Row(s) */}
@@ -646,10 +641,10 @@ function App() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 10 }}
                                 onClick={(e) => e.stopPropagation()}
-                                className="absolute top-[110%] left-0 w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
+                                className="absolute top-[110%] left-0 w-[300px] sm:w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
                               >
                                 <div className="text-sm font-bold text-slate-800 mb-3 px-1">Popular cities</div>
-                                <div className="grid grid-cols-4 gap-x-2 gap-y-2">
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-2">
                                   {popularCities.map((city, idx) => (
                                     <motion.div
                                       key={city}
@@ -722,10 +717,10 @@ function App() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 10 }}
                                 onClick={(e) => e.stopPropagation()}
-                                className="absolute top-[110%] left-0 lg:left-6 w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
+                                className="absolute top-[110%] left-0 lg:left-6 w-[300px] sm:w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
                               >
                                 <div className="text-sm font-bold text-slate-800 mb-3 px-1">Popular cities</div>
-                                <div className="grid grid-cols-4 gap-x-2 gap-y-2">
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-2">
                                   {popularCities.map((city, idx) => (
                                     <motion.div
                                       key={city}
@@ -786,7 +781,7 @@ function App() {
                              <ChevronDown size={14} className="text-slate-400 group-hover/passclass:rotate-180 transition-transform ml-2" />
                            </div>
                            
-                           <div className="absolute right-0 mt-2 w-[340px] bg-[#eaeaec] border border-slate-200 rounded-xl shadow-xl p-0 opacity-0 scale-95 pointer-events-none group-hover/passclass:opacity-100 group-hover/passclass:scale-100 group-hover/passclass:pointer-events-auto transition-all duration-200 z-50 overflow-hidden">
+                           <div className="absolute right-0 mt-2 w-[300px] sm:w-[340px] bg-[#eaeaec] border border-slate-200 rounded-xl shadow-xl p-0 opacity-0 scale-95 pointer-events-none group-hover/passclass:opacity-100 group-hover/passclass:scale-100 group-hover/passclass:pointer-events-auto transition-all duration-200 z-50 overflow-hidden">
                              <div className="p-5 pb-4">
                                <div className="text-[14px] font-bold text-slate-900 mb-4">Travelers</div>
                                
@@ -905,7 +900,7 @@ function App() {
 
               {/* Bottom row: Search Button Area */}
               <div className="mt-6 flex flex-col md:flex-row md:items-center justify-end gap-3 z-20 relative">
-                 <button className="px-10 py-3 bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[15px] rounded-[4px] shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer relative group">
+                 <button className="w-full md:w-auto px-10 py-3 bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[15px] rounded-[4px] shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer relative group">
                    <Search size={18} strokeWidth={2.5} />
                    <span>Search</span>
                  </button>
@@ -914,15 +909,27 @@ function App() {
               {/* Calendar Dropdown Rendered Here (Floating globally below the panel) */}
               <AnimatePresence>
                 {isCalendarOpen && (
-                  <motion.div
-                    ref={calendarRef}
-                    initial={{ opacity: 0, scale: 0.95, x: "-50%", y: "-45%" }}
-                    animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
-                    exit={{ opacity: 0, scale: 0.95, x: "-50%", y: "-45%" }}
-                    transition={{ duration: 0.2 }}
-                    className="fixed left-1/2 top-1/2 z-[200] bg-[#f2f3f5] rounded-[24px] shadow-[0_50px_100px_rgba(0,0,0,0.5)] w-[95%] max-w-[800px] flex flex-col overflow-hidden cursor-default border border-slate-200"
-                    onClick={(e) => e.stopPropagation()}
-                  >
+                    <motion.div
+                      key="calendar-backdrop"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="fixed inset-0 bg-black/20 z-[190] backdrop-blur-[2px]"
+                      onClick={() => setIsCalendarOpen(false)}
+                    />
+                )}
+                {isCalendarOpen && (
+                    <motion.div
+                      key="calendar-modal"
+                      ref={calendarRef}
+                      initial={{ opacity: 0, scale: 0.95, x: "-50%", y: "-45%" }}
+                      animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
+                      exit={{ opacity: 0, scale: 0.95, x: "-50%", y: "-45%" }}
+                      transition={{ duration: 0.2 }}
+                      className="fixed left-1/2 top-1/2 z-[200] bg-[#f2f3f5] rounded-[24px] shadow-[0_50px_100px_rgba(0,0,0,0.5)] w-[95%] max-w-[800px] flex flex-col overflow-y-auto overflow-x-hidden max-h-[90vh] cursor-default border border-slate-200"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                     {/* Header Inputs (Mimicking the underlying fields for context) */}
                     {tripType !== 'multi-city' && (
                       <div className="flex bg-[#e2e8f0]/50 p-2 rounded-t-[24px]">
