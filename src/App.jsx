@@ -576,6 +576,8 @@ function App() {
                 
                 
               
+              {activeCategory === 'flights' && (
+                <>
               {/* Top row: Trip Type Selector & Direct Flights */}
               <div className="flex flex-wrap items-center gap-6 mb-4 px-2">
                 <div className="flex items-center gap-5">
@@ -895,6 +897,53 @@ function App() {
                     <Plus size={16} strokeWidth={2.5} />
                     Add another flight
                   </button>
+                </div>
+              )}
+
+                </>
+              )}
+
+              {activeCategory === 'stays' && (
+                <div className="relative z-30 flex flex-col lg:flex-row items-stretch bg-slate-50 border border-slate-200 hover:border-[#E11D48]/50 focus-within:border-[#E11D48]/60 rounded-[4px] transition-all w-full shadow-sm">
+                  {/* Destination */}
+                  <div className="flex-1 lg:flex-[1.2] px-4 py-3 relative cursor-text hover:bg-white rounded-t-[4px] lg:rounded-l-[4px] lg:rounded-tr-none flex items-center gap-3 overflow-hidden">
+                    <MapPin size={22} className="text-slate-500 shrink-0" />
+                    <input 
+                      type="text" 
+                      placeholder="Where to?" 
+                      value={toCity}
+                      onChange={(e) => setToCity(e.target.value)}
+                      className="bg-transparent text-[14px] lg:text-[15px] font-bold text-slate-800 w-full focus:outline-none placeholder-slate-400 truncate" 
+                    />
+                  </div>
+
+                  <div className="w-full h-[1px] lg:w-[1px] lg:h-auto lg:my-3 bg-slate-200 block"></div>
+
+                  {/* Dates */}
+                  <div 
+                    onClick={() => { setCalendarTarget({ type: 'depart', index: null }); setIsCalendarOpen(true); }}
+                    className="flex-[1.2] lg:flex-[1.6] px-4 py-3 relative cursor-pointer hover:bg-white flex items-center gap-3 overflow-hidden"
+                  >
+                    <CalendarDays size={22} className="text-slate-500 shrink-0" />
+                    <div className="flex items-center gap-2 text-[14px] lg:text-[15px] font-bold text-slate-800 w-full whitespace-nowrap overflow-hidden">
+                      <span className="truncate">{formatDateString(departDate)}</span>
+                      <span className="text-slate-400 font-normal shrink-0">-</span>
+                      <span className="truncate">{formatDateString(returnDate)}</span>
+                      <span className="ml-auto text-[11px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-[4px] font-bold shrink-0">
+                        {Math.max(1, Math.ceil((returnDate - departDate) / (1000 * 60 * 60 * 24)))} night{Math.max(1, Math.ceil((returnDate - departDate) / (1000 * 60 * 60 * 24))) > 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="w-full h-[1px] lg:w-[1px] lg:h-auto lg:my-3 bg-slate-200 block"></div>
+
+                  {/* Guests / Rooms */}
+                  <div className="flex-1 px-4 py-3 relative cursor-pointer hover:bg-white rounded-b-[4px] lg:rounded-b-none lg:rounded-r-[4px] flex items-center gap-3 overflow-hidden">
+                    <User size={22} className="text-slate-500 shrink-0" />
+                    <div className="text-[14px] lg:text-[15px] font-bold text-slate-800 whitespace-nowrap truncate flex-1">
+                      1 room, {(adults + children)} traveler{(adults + children) !== 1 ? 's' : ''}
+                    </div>
+                  </div>
                 </div>
               )}
 
