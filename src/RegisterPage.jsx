@@ -11,7 +11,7 @@ import {
   Globe2, 
   Building2 
 } from 'lucide-react';
-import heroImg from './assets/Gemini_Generated_Image_hxqmh7hxqmh7hxqm.png';
+import heroImg from './assets/hero_poster.jpg';
 
 const RegisterPage = ({ onClose }) => {
   const [accountType, setAccountType] = useState('Customer');

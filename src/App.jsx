@@ -36,7 +36,7 @@ import {
 } from 'lucide-react'
 import heroVideo from './assets/create_a_video_for_my_website (1).mp4'
 import RegisterPage from './RegisterPage';
-import heroImg from './assets/Gemini_Generated_Image_hxqmh7hxqmh7hxqm.png'
+import heroImg from './assets/hero_poster.jpg'
 import FeaturedHotels from './FeaturedHotels';
 import FeaturedFlights from './FeaturedFlights';
 import FeaturedTours from './FeaturedTours';
