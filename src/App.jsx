@@ -32,7 +32,8 @@ import {
   Sparkles,
   Globe2,
   Compass,
-  FileText
+  FileText,
+  Train
 } from 'lucide-react'
 import heroVideo from './assets/create_a_video_for_my_website (1).mp4'
 import RegisterPage from './RegisterPage';
@@ -54,6 +55,63 @@ const Flag = ({ code, className }) => {
     />
   );
 }
+
+const locationSuggestions = [
+  { id: 101, type: 'city', name: 'Amsterdam', subtitle: 'Netherlands' },
+  { id: 102, type: 'airport', name: 'Atlanta Hartsfield-Jackson (ATL)', subtitle: 'Atlanta, United States', terminals: ['North Terminal', 'South Terminal'] },
+  { id: 103, type: 'city', name: 'Bangkok', subtitle: 'Thailand' },
+  { id: 104, type: 'station', name: 'Berlin Hauptbahnhof', subtitle: 'Berlin, Germany' },
+  { id: 105, type: 'city', name: 'Chicago', subtitle: 'Illinois, United States' },
+  { id: 106, type: 'airport', name: 'Charles de Gaulle Airport (CDG)', subtitle: 'Paris, France', terminals: ['Terminal 1', 'Terminal 2', 'Terminal 3'] },
+  { id: 107, type: 'city', name: 'Dubai', subtitle: 'United Arab Emirates' },
+  { id: 108, type: 'airport', name: 'Dubai International Airport (DXB)', subtitle: 'Dubai, UAE', terminals: ['Terminal 1', 'Terminal 3'] },
+  { id: 109, type: 'city', name: 'Edinburgh', subtitle: 'Scotland, United Kingdom' },
+  { id: 110, type: 'hotel', name: 'Emirates Palace', subtitle: 'Abu Dhabi, UAE' },
+  { id: 111, type: 'city', name: 'Frankfurt', subtitle: 'Germany' },
+  { id: 112, type: 'airport', name: 'Frankfurt Airport (FRA)', subtitle: 'Frankfurt, Germany', terminals: ['Terminal 1', 'Terminal 2'] },
+  { id: 113, type: 'city', name: 'Geneva', subtitle: 'Switzerland' },
+  { id: 114, type: 'station', name: 'Grand Central Terminal', subtitle: 'New York, United States' },
+  { id: 115, type: 'city', name: 'Hong Kong', subtitle: 'Hong Kong SAR' },
+  { id: 116, type: 'airport', name: 'Heathrow Airport (LHR)', subtitle: 'London, United Kingdom', terminals: ['Terminal 2', 'Terminal 3', 'Terminal 4', 'Terminal 5'] },
+  { id: 117, type: 'city', name: 'Istanbul', subtitle: 'Turkey' },
+  { id: 118, type: 'airport', name: 'Incheon International Airport (ICN)', subtitle: 'Seoul, South Korea', terminals: ['Terminal 1', 'Terminal 2'] },
+  { id: 1, type: 'city', name: 'Jeju Island', subtitle: 'South Korea' },
+  { id: 2, type: 'station', name: 'Jamaica', subtitle: 'New York, New York State, United States' },
+  { id: 3, type: 'airport', name: 'John F. Kennedy International Airport (JFK)', subtitle: 'New York, New York State, United States', terminals: ['Terminal 1', 'Terminal 4', 'Terminal 5', 'Terminal 8'] },
+  { id: 4, type: 'city', name: 'Jakarta', subtitle: 'Special Capital Region of Jakarta, Indonesia' },
+  { id: 5, type: 'hotel', name: 'Jumeirah Beach Hotel', subtitle: 'Dubai, United Arab Emirates' },
+  { id: 119, type: 'city', name: 'Kuala Lumpur', subtitle: 'Malaysia' },
+  { id: 120, type: 'airport', name: 'Kansai International Airport (KIX)', subtitle: 'Osaka, Japan', terminals: ['Terminal 1', 'Terminal 2'] },
+  { id: 121, type: 'city', name: 'London', subtitle: 'United Kingdom' },
+  { id: 122, type: 'airport', name: 'Los Angeles International Airport (LAX)', subtitle: 'California, United States', terminals: ['Terminal B', 'Terminal 2', 'Terminal 3'] },
+  { id: 123, type: 'city', name: 'Madrid', subtitle: 'Spain' },
+  { id: 124, type: 'hotel', name: 'Marina Bay Sands', subtitle: 'Singapore' },
+  { id: 125, type: 'city', name: 'New York', subtitle: 'New York State, United States' },
+  { id: 126, type: 'airport', name: 'Narita International Airport (NRT)', subtitle: 'Tokyo, Japan', terminals: ['Terminal 1', 'Terminal 2', 'Terminal 3'] },
+  { id: 127, type: 'city', name: 'Osaka', subtitle: 'Japan' },
+  { id: 128, type: 'airport', name: 'O\'Hare International Airport (ORD)', subtitle: 'Chicago, United States', terminals: ['Terminal 1', 'Terminal 2', 'Terminal 3', 'Terminal 5'] },
+  { id: 129, type: 'city', name: 'Paris', subtitle: 'France' },
+  { id: 130, type: 'station', name: 'Paddington Station', subtitle: 'London, United Kingdom' },
+  { id: 131, type: 'city', name: 'Quebec City', subtitle: 'Canada' },
+  { id: 132, type: 'city', name: 'Quito', subtitle: 'Ecuador' },
+  { id: 133, type: 'city', name: 'Rome', subtitle: 'Italy' },
+  { id: 134, type: 'hotel', name: 'Ritz Paris', subtitle: 'Paris, France' },
+  { id: 135, type: 'city', name: 'Singapore', subtitle: 'Singapore' },
+  { id: 136, type: 'airport', name: 'Sydney Airport (SYD)', subtitle: 'Sydney, Australia', terminals: ['T1 International', 'T2 Domestic'] },
+  { id: 137, type: 'city', name: 'Tokyo', subtitle: 'Japan' },
+  { id: 138, type: 'station', name: 'Tokyo Station', subtitle: 'Tokyo, Japan' },
+  { id: 139, type: 'city', name: 'Ushuaia', subtitle: 'Argentina' },
+  { id: 140, type: 'city', name: 'Utrecht', subtitle: 'Netherlands' },
+  { id: 141, type: 'city', name: 'Venice', subtitle: 'Italy' },
+  { id: 142, type: 'city', name: 'Vienna', subtitle: 'Austria' },
+  { id: 143, type: 'city', name: 'Washington D.C.', subtitle: 'United States' },
+  { id: 144, type: 'airport', name: 'Warsaw Chopin Airport (WAW)', subtitle: 'Warsaw, Poland' },
+  { id: 145, type: 'city', name: 'Xi\'an', subtitle: 'Shaanxi, China' },
+  { id: 146, type: 'city', name: 'Yokohama', subtitle: 'Japan' },
+  { id: 147, type: 'airport', name: 'YVR - Vancouver International Airport', subtitle: 'Vancouver, Canada' },
+  { id: 148, type: 'city', name: 'Zurich', subtitle: 'Switzerland' },
+  { id: 149, type: 'airport', name: 'Zurich Airport (ZRH)', subtitle: 'Zurich, Switzerland' }
+];
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -460,7 +518,65 @@ function App() {
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-[#E11D48] selection:text-white flex relative overflow-x-hidden">
       {isRegisterPageOpen && <RegisterPage onClose={() => setIsRegisterPageOpen(false)} />}
 
-      
+      {/* Mobile Sidebar */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSidebarOpen(false)}
+              className="fixed inset-0 bg-black/50 z-[200] md:hidden backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-[320px] bg-white z-[210] md:hidden shadow-2xl flex flex-col"
+            >
+              <div className="flex items-center justify-between p-5 border-b border-slate-100">
+                <span className="text-xl font-black tracking-[0.15em] text-[#E11D48]">
+                  TRAVEL<span className="text-slate-900">IQ</span>
+                </span>
+                <button onClick={() => setIsSidebarOpen(false)} className="p-2 text-slate-400 hover:text-slate-700 bg-slate-100 rounded-full transition-colors cursor-pointer">
+                  <X size={20} strokeWidth={2.5} />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-6">
+                {/* Mobile Services */}
+                <div>
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Services</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {servicesDropdown.map((item, idx) => {
+                      const Icon = item.icon;
+                      return (
+                        <a key={idx} href="#" className="flex flex-col items-center gap-2 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-[#E11D48]/30 transition-colors">
+                          <Icon size={20} className="text-[#E11D48]" />
+                          <span className="text-[13px] font-bold text-slate-700">{item.title}</span>
+                        </a>
+                      )
+                    })}
+                  </div>
+                </div>
+                {/* Other Links */}
+                <div className="flex flex-col gap-2">
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Company</div>
+                  {['Blog', 'About Us'].map(link => (
+                    <a key={link} href="#" className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors font-bold text-slate-700">
+                      {link}
+                      <ChevronRight size={16} className="text-slate-300" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+
       {/* Main Content Wrapper */}
       <div className="flex-1 w-full min-w-0 flex flex-col min-h-screen">
 
@@ -482,8 +598,14 @@ function App() {
 
         {/* Solid Navbar matching screenshot */}
         <nav className="relative z-50 px-2 sm:px-4 md:px-8 py-3 sm:py-4 flex items-center justify-between mx-auto w-full shrink-0 bg-[#EBEBEB] shadow-sm border-b border-slate-200/60">
-          {/* Left side: Logo */}
-          <div className="flex items-center gap-4">
+          {/* Left side: Menu & Logo */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button 
+              className="md:hidden p-2 -ml-2 text-slate-700 hover:text-[#E11D48] transition-colors cursor-pointer"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <Menu size={24} strokeWidth={2.5} />
+            </button>
             <span className="text-xl sm:text-2xl font-black tracking-[0.15em] text-[#E11D48] cursor-pointer hover:scale-[1.02] transition-transform duration-300">
               TRAVEL<span className="text-slate-900 tracking-[0.15em]">IQ</span>
             </span>
@@ -547,11 +669,11 @@ function App() {
             
             {/* Currency Dropdown */}
             <div className="relative group/curr flex items-center h-full">
-              <button className="flex items-center gap-1 px-1.5 sm:px-2 py-2 bg-transparent group-hover/curr:bg-slate-200/70 text-slate-800 font-extrabold text-[13px] sm:text-[15px] rounded-[10px] transition-all cursor-pointer">
+              <button className="flex items-center gap-1 px-3 sm:px-4 py-2 bg-white border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 text-slate-800 font-extrabold text-[13px] sm:text-[14px] rounded-full transition-all duration-200 cursor-pointer">
                 {selectedCurrency.code}
               </button>
               
-              <div className="absolute top-full right-0 pt-2 w-[340px] opacity-0 scale-95 pointer-events-none group-hover/curr:opacity-100 group-hover/curr:scale-100 group-hover/curr:pointer-events-auto transition-all duration-200 z-[100] origin-top-right">
+              <div className="absolute top-full right-0 pt-2 w-[300px] sm:w-[340px] opacity-0 scale-95 pointer-events-none group-hover/curr:opacity-100 group-hover/curr:scale-100 group-hover/curr:pointer-events-auto transition-all duration-200 z-[100] origin-top-right">
                 <div className="bg-white rounded-[16px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-slate-100 p-4">
                   <div className="text-sm font-bold text-slate-900 mb-3 px-2">Select Currency</div>
                   <div className="grid grid-cols-2 gap-2">
@@ -572,8 +694,8 @@ function App() {
 
             {/* Language Dropdown */}
             <div className="relative group/lang flex items-center h-full">
-              <button className="flex items-center gap-1 px-2 py-2 bg-transparent group-hover/lang:bg-slate-200/70 text-slate-700 font-bold text-[14px] rounded-[10px] transition-all cursor-pointer">
-                <div className="w-[24px] h-[24px] rounded-full overflow-hidden flex items-center justify-center shrink-0 border border-slate-300 shadow-sm bg-white">
+              <button className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 text-slate-700 font-bold text-[14px] rounded-full transition-all duration-200 cursor-pointer">
+                <div className="w-[20px] h-[20px] rounded-full overflow-hidden flex items-center justify-center shrink-0">
                   {selectedLanguage.isGlobe ? (
                     <Globe2 size={16} className="text-blue-600" strokeWidth={2.5} />
                   ) : (
@@ -582,10 +704,10 @@ function App() {
                 </div>
               </button>
 
-              <div className="absolute top-full right-0 pt-2 w-[480px] opacity-0 scale-95 pointer-events-none group-hover/lang:opacity-100 group-hover/lang:scale-100 group-hover/lang:pointer-events-auto transition-all duration-200 z-[100] origin-top-right">
+              <div className="absolute top-full right-0 pt-2 w-[300px] sm:w-[480px] opacity-0 scale-95 pointer-events-none group-hover/lang:opacity-100 group-hover/lang:scale-100 group-hover/lang:pointer-events-auto transition-all duration-200 z-[100] origin-top-right">
                 <div className="bg-white rounded-[16px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-slate-100 p-4">
                   <div className="text-sm font-bold text-slate-900 mb-3 px-2">Select Language</div>
-                  <div className="grid grid-cols-3 gap-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200">
                     {languagesList.map(lang => (
                       <button 
                         key={lang.code}
@@ -606,7 +728,7 @@ function App() {
             {/* Sign In Button */}
             <button 
               onClick={() => setIsSignInModalOpen(true)}
-              className="px-2 py-1.5 sm:px-6 sm:py-2.5 rounded-none bg-[#D4D6DB] hover:bg-slate-300 text-slate-800 font-extrabold text-[12px] sm:text-[15px] whitespace-nowrap transition-all cursor-pointer shadow-sm"
+              className="px-2 py-1.5 sm:px-6 sm:py-2.5 rounded-full bg-[#D4D6DB] hover:bg-slate-300 text-slate-800 font-extrabold text-[12px] sm:text-[15px] whitespace-nowrap transition-all cursor-pointer shadow-sm"
             >
               Sign In
             </button>
@@ -614,7 +736,7 @@ function App() {
             {/* Register Button */}
             <button 
               onClick={() => setIsRegisterPageOpen(true)}
-              className="px-2.5 py-1.5 sm:px-6 sm:py-2.5 rounded-none bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[12px] sm:text-[15px] whitespace-nowrap shadow-[0_4px_14px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer"
+              className="px-2.5 py-1.5 sm:px-6 sm:py-2.5 rounded-full bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[12px] sm:text-[15px] whitespace-nowrap shadow-[0_4px_14px_rgba(225,29,72,0.3)] hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer"
             >
               Register
             </button>
@@ -675,7 +797,7 @@ function App() {
             
             
             <div className="bg-white border border-slate-100 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] relative z-10">
-              <div className="bg-white p-6 relative">
+              <div className="p-6 relative rounded-2xl">
 
               {activeCategory === 'flights' && (
                 <>
@@ -683,7 +805,7 @@ function App() {
               <div className="flex flex-wrap items-center gap-3 mb-5">
                 <div className="flex items-center bg-slate-100 p-1 rounded-lg">
                   {[
-                    { id: 'round-trip', label: 'Roundtrip' },
+                    { id: 'round-trip', label: 'Round-trip' },
                     { id: 'one-way', label: 'One-way' },
                     { id: 'multi-city', label: 'Multi-city' }
                   ].map((t) => {
@@ -717,14 +839,14 @@ function App() {
                       </div>
                     )}
 
-                    <div className="flex flex-col lg:flex-row items-center gap-2 flex-1">
+                    <div className="flex flex-col lg:flex-row items-stretch bg-[#F7F8FA] border border-slate-200/80 rounded-xl transition-all flex-1 shadow-sm w-full">
                       
                       {/* FROM / TO Connected Block */}
-                      <div className="flex flex-col sm:flex-row flex-1 items-stretch bg-[#F7F8FA] border border-slate-200/80 hover:border-[#E11D48]/40 focus-within:border-[#E11D48]/60 focus-within:shadow-[0_0_0_3px_rgba(225,29,72,0.08)] rounded-xl transition-all duration-200 relative w-full group">
+                      <div className="flex flex-col sm:flex-row flex-[1.1] items-stretch relative group">
                         
                         {/* FROM */}
                         <div 
-                          className="flex-1 px-4 py-3.5 relative cursor-text group-hover:bg-white rounded-l-xl transition-colors"
+                          className="flex-1 px-5 py-4 relative cursor-text group-hover:bg-white rounded-l-xl transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
                             setActiveDropdown({ type: 'from', index: tripType === 'multi-city' ? index : 'single' });
@@ -733,7 +855,7 @@ function App() {
                           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Leaving from</div>
                           <input 
                             type="text" 
-                            placeholder="Origin city" 
+                            placeholder="From" 
                             value={tripType === 'multi-city' ? flight.from : fromCity}
                             onChange={(e) => {
                               tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', e.target.value) : setFromCity(e.target.value);
@@ -749,33 +871,64 @@ function App() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 10 }}
                                 onClick={(e) => e.stopPropagation()}
-                                className="absolute top-[110%] left-0 w-[300px] sm:w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
+                                className="absolute top-[110%] left-0 w-[320px] sm:w-[480px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] py-2 z-[100] border border-slate-100 overflow-hidden"
                               >
-                                <div className="text-sm font-bold text-slate-800 mb-3 px-1">
-                                  {(tripType === 'multi-city' ? flight.from : fromCity) ? 'Suggestions' : 'Popular cities'}
-                                </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-2">
-                                  {popularCities.filter(c => c.toLowerCase().includes((tripType === 'multi-city' ? flight.from : fromCity).toLowerCase())).map((city, idx) => (
-                                    <motion.div
-                                      key={city}
-                                      initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                                      transition={{ delay: idx * 0.02, duration: 0.25, ease: "easeOut" }}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', city) : setFromCity(city);
-                                        setActiveDropdown(null);
-                                      }}
-                                      className={`px-2 py-2 text-[13px] cursor-pointer rounded-lg transition-colors flex items-center ${
-                                        (tripType === 'multi-city' ? flight.from : fromCity) === city
-                                          ? 'bg-[#E11D48]/10 text-[#E11D48] font-bold shadow-[0_4px_12px_rgba(225,29,72,0.15)] ring-1 ring-white'
-                                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                                      }`}
-                                    >
-                                      {city}
-                                    </motion.div>
-                                  ))}
-                                </div>
+                                {locationSuggestions.filter(item => {
+                                  const searchStr = (tripType === 'multi-city' ? flight.from : fromCity).toLowerCase();
+                                  if (!searchStr) return true;
+                                  return item.name.toLowerCase().startsWith(searchStr) || item.subtitle.toLowerCase().startsWith(searchStr);
+                                }).map((item) => (
+                                  <div
+                                    key={item.id}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', item.name) : setFromCity(item.name);
+                                      setActiveDropdown(null);
+                                    }}
+                                    className="px-4 py-3 cursor-pointer transition-colors hover:bg-[#F2F6F9] flex flex-col group/sugg"
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      <div className="text-slate-400 group-hover/sugg:text-[#E11D48] transition-colors shrink-0">
+                                        {item.type === 'city' && <MapPin size={18} />}
+                                        {item.type === 'airport' && <Plane size={18} />}
+                                        {item.type === 'station' && <Train size={18} />}
+                                        {item.type === 'hotel' && <Building2 size={18} />}
+                                      </div>
+                                      <div className="flex flex-col flex-1 min-w-0">
+                                        <div className="text-[14px] font-bold text-slate-800 truncate">{item.name}</div>
+                                        <div className="text-[12px] text-slate-500 truncate mt-0.5">{item.subtitle}</div>
+                                      </div>
+                                    </div>
+                                    
+                                    {item.terminals && (
+                                      <div className="flex flex-wrap gap-2 mt-2 pl-7">
+                                        {item.terminals.map((terminal, tidx) => (
+                                          <button 
+                                            key={tidx}
+                                            onClick={(e) => {
+                                               e.stopPropagation();
+                                               const fullName = `${item.name} - ${terminal}`;
+                                               tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', fullName) : setFromCity(fullName);
+                                               setActiveDropdown(null);
+                                            }}
+                                            className="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors"
+                                          >
+                                            {terminal}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                                {locationSuggestions.filter(item => {
+                                  const searchStr = (tripType === 'multi-city' ? flight.from : fromCity).toLowerCase();
+                                  if (!searchStr) return true;
+                                  return item.name.toLowerCase().startsWith(searchStr) || item.subtitle.toLowerCase().startsWith(searchStr);
+                                }).length === 0 && (
+                                  <div className="px-4 py-6 text-center text-slate-500 text-[13px]">
+                                    No matches found
+                                  </div>
+                                )}
                               </motion.div>
                             )}
                           </AnimatePresence>
@@ -805,7 +958,7 @@ function App() {
   
                         {/* TO */}
                         <div 
-                          className="flex-1 px-4 py-3.5 relative cursor-text group-hover:bg-white rounded-r-xl lg:pl-6 transition-colors"
+                          className="flex-1 px-5 py-4 relative cursor-text hover:bg-white transition-colors border-b lg:border-b-0 lg:border-r border-slate-200/80"
                           onClick={(e) => {
                             e.stopPropagation();
                             setActiveDropdown({ type: 'to', index: tripType === 'multi-city' ? index : 'single' });
@@ -814,7 +967,7 @@ function App() {
                           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Going to</div>
                           <input 
                             type="text" 
-                            placeholder="Destination city" 
+                            placeholder="To" 
                             value={tripType === 'multi-city' ? flight.to : toCity}
                             onChange={(e) => {
                               tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', e.target.value) : setToCity(e.target.value);
@@ -830,33 +983,64 @@ function App() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 10 }}
                                 onClick={(e) => e.stopPropagation()}
-                                className="absolute top-[110%] left-0 lg:left-6 w-[300px] sm:w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
+                                className="absolute top-[110%] left-0 lg:left-6 w-[320px] sm:w-[480px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] py-2 z-[100] border border-slate-100 overflow-hidden"
                               >
-                                <div className="text-sm font-bold text-slate-800 mb-3 px-1">
-                                  {(tripType === 'multi-city' ? flight.to : toCity) ? 'Suggestions' : 'Popular cities'}
-                                </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-2">
-                                  {popularCities.filter(c => c.toLowerCase().includes((tripType === 'multi-city' ? flight.to : toCity).toLowerCase())).map((city, idx) => (
-                                    <motion.div
-                                      key={city}
-                                      initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                                      transition={{ delay: idx * 0.02, duration: 0.25, ease: "easeOut" }}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', city) : setToCity(city);
-                                        setActiveDropdown(null);
-                                      }}
-                                      className={`px-2 py-2 text-[13px] cursor-pointer rounded-lg transition-colors flex items-center ${
-                                        (tripType === 'multi-city' ? flight.to : toCity) === city
-                                          ? 'bg-[#E11D48]/10 text-[#E11D48] font-bold shadow-[0_4px_12px_rgba(225,29,72,0.15)] ring-1 ring-white'
-                                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                                      }`}
-                                    >
-                                      {city}
-                                    </motion.div>
-                                  ))}
-                                </div>
+                                {locationSuggestions.filter(item => {
+                                  const searchStr = (tripType === 'multi-city' ? flight.to : toCity).toLowerCase();
+                                  if (!searchStr) return true;
+                                  return item.name.toLowerCase().startsWith(searchStr) || item.subtitle.toLowerCase().startsWith(searchStr);
+                                }).map((item) => (
+                                  <div
+                                    key={item.id}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', item.name) : setToCity(item.name);
+                                      setActiveDropdown(null);
+                                    }}
+                                    className="px-4 py-3 cursor-pointer transition-colors hover:bg-[#F2F6F9] flex flex-col group/sugg"
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      <div className="text-slate-400 group-hover/sugg:text-[#E11D48] transition-colors shrink-0">
+                                        {item.type === 'city' && <MapPin size={18} />}
+                                        {item.type === 'airport' && <Plane size={18} />}
+                                        {item.type === 'station' && <Train size={18} />}
+                                        {item.type === 'hotel' && <Building2 size={18} />}
+                                      </div>
+                                      <div className="flex flex-col flex-1 min-w-0">
+                                        <div className="text-[14px] font-bold text-slate-800 truncate">{item.name}</div>
+                                        <div className="text-[12px] text-slate-500 truncate mt-0.5">{item.subtitle}</div>
+                                      </div>
+                                    </div>
+                                    
+                                    {item.terminals && (
+                                      <div className="flex flex-wrap gap-2 mt-2 pl-7">
+                                        {item.terminals.map((terminal, tidx) => (
+                                          <button 
+                                            key={tidx}
+                                            onClick={(e) => {
+                                               e.stopPropagation();
+                                               const fullName = `${item.name} - ${terminal}`;
+                                               tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', fullName) : setToCity(fullName);
+                                               setActiveDropdown(null);
+                                            }}
+                                            className="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors"
+                                          >
+                                            {terminal}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                                {locationSuggestions.filter(item => {
+                                  const searchStr = (tripType === 'multi-city' ? flight.to : toCity).toLowerCase();
+                                  if (!searchStr) return true;
+                                  return item.name.toLowerCase().startsWith(searchStr) || item.subtitle.toLowerCase().startsWith(searchStr);
+                                }).length === 0 && (
+                                  <div className="px-4 py-6 text-center text-slate-500 text-[13px]">
+                                    No matches found
+                                  </div>
+                                )}
                               </motion.div>
                             )}
                           </AnimatePresence>
@@ -864,10 +1048,10 @@ function App() {
                       </div>
   
                       {/* DATES Field */}
-                      <div className="flex-[0.8] w-full lg:w-auto">
+                      <div className="flex-[0.8] w-full lg:w-auto h-full border-b lg:border-b-0 lg:border-r border-slate-200/80">
                         <div 
                           onClick={() => { setCalendarTarget(tripType === 'multi-city' ? { type: 'multi', index } : { type: 'depart', index: null }); setIsCalendarOpen(true); }}
-                          className="flex items-center bg-[#F7F8FA] border border-slate-200/80 hover:border-[#E11D48]/40 hover:bg-white rounded-xl px-4 h-[60px] transition-all duration-200 cursor-pointer justify-between group/dates"
+                          className="flex items-center hover:bg-white px-5 py-4 h-full transition-all duration-200 cursor-pointer justify-between group/dates"
                         >
                           <div className="flex flex-col justify-center">
                             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
@@ -893,8 +1077,8 @@ function App() {
 
                       {/* PASSENGERS Field */}
                       {(index === 0 || tripType !== 'multi-city') && (
-                        <div className="flex-[0.6] w-full lg:w-auto relative group/passclass h-[60px]">
-                           <div className="flex items-center justify-between bg-[#F7F8FA] border border-slate-200/80 hover:border-[#E11D48]/40 hover:bg-white rounded-xl px-4 h-full transition-all duration-200 cursor-pointer">
+                        <div className="flex-[0.6] w-full lg:w-auto relative group/passclass h-full">
+                           <div className="flex items-center justify-between hover:bg-white rounded-r-xl px-5 py-4 h-full transition-all duration-200 cursor-pointer">
                              <div className="flex flex-col justify-center">
                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Travelers</span>
                                <span className="text-[14px] font-bold text-slate-900 tracking-tight whitespace-nowrap">{(adults + children + infants)} {(adults + children + infants) === 1 ? 'traveler' : 'travelers'} · {travelClass}</span>
@@ -902,47 +1086,47 @@ function App() {
                              <ChevronDown size={14} className="text-slate-300 group-hover/passclass:text-[#E11D48] group-hover/passclass:rotate-180 transition-all duration-200 ml-3 shrink-0" />
                            </div>
                            
-                           <div className="absolute right-0 top-full pt-2 w-[300px] sm:w-[340px] z-50 opacity-0 scale-95 pointer-events-none group-hover/passclass:opacity-100 group-hover/passclass:scale-100 group-hover/passclass:pointer-events-auto transition-all duration-200 origin-top-right">
+                           <div className="absolute right-0 bottom-full pb-2 w-[280px] sm:w-[320px] z-[99] opacity-0 scale-95 pointer-events-none group-hover/passclass:opacity-100 group-hover/passclass:scale-100 group-hover/passclass:pointer-events-auto transition-all duration-200 origin-bottom-right">
                              <div className="bg-white border border-slate-200 rounded-xl shadow-xl p-0 overflow-hidden">
-                               <div className="p-5 pb-4">
-                                 <div className="text-[14px] font-bold text-slate-900 mb-4">Travelers</div>
+                               <div className="p-3">
+                                 <div className="text-[13px] font-bold text-slate-900 mb-2">Travelers</div>
                                  
-                                 <div className="flex items-center justify-between mb-4">
+                                 <div className="flex items-center justify-between mb-2">
                                    <div>
-                                     <div className="text-[14px] text-slate-700">Adults <span className="text-slate-500">18+</span></div>
+                                     <div className="text-[13px] text-slate-700">Adults <span className="text-slate-500">18+</span></div>
                                    </div>
-                                   <div className="flex items-center gap-3">
-                                     <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
-                                     <span className="w-4 text-center font-bold text-[15px]">{adults}</span>
-                                     <button onClick={() => setAdults(adults + 1)} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
+                                   <div className="flex items-center gap-2">
+                                     <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">-</button>
+                                     <span className="w-4 text-center font-bold text-[14px]">{adults}</span>
+                                     <button onClick={() => setAdults(adults + 1)} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">+</button>
                                    </div>
                                  </div>
                                  
-                                 <div className="flex items-center justify-between mb-4">
+                                 <div className="flex items-center justify-between mb-2">
                                    <div>
-                                     <div className="text-[14px] text-slate-700">Children <span className="text-slate-500">0-17</span></div>
+                                     <div className="text-[13px] text-slate-700">Children <span className="text-slate-500">0-17</span></div>
                                    </div>
-                                   <div className="flex items-center gap-3">
+                                   <div className="flex items-center gap-2">
                                      <button onClick={() => {
                                         const newCount = Math.max(0, children - 1);
                                         setChildren(newCount);
                                         setChildAges(prev => prev.slice(0, newCount));
-                                     }} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
-                                     <span className="w-4 text-center font-bold text-[15px]">{children}</span>
+                                     }} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">-</button>
+                                     <span className="w-4 text-center font-bold text-[14px]">{children}</span>
                                      <button onClick={() => {
                                         const newCount = children + 1;
                                         setChildren(newCount);
                                         setChildAges(prev => [...prev, '']);
-                                     }} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
+                                     }} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">+</button>
                                    </div>
                                  </div>
   
                                  {/* Child Ages Dropdowns */}
                                  {children > 0 && (
-                                   <div className="mb-4">
+                                   <div className="mb-2">
                                      {childAges.map((age, idx) => (
-                                       <div key={idx} className="flex items-center justify-between mt-3">
-                                         <div className="text-[14px] text-slate-800">Child's age</div>
+                                       <div key={idx} className="flex items-center justify-between mt-2">
+                                         <div className="text-[12px] text-slate-800">Child's age</div>
                                          <div className="relative">
                                            <select 
                                              value={age}
@@ -951,14 +1135,14 @@ function App() {
                                                newAges[idx] = e.target.value;
                                                setChildAges(newAges);
                                              }}
-                                             className="appearance-none bg-transparent border border-slate-400/80 rounded-[8px] pl-4 pr-10 py-1.5 text-[14px] text-slate-600 focus:outline-none focus:border-slate-500 cursor-pointer min-w-[70px] shadow-sm transition-colors hover:bg-slate-50"
+                                             className="appearance-none bg-transparent border border-slate-400/80 rounded-[6px] pl-3 pr-8 py-1 text-[12px] text-slate-600 focus:outline-none focus:border-slate-500 cursor-pointer min-w-[60px] shadow-sm transition-colors hover:bg-slate-50"
                                            >
                                              <option value="" disabled>Age</option>
                                              {Array.from({length: 18}).map((_, i) => (
                                                <option key={i} value={i}>{i}</option>
                                              ))}
                                            </select>
-                                           <ChevronDown size={16} strokeWidth={2.5} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-800 pointer-events-none" />
+                                           <ChevronDown size={14} strokeWidth={2.5} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-800 pointer-events-none" />
                                          </div>
                                        </div>
                                      ))}
@@ -967,26 +1151,26 @@ function App() {
                              
                                  <div className="flex items-center justify-between">
                                    <div>
-                                     <div className="text-[14px] text-slate-700">Infants on lap <span className="text-slate-500">under 2</span></div>
+                                     <div className="text-[13px] text-slate-700">Infants on lap <span className="text-slate-500">under 2</span></div>
                                    </div>
-                                   <div className="flex items-center gap-3">
-                                     <button onClick={() => setInfants(Math.max(0, infants - 1))} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
-                                     <span className="w-4 text-center font-bold text-[15px]">{infants}</span>
-                                     <button onClick={() => setInfants(infants + 1)} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
+                                   <div className="flex items-center gap-2">
+                                     <button onClick={() => setInfants(Math.max(0, infants - 1))} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">-</button>
+                                     <span className="w-4 text-center font-bold text-[14px]">{infants}</span>
+                                     <button onClick={() => setInfants(infants + 1)} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">+</button>
                                    </div>
                                  </div>
                                </div>
                              
                                <div className="h-[1px] bg-slate-300 w-full opacity-60"></div>
                              
-                               <div className="p-5 pt-4">
-                                 <div className="text-[14px] font-bold text-slate-900 mb-3">Cabin Class</div>
-                                 <div className="flex flex-wrap gap-2">
+                               <div className="p-3">
+                                 <div className="text-[13px] font-bold text-slate-900 mb-2">Cabin Class</div>
+                                 <div className="flex flex-wrap gap-1.5">
                                    {['Economy', 'Premium Economy', 'Business', 'First'].map((opt) => (
                                      <button 
                                        key={opt} 
                                        onClick={() => setTravelClass(opt)} 
-                                       className={`px-3 py-1.5 text-[14px] rounded-lg border transition-all cursor-pointer ${travelClass === opt ? 'border-slate-800 text-slate-800 bg-slate-200/50' : 'border-slate-300 text-slate-700 hover:border-slate-400'}`}
+                                       className={`px-2.5 py-1 text-[13px] rounded-lg border transition-all cursor-pointer ${travelClass === opt ? 'border-slate-800 text-slate-800 bg-slate-200/50' : 'border-slate-300 text-slate-700 hover:border-slate-400'}`}
                                      >
                                        {opt}
                                      </button>
@@ -1171,8 +1355,8 @@ function App() {
                       </div>
                     </div>
                     
-                    <div className="absolute right-0 top-full pt-2 w-[300px] sm:w-[340px] z-50 opacity-0 scale-95 pointer-events-none group-hover/stayspass:opacity-100 group-hover/stayspass:scale-100 group-hover/stayspass:pointer-events-auto transition-all duration-200 origin-top-right">
-                      <div className="bg-white border border-slate-200 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] p-0 overflow-hidden">
+                    <div className="absolute right-0 bottom-full pb-2 w-[300px] sm:w-[340px] z-[99] opacity-0 scale-95 pointer-events-none group-hover/stayspass:opacity-100 group-hover/stayspass:scale-100 group-hover/stayspass:pointer-events-auto transition-all duration-200 origin-bottom-right">
+                      <div className="bg-white border border-slate-200 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] p-0 overflow-x-hidden overflow-y-auto max-h-[240px] sm:max-h-[300px]">
                         <div className="p-5 pb-4">
                           
                           <div className="flex items-center justify-between mb-4">
@@ -1835,7 +2019,6 @@ function App() {
                   <span className="relative z-10 flex items-center gap-2.5">
                     <Search size={18} strokeWidth={2.5} />
                     <span>Search</span>
-                    <ArrowLeftRight size={16} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 rotate-90" />
                   </span>
                   <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                 </button>
