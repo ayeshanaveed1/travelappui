@@ -674,16 +674,14 @@ function App() {
           >
             
             
-            <div className="bg-white border border-slate-100 p-1.5 rounded-[2rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] relative z-10">
-              <div className="bg-white rounded-[1.6rem] p-5 relative">
-                
-                
-              
+            <div className="bg-white border border-slate-100 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] relative z-10">
+              <div className="bg-white p-6 relative">
+
               {activeCategory === 'flights' && (
                 <>
               {/* Top row: Trip Type Selector & Direct Flights */}
-              <div className="flex flex-wrap items-center gap-6 mb-4 px-2">
-                <div className="flex items-center gap-5">
+              <div className="flex flex-wrap items-center gap-3 mb-5">
+                <div className="flex items-center bg-slate-100 p-1 rounded-lg">
                   {[
                     { id: 'round-trip', label: 'Roundtrip' },
                     { id: 'one-way', label: 'One-way' },
@@ -691,18 +689,20 @@ function App() {
                   ].map((t) => {
                     const isActive = tripType === t.id;
                     return (
-                      <label key={t.id} className="flex items-center gap-2 cursor-pointer group">
-                        <div className={`w-4 h-4 rounded-full border-[1.5px] flex items-center justify-center transition-colors ${isActive ? 'border-[#E11D48]' : 'border-slate-400 group-hover:border-[#E11D48]'}`}>
-                          {isActive && <div className="w-2 h-2 rounded-full bg-[#E11D48]" />}
-                        </div>
-                        <span className={`text-[13px] transition-colors ${isActive ? 'text-slate-800 font-bold' : 'text-slate-600 group-hover:text-slate-800'}`}>{t.label}</span>
-                        <input type="radio" className="hidden" checked={isActive} onChange={() => setTripType(t.id)} />
-                      </label>
+                      <button
+                        key={t.id}
+                        onClick={() => setTripType(t.id)}
+                        className={`px-4 py-1.5 rounded-md text-[13px] font-semibold transition-all duration-200 cursor-pointer ${
+                          isActive
+                            ? 'bg-white text-slate-900 shadow-sm'
+                            : 'text-slate-500 hover:text-slate-700'
+                        }`}
+                      >
+                        {t.label}
+                      </button>
                     )
                   })}
                 </div>
-                
-
               </div>
 
               {/* Core Search Fields Row(s) */}
@@ -712,7 +712,7 @@ function App() {
                     
                     {/* Multi-city Row Number */}
                     {tripType === 'multi-city' && (
-                      <div className="w-8 bg-[#E11D48] text-white flex items-center justify-center rounded-l-[4px] font-bold text-sm shrink-0 shadow-sm mr-2">
+                      <div className="w-8 bg-[#E11D48] text-white flex items-center justify-center rounded-md font-bold text-sm shrink-0 shadow-sm mr-2">
                         {index + 1}
                       </div>
                     )}
@@ -720,17 +720,17 @@ function App() {
                     <div className="flex flex-col lg:flex-row items-center gap-2 flex-1">
                       
                       {/* FROM / TO Connected Block */}
-                      <div className="flex flex-col sm:flex-row flex-1 items-stretch bg-slate-50 border border-slate-200 hover:border-[#E11D48]/50 focus-within:border-[#E11D48]/60 rounded-[4px] transition-all relative w-full shadow-sm group">
+                      <div className="flex flex-col sm:flex-row flex-1 items-stretch bg-[#F7F8FA] border border-slate-200/80 hover:border-[#E11D48]/40 focus-within:border-[#E11D48]/60 focus-within:shadow-[0_0_0_3px_rgba(225,29,72,0.08)] rounded-xl transition-all duration-200 relative w-full group">
                         
                         {/* FROM */}
                         <div 
-                          className="flex-1 px-4 py-3 relative cursor-text group-hover:bg-white rounded-l-[4px]"
+                          className="flex-1 px-4 py-3.5 relative cursor-text group-hover:bg-white rounded-l-xl transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
                             setActiveDropdown({ type: 'from', index: tripType === 'multi-city' ? index : 'single' });
                           }}
                         >
-                          <div className="text-[11px] font-semibold text-slate-500 mb-0.5">Leaving from</div>
+                          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Leaving from</div>
                           <input 
                             type="text" 
                             placeholder="Origin city" 
@@ -739,7 +739,7 @@ function App() {
                               tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', e.target.value) : setFromCity(e.target.value);
                               setActiveDropdown({ type: 'from', index: tripType === 'multi-city' ? index : 'single' });
                             }}
-                            className="bg-transparent text-sm font-bold text-slate-800 w-full focus:outline-none placeholder-slate-300" 
+                            className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight" 
                           />
                           {/* FROM Dropdown */}
                           <AnimatePresence>
@@ -795,9 +795,9 @@ function App() {
                                 setToCity(temp);
                               }
                             }}
-                            className="w-7 h-7 rounded-full bg-slate-50 border border-slate-200 shadow-sm hover:bg-white flex items-center justify-center text-[#E11D48] transition-all cursor-pointer group/swap z-20"
+                            className="w-8 h-8 rounded-full bg-white border-2 border-slate-200 shadow-md hover:border-[#E11D48]/40 hover:shadow-[0_0_0_3px_rgba(225,29,72,0.1)] flex items-center justify-center text-[#E11D48] transition-all duration-200 cursor-pointer group/swap z-20"
                           >
-                            <ArrowLeftRight size={13} className="group-hover/swap:rotate-180 transition-transform duration-300" />
+                            <ArrowLeftRight size={14} className="group-hover/swap:rotate-180 transition-transform duration-300" />
                           </button>
                         </div>
   
@@ -805,13 +805,13 @@ function App() {
   
                         {/* TO */}
                         <div 
-                          className="flex-1 px-4 py-3 relative cursor-text group-hover:bg-white rounded-r-[4px] lg:pl-6"
+                          className="flex-1 px-4 py-3.5 relative cursor-text group-hover:bg-white rounded-r-xl lg:pl-6 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
                             setActiveDropdown({ type: 'to', index: tripType === 'multi-city' ? index : 'single' });
                           }}
                         >
-                          <div className="text-[11px] font-semibold text-slate-500 mb-0.5">Going to</div>
+                          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Going to</div>
                           <input 
                             type="text" 
                             placeholder="Destination city" 
@@ -820,7 +820,7 @@ function App() {
                               tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', e.target.value) : setToCity(e.target.value);
                               setActiveDropdown({ type: 'to', index: tripType === 'multi-city' ? index : 'single' });
                             }}
-                            className="bg-transparent text-sm font-bold text-slate-800 w-full focus:outline-none placeholder-slate-300" 
+                            className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight" 
                           />
                           {/* TO Dropdown */}
                           <AnimatePresence>
@@ -867,33 +867,39 @@ function App() {
                       <div className="flex-[0.8] w-full lg:w-auto">
                         <div 
                           onClick={() => { setCalendarTarget(tripType === 'multi-city' ? { type: 'multi', index } : { type: 'depart', index: null }); setIsCalendarOpen(true); }}
-                          className="flex items-center bg-slate-50 border border-slate-200 hover:border-[#E11D48]/50 rounded-[4px] px-4 h-[58px] transition-all shadow-sm cursor-pointer hover:bg-white justify-between"
+                          className="flex items-center bg-[#F7F8FA] border border-slate-200/80 hover:border-[#E11D48]/40 hover:bg-white rounded-xl px-4 h-[60px] transition-all duration-200 cursor-pointer justify-between group/dates"
                         >
-                          {tripType === 'round-trip' ? (
-                            <div className="flex items-center justify-center w-full gap-3 text-[13px] font-bold text-slate-800">
-                              <span>{formatDateString(departDate) || 'Choose date'}</span>
-                              <span className="text-slate-300 font-normal">—</span>
-                              <span>{formatDateString(returnDate) || 'Choose date'}</span>
-                            </div>
-                          ) : (
-                            <div className="flex items-center justify-start w-full gap-2 text-[13px] font-bold text-slate-800">
-                              <span className={!(tripType === 'multi-city' ? flight.date : departDate) ? 'text-slate-400' : ''}>
+                          <div className="flex flex-col justify-center">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
+                              {tripType === 'round-trip' ? 'Depart — Return' : 'Date'}
+                            </span>
+                            {tripType === 'round-trip' ? (
+                              <div className="flex items-center gap-2 text-[14px] font-bold text-slate-900 tracking-tight">
+                                <span>{formatDateString(departDate) || 'Choose date'}</span>
+                                <span className="text-slate-300 font-normal">→</span>
+                                <span>{formatDateString(returnDate) || 'Choose date'}</span>
+                              </div>
+                            ) : (
+                              <span className={`text-[14px] font-bold tracking-tight ${
+                                !(tripType === 'multi-city' ? flight.date : departDate) ? 'text-slate-300' : 'text-slate-900'
+                              }`}>
                                 {(tripType === 'multi-city' ? flight.date : departDate) ? formatDateString(tripType === 'multi-city' ? flight.date : departDate) : 'Choose date'}
                               </span>
-                            </div>
-                          )}
+                            )}
+                          </div>
+                          <CalendarDays size={18} className="text-slate-300 group-hover/dates:text-[#E11D48] transition-colors shrink-0 ml-3" />
                         </div>
                       </div>
 
                       {/* PASSENGERS Field */}
                       {(index === 0 || tripType !== 'multi-city') && (
-                        <div className="flex-[0.6] w-full lg:w-auto relative group/passclass h-[58px]">
-                           <div className="flex items-center justify-between bg-slate-50 border border-slate-200 hover:border-[#E11D48]/50 rounded-[4px] px-4 h-full transition-all shadow-sm cursor-pointer hover:bg-white">
-                             <div className="flex items-center gap-2 text-[13px] font-bold text-slate-800 whitespace-nowrap">
-                               <User size={14} className="text-slate-600" />
-                               <span>{(adults + children + infants)} {(adults + children + infants) === 1 ? 'adult' : 'travelers'} &middot; {travelClass}</span>
+                        <div className="flex-[0.6] w-full lg:w-auto relative group/passclass h-[60px]">
+                           <div className="flex items-center justify-between bg-[#F7F8FA] border border-slate-200/80 hover:border-[#E11D48]/40 hover:bg-white rounded-xl px-4 h-full transition-all duration-200 cursor-pointer">
+                             <div className="flex flex-col justify-center">
+                               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Travelers</span>
+                               <span className="text-[14px] font-bold text-slate-900 tracking-tight whitespace-nowrap">{(adults + children + infants)} {(adults + children + infants) === 1 ? 'traveler' : 'travelers'} · {travelClass}</span>
                              </div>
-                             <ChevronDown size={14} className="text-slate-400 group-hover/passclass:rotate-180 transition-transform ml-2" />
+                             <ChevronDown size={14} className="text-slate-300 group-hover/passclass:text-[#E11D48] group-hover/passclass:rotate-180 transition-all duration-200 ml-3 shrink-0" />
                            </div>
                            
                            <div className="absolute right-0 top-full pt-2 w-[300px] sm:w-[340px] z-50 opacity-0 scale-95 pointer-events-none group-hover/passclass:opacity-100 group-hover/passclass:scale-100 group-hover/passclass:pointer-events-auto transition-all duration-200 origin-top-right">
@@ -1008,7 +1014,7 @@ function App() {
               {/* Multi-city Add Row Button */}
               {tripType === 'multi-city' && (
                 <div className="mt-4 w-full">
-                  <button onClick={handleAddMultiCityFlight} className="w-full flex items-center justify-center gap-2 py-3 rounded-[4px] border border-dashed border-[#E11D48]/40 text-[#E11D48] hover:bg-[#E11D48]/5 hover:border-[#E11D48] font-bold transition-all cursor-pointer text-sm">
+                  <button onClick={handleAddMultiCityFlight} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-[#E11D48]/30 text-[#E11D48] hover:bg-[#E11D48]/5 hover:border-[#E11D48]/60 font-bold transition-all duration-200 cursor-pointer text-sm">
                     <Plus size={16} strokeWidth={2.5} />
                     Add another flight
                   </button>
@@ -1023,7 +1029,7 @@ function App() {
                   {/* Top row: Nationality Selector */}
                   <div className="flex flex-wrap items-center gap-6 mb-4 px-2">
                     <div className="relative group/nat z-50">
-                      <button className="flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-slate-50 border border-slate-200 rounded-full text-[14px] font-bold text-slate-800 transition-all cursor-pointer shadow-sm">
+                      <button className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 border-none rounded-lg text-[13px] font-semibold text-slate-700 transition-all duration-200 cursor-pointer">
                         {nationality}
                         <ChevronDown size={16} className="text-slate-500" />
                       </button>
@@ -1065,27 +1071,30 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="relative z-30 flex flex-col lg:flex-row items-stretch bg-[#F0F2F4] border border-slate-200 transition-all w-full shadow-sm p-1.5 lg:p-2 gap-1 lg:gap-2">
+                  <div className="relative z-30 flex flex-col lg:flex-row items-stretch bg-[#F7F8FA] border border-slate-200/80 rounded-xl transition-all w-full shadow-sm">
                   {/* Destination */}
                   <div 
-                    className="flex-1 lg:flex-[1.2] px-5 py-3.5 relative cursor-text hover:bg-slate-200/60 flex items-center gap-3 transition-colors border-2 border-transparent focus-within:border-slate-300 dropdown-container"
+                    className="flex-1 lg:flex-[1.2] px-5 py-4 relative cursor-text hover:bg-white flex items-center gap-3 transition-colors duration-200 border-b lg:border-b-0 lg:border-r border-slate-200/80 focus-within:bg-white dropdown-container group/dest"
                     onClick={(e) => {
                       e.stopPropagation();
                       setActiveDropdown({ type: 'stays-to', index: 'single' });
                     }}
                     onMouseDown={(e) => e.stopPropagation()}
                   >
-                    <MapPin size={22} className="text-slate-500 shrink-0" />
+                    <MapPin size={18} className="text-slate-400 group-hover/dest:text-[#E11D48] shrink-0 transition-colors duration-200" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Where to?</span>
                     <input 
                       type="text" 
-                      placeholder="Where to?" 
+                      placeholder="Search destinations" 
                       value={toCity}
                       onChange={(e) => {
                         setToCity(e.target.value);
                         setActiveDropdown({ type: 'stays-to', index: 'single' });
                       }}
-                      className="bg-transparent text-[14px] lg:text-[15px] font-bold text-slate-800 w-full focus:outline-none placeholder-slate-400 truncate" 
+                      className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight" 
                     />
+                    </div>
                     {/* TO Dropdown */}
                     <AnimatePresence>
                       {activeDropdown?.type === 'stays-to' && (
@@ -1127,32 +1136,38 @@ function App() {
                     </AnimatePresence>
                   </div>
 
-                  <div className="w-full h-[1px] lg:w-[1px] lg:h-10 lg:my-auto bg-slate-200 block shrink-0 hidden lg:block"></div>
+                  <div className="w-full h-[1px] lg:w-[1px] lg:h-auto bg-slate-200/80 block shrink-0 hidden lg:block"></div>
 
                   {/* Dates */}
                   <div 
                     onClick={() => { setCalendarTarget({ type: 'depart', index: null }); setIsCalendarOpen(true); }}
-                    className="flex-[1.2] lg:flex-[1.6] px-5 py-3.5 relative cursor-pointer hover:bg-slate-200/60 flex items-center gap-3 overflow-hidden transition-colors"
+                    className="flex-[1.2] lg:flex-[1.6] px-5 py-4 relative cursor-pointer hover:bg-white flex items-center gap-3 overflow-hidden transition-colors duration-200 border-b lg:border-b-0 lg:border-r border-slate-200/80 group/staysdates"
                   >
-                    <CalendarDays size={22} className="text-slate-500 shrink-0" />
-                    <div className="flex items-center gap-2 text-[14px] lg:text-[15px] font-bold text-slate-800 w-full whitespace-nowrap overflow-hidden">
-                      <span className="truncate">{formatDateString(departDate)}</span>
-                      <span className="text-slate-400 font-normal shrink-0">-</span>
-                      <span className="truncate">{formatDateString(returnDate)}</span>
-                      <span className="ml-auto text-[11px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-[4px] font-bold shrink-0">
-                        {Math.max(1, Math.ceil((returnDate - departDate) / (1000 * 60 * 60 * 24)))} night{Math.max(1, Math.ceil((returnDate - departDate) / (1000 * 60 * 60 * 24))) > 1 ? 's' : ''}
-                      </span>
+                    <CalendarDays size={18} className="text-slate-400 group-hover/staysdates:text-[#E11D48] shrink-0 transition-colors duration-200" />
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Check-in — Check-out</span>
+                      <div className="flex items-center gap-2 text-[14px] font-bold text-slate-900 tracking-tight w-full whitespace-nowrap overflow-hidden">
+                        <span className="truncate">{formatDateString(departDate)}</span>
+                        <span className="text-slate-300 font-normal shrink-0">→</span>
+                        <span className="truncate">{formatDateString(returnDate)}</span>
+                        <span className="ml-auto text-[11px] bg-[#E11D48]/10 text-[#E11D48] px-2 py-0.5 rounded-full font-bold shrink-0">
+                          {Math.max(1, Math.ceil((returnDate - departDate) / (1000 * 60 * 60 * 24)))} night{Math.max(1, Math.ceil((returnDate - departDate) / (1000 * 60 * 60 * 24))) > 1 ? 's' : ''}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="w-full h-[1px] lg:w-[1px] lg:h-10 lg:my-auto bg-slate-200 block shrink-0 hidden lg:block"></div>
+                  <div className="w-full h-[1px] lg:w-[1px] lg:h-auto bg-slate-200/80 block shrink-0 hidden lg:block"></div>
 
                   {/* Guests / Rooms */}
                   <div className="flex-1 relative group/stayspass">
-                    <div className="px-5 py-3.5 h-full cursor-pointer hover:bg-slate-200/60 flex items-center gap-3 overflow-hidden transition-colors">
-                      <User size={22} className="text-slate-500 shrink-0" />
-                      <div className="text-[14px] lg:text-[15px] font-bold text-slate-800 whitespace-nowrap truncate flex-1">
-                        {rooms} room{rooms > 1 ? 's' : ''}, {(adults + children)} traveler{(adults + children) !== 1 ? 's' : ''}
+                    <div className="px-5 py-4 h-full cursor-pointer hover:bg-white flex items-center gap-3 overflow-hidden transition-colors duration-200 group/staysguests">
+                      <User size={18} className="text-slate-400 group-hover/staysguests:text-[#E11D48] shrink-0 transition-colors duration-200" />
+                      <div className="flex flex-col flex-1 min-w-0">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Guests &amp; rooms</span>
+                        <div className="text-[14px] lg:text-[15px] font-bold text-slate-900 tracking-tight whitespace-nowrap truncate">
+                          {rooms} room{rooms > 1 ? 's' : ''}, {(adults + children)} traveler{(adults + children) !== 1 ? 's' : ''}
+                        </div>
                       </div>
                     </div>
                     
@@ -1257,76 +1272,67 @@ function App() {
                   
                   {/* Top row */}
                   <div className="flex items-center px-2 mb-0.5 relative dropdown-container">
-                    <button 
-                      onClick={() => setCarActiveDropdown(carActiveDropdown === 'mode' ? null : 'mode')}
-                      onMouseDown={(e) => e.stopPropagation()}
-                      className="flex items-center gap-1.5 text-[14px] text-slate-700 hover:text-slate-900 transition-colors cursor-pointer group"
-                    >
-                      {carDropoffMode === 'same' ? 'Same drop-off' : 'Different drop-off'}
-                      <ChevronDown size={14} className="text-slate-600 group-hover:text-slate-800 mt-0.5" />
-                    </button>
-                    
-                    <AnimatePresence>
-                      {carActiveDropdown === 'mode' && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 5 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 5 }}
-                          onMouseDown={(e) => e.stopPropagation()}
-                          className="absolute top-[120%] left-2 bg-[#EBEBEB] border border-slate-200 shadow-md rounded-[8px] overflow-hidden z-50 w-[200px]"
-                        >
-                          <button 
-                            onClick={() => { setCarDropoffMode('same'); setCarActiveDropdown(null); }}
-                            className={`w-full text-left px-4 py-3 text-[14px] transition-colors ${carDropoffMode === 'same' ? 'font-bold bg-slate-200/50' : 'text-slate-700 hover:bg-slate-200'}`}
-                          >
-                            Same drop-off
-                          </button>
-                          <button 
-                            onClick={() => { setCarDropoffMode('different'); setCarActiveDropdown(null); }}
-                            className={`w-full text-left px-4 py-3 text-[14px] transition-colors ${carDropoffMode === 'different' ? 'font-bold bg-slate-200/50' : 'text-slate-700 hover:bg-slate-200'}`}
-                          >
-                            Different drop-off
-                          </button>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    <div className="flex items-center bg-slate-100 p-1 rounded-lg">
+                      <button 
+                        onClick={() => { setCarDropoffMode('same'); setCarActiveDropdown(null); }}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        className={`px-4 py-1.5 rounded-md text-[13px] font-semibold transition-all duration-200 cursor-pointer ${carDropoffMode === 'same' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                      >
+                        Same drop-off
+                      </button>
+                      <button 
+                        onClick={() => { setCarDropoffMode('different'); setCarActiveDropdown(null); }}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        className={`px-4 py-1.5 rounded-md text-[13px] font-semibold transition-all duration-200 cursor-pointer ${carDropoffMode === 'different' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                      >
+                        Different drop-off
+                      </button>
+                    </div>
                   </div>
 
                   {/* Main search bar */}
-                  <div className="flex flex-col md:flex-row items-stretch bg-[#F0F2F4] border border-slate-200 p-1.5 transition-all w-full shadow-sm">
+                  <div className="flex flex-col md:flex-row items-stretch bg-[#F7F8FA] border border-slate-200/80 rounded-xl transition-all w-full shadow-sm">
                     
                     <div className="flex-1 relative flex flex-col md:flex-row items-stretch w-full dropdown-container">
                       {carDropoffMode === 'same' ? (
                         <div className="flex-1 relative cursor-text">
                           <div 
-                            className={`w-full h-full px-4 py-2 relative flex items-center transition-colors border ${carActiveDropdown === 'pickup' ? 'bg-[#E5E7EB] border-slate-300' : 'border-transparent hover:bg-slate-200/60'}`}
+                            className={`w-full h-full px-5 py-4 relative flex items-center gap-3 transition-colors duration-200 border-b md:border-b-0 md:border-r border-slate-200/80 ${carActiveDropdown === 'pickup' ? 'bg-white' : 'hover:bg-white'}`}
                             onClick={() => setCarActiveDropdown(carActiveDropdown === 'pickup' ? null : 'pickup')}
                             onMouseDown={(e) => e.stopPropagation()}
                           >
+                            <MapPin size={18} className={`shrink-0 transition-colors duration-200 ${carActiveDropdown === 'pickup' ? 'text-[#E11D48]' : 'text-slate-400'}`} />
+                            <div className="flex flex-col flex-1 min-w-0">
+                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pick-up location</span>
                             <input 
                               type="text" 
-                              placeholder="Location" 
+                              placeholder="Search city or airport" 
                               value={carPickupLocation}
                               onChange={(e) => { setCarPickupLocation(e.target.value); setCarActiveDropdown('pickup'); }}
-                              className="bg-transparent text-[15px] font-medium text-slate-800 w-full focus:outline-none placeholder-slate-500 truncate" 
+                              className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
                             />
+                            </div>
                           </div>
                         </div>
                       ) : (
                         <div className="flex-1 flex flex-col md:flex-row items-stretch relative">
                           <div className="flex-1 relative w-full">
                             <div 
-                              className={`w-full h-full px-4 py-2 relative md:pr-8 flex items-center transition-colors border ${carActiveDropdown === 'pickup' ? 'bg-[#E5E7EB] border-slate-400' : 'border-slate-300 bg-[#E5E7EB]'}`}
+                              className={`w-full h-full px-5 py-4 relative md:pr-10 flex items-center gap-3 transition-colors duration-200 border-b md:border-b-0 md:border-r border-slate-200/80 ${carActiveDropdown === 'pickup' ? 'bg-white' : 'hover:bg-white'}`}
                               onClick={() => setCarActiveDropdown(carActiveDropdown === 'pickup' ? null : 'pickup')}
                               onMouseDown={(e) => e.stopPropagation()}
                             >
+                              <MapPin size={18} className={`shrink-0 transition-colors duration-200 ${carActiveDropdown === 'pickup' ? 'text-[#E11D48]' : 'text-slate-400'}`} />
+                              <div className="flex flex-col flex-1 min-w-0">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pick-up</span>
                               <input 
                                 type="text" 
-                                placeholder="From" 
+                                placeholder="City or airport" 
                                 value={carPickupLocation}
                                 onChange={(e) => { setCarPickupLocation(e.target.value); setCarActiveDropdown('pickup'); }}
-                                className="bg-transparent text-[15px] font-medium text-slate-800 w-full focus:outline-none placeholder-slate-500 truncate" 
+                                className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
                               />
+                              </div>
                             </div>
                           </div>
                           
@@ -1336,24 +1342,28 @@ function App() {
                               setCarPickupLocation(carDropoffLocation);
                               setCarDropoffLocation(temp);
                             }}
-                            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-[8px] border border-slate-300 bg-[#F0F2F4] hover:bg-slate-200 flex items-center justify-center shadow-sm cursor-pointer"
+                            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white border-2 border-slate-200 shadow-md hover:border-[#E11D48]/40 flex items-center justify-center cursor-pointer transition-all duration-200"
                           >
-                            <ArrowLeftRight size={14} className="text-slate-600" />
+                            <ArrowLeftRight size={14} className="text-[#E11D48]" />
                           </button>
                           
                           <div className="flex-1 relative w-full mt-2 md:mt-0">
                             <div 
-                              className={`w-full h-full px-4 py-2 md:pl-8 relative flex items-center transition-colors border ${carActiveDropdown === 'dropoff' ? 'bg-[#E5E7EB] border-slate-400' : 'border-transparent hover:bg-slate-200/60'}`}
+                              className={`w-full h-full px-5 py-4 md:pl-10 relative flex items-center gap-3 transition-colors duration-200 ${carActiveDropdown === 'dropoff' ? 'bg-white' : 'hover:bg-white'}`}
                               onClick={() => setCarActiveDropdown(carActiveDropdown === 'dropoff' ? null : 'dropoff')}
                               onMouseDown={(e) => e.stopPropagation()}
                             >
+                              <MapPin size={18} className={`shrink-0 transition-colors duration-200 ${carActiveDropdown === 'dropoff' ? 'text-[#E11D48]' : 'text-slate-400'}`} />
+                              <div className="flex flex-col flex-1 min-w-0">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Drop-off</span>
                               <input 
                                 type="text" 
-                                placeholder="To?" 
+                                placeholder="City or airport" 
                                 value={carDropoffLocation}
                                 onChange={(e) => setCarDropoffLocation(e.target.value)}
-                                className="bg-transparent text-[15px] font-medium text-slate-800 w-full focus:outline-none placeholder-slate-500 truncate" 
+                                className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
                               />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1443,13 +1453,15 @@ function App() {
                       </AnimatePresence>
                     </div>
                     
-                    <div className="w-full h-[1px] md:w-[1px] md:h-7 md:my-auto bg-slate-300 block shrink-0 mx-1 mt-2 md:mt-0"></div>
+                    <div className="w-full h-[1px] md:w-[1px] md:h-auto bg-slate-200/80 block shrink-0 hidden md:block"></div>
 
                     {/* Dates */}
-                    <div className="flex-[1.2] px-4 py-2 relative flex items-center gap-5 transition-colors">
-                      <div className="flex items-center gap-3 text-[15px] text-slate-800 whitespace-nowrap">
+                    <div className="flex-[1.2] px-5 py-4 relative flex items-center gap-5 transition-colors border-t md:border-t-0 md:border-l-0 border-slate-200/80">
+                      <div className="flex flex-col flex-1">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Pick-up — Drop-off</span>
+                        <div className="flex items-center gap-3 text-[15px] text-slate-900 whitespace-nowrap">
                         <span 
-                          className="font-medium cursor-pointer hover:text-slate-500 transition-colors"
+                          className="font-bold cursor-pointer hover:text-[#E11D48] transition-colors"
                           onClick={() => { setCalendarTarget({ type: 'depart', index: null }); setIsCalendarOpen(true); }}
                         >
                           {formatDateString(departDate).split(',')[0]} {departDate.getDate()}/{departDate.getMonth() + 1}
@@ -1499,7 +1511,7 @@ function App() {
                       
                       <div className="flex items-center gap-3 text-[15px] text-slate-800 whitespace-nowrap">
                         <span 
-                          className="font-medium cursor-pointer hover:text-slate-500 transition-colors"
+                          className="font-bold cursor-pointer hover:text-[#E11D48] transition-colors"
                           onClick={() => { setCalendarTarget({ type: 'return', index: null }); setIsCalendarOpen(true); }}
                         >
                           {formatDateString(returnDate).split(',')[0]} {returnDate ? `${returnDate.getDate()}/${returnDate.getMonth() + 1}` : ''}
@@ -1546,6 +1558,7 @@ function App() {
                       </div>
                     </div>
                   </div>
+                </div>
 
                   {/* Bottom row checkboxes */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end px-2 mt-1">
@@ -1562,24 +1575,27 @@ function App() {
               {activeCategory === 'packages' && (
                 <div className="w-full flex flex-col gap-3 relative z-30">
                   {/* Main search bar */}
-                  <div className="relative z-30 flex flex-col lg:flex-row items-stretch bg-[#F0F2F4] border border-slate-200 transition-all w-full shadow-sm p-1.5 lg:p-2 gap-1 lg:gap-2">
+                  <div className="relative z-30 flex flex-col lg:flex-row items-stretch bg-[#F7F8FA] border border-slate-200/80 rounded-xl transition-all w-full shadow-sm">
                     
                     {/* Location fields */}
                     <div className="flex-1 flex flex-col md:flex-row items-stretch relative">
                       <div className="flex-1 relative w-full">
                         <div 
-                          className="w-full h-full px-5 py-3.5 relative cursor-text hover:bg-slate-200/60 flex items-center gap-3 transition-colors border-2 border-transparent focus-within:border-slate-300"
+                          className="w-full h-full px-5 py-4 relative cursor-text hover:bg-white flex items-center gap-3 transition-colors duration-200 border-b md:border-b-0 md:border-r border-slate-200/80 focus-within:bg-white group/pkgfrom"
                           onClick={() => setActiveDropdown(activeDropdown?.type === 'package-from' ? null : { type: 'package-from' })}
                           onMouseDown={(e) => e.stopPropagation()}
                         >
-                          <MapPin size={22} className="text-slate-500 shrink-0" />
+                          <MapPin size={18} className="text-slate-400 group-hover/pkgfrom:text-[#E11D48] shrink-0 transition-colors duration-200" />
+                          <div className="flex flex-col flex-1 min-w-0">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">From</span>
                           <input 
                             type="text" 
-                            placeholder="From" 
+                            placeholder="Origin city" 
                             value={packageFrom}
                             onChange={(e) => { setPackageFrom(e.target.value); setActiveDropdown({ type: 'package-from' }); }}
-                            className="bg-transparent text-[14px] lg:text-[15px] font-bold text-slate-800 w-full focus:outline-none placeholder-slate-400 truncate" 
+                            className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
                           />
+                          </div>
                         </div>
                       </div>
                       
@@ -1591,28 +1607,31 @@ function App() {
                             setPackageFrom(packageTo);
                             setPackageTo(temp);
                           }}
-                          className="w-8 h-8 rounded-full bg-white border border-slate-200 shadow-sm hover:bg-slate-50 flex items-center justify-center text-slate-600 transition-all cursor-pointer group/swap"
+                          className="w-8 h-8 rounded-full bg-white border-2 border-slate-200 shadow-md hover:border-[#E11D48]/40 flex items-center justify-center text-[#E11D48] transition-all duration-200 cursor-pointer group/swap"
                         >
                           <ArrowLeftRight size={14} className="group-hover/swap:rotate-180 transition-transform duration-300" />
                         </button>
                       </div>
 
-                      <div className="w-full h-[1px] md:w-[1px] md:h-8 md:my-auto bg-slate-200 block shrink-0 hidden md:block"></div>
+                      <div className="w-full h-[1px] md:w-[1px] md:h-auto bg-slate-200/80 block shrink-0 hidden md:block"></div>
                       
                       <div className="flex-1 relative w-full mt-2 md:mt-0">
                         <div 
-                          className="w-full h-full px-5 py-3.5 pl-8 relative cursor-text hover:bg-slate-200/60 flex items-center gap-3 transition-colors border-2 border-transparent focus-within:border-slate-300"
+                          className="w-full h-full px-5 py-4 pl-10 relative cursor-text hover:bg-white flex items-center gap-3 transition-colors duration-200 focus-within:bg-white group/pkgto"
                           onClick={() => setActiveDropdown(activeDropdown?.type === 'package-to' ? null : { type: 'package-to' })}
                           onMouseDown={(e) => e.stopPropagation()}
                         >
-                          <MapPin size={22} className="text-slate-500 shrink-0" />
+                          <MapPin size={18} className="text-slate-400 group-hover/pkgto:text-[#E11D48] shrink-0 transition-colors duration-200" />
+                          <div className="flex flex-col flex-1 min-w-0">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">To</span>
                           <input 
                             type="text" 
-                            placeholder="To?" 
+                            placeholder="Destination city" 
                             value={packageTo}
                             onChange={(e) => { setPackageTo(e.target.value); setActiveDropdown({ type: 'package-to' }) }}
-                            className="bg-transparent text-[14px] lg:text-[15px] font-bold text-slate-800 w-full focus:outline-none placeholder-slate-400 truncate" 
+                            className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
                           />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1672,38 +1691,44 @@ function App() {
                       )}
                     </AnimatePresence>
 
-                    <div className="w-full h-[1px] lg:w-[1px] lg:h-8 lg:my-auto bg-slate-200 block shrink-0"></div>
+                    <div className="w-full h-[1px] lg:w-[1px] lg:h-auto bg-slate-200/80 block shrink-0 hidden lg:block"></div>
 
                     {/* Dates */}
                     <div 
-                      className="flex-[0.8] px-5 py-3.5 relative flex items-center gap-3 transition-colors border-2 border-transparent hover:bg-slate-200/60 cursor-pointer"
+                      className="flex-[0.8] px-5 py-4 relative flex items-center gap-3 transition-colors duration-200 border-b lg:border-b-0 lg:border-r border-slate-200/80 hover:bg-white cursor-pointer group/pkgdates"
                       onClick={() => { setCalendarTarget({ type: 'depart', index: null }); setIsCalendarOpen(true); }}
                     >
-                      <CalendarDays size={22} className="text-slate-500 shrink-0" />
-                      <div className="flex items-center gap-2 text-[14px] lg:text-[15px] text-slate-800 whitespace-nowrap overflow-hidden text-ellipsis">
-                        <span className="font-bold">{formatDateString(departDate).split(',')[0]} {departDate.getDate()} {departDate.toLocaleString('default', {month:'short'})}</span>
-                        <span className="text-slate-400 font-normal shrink-0">-</span>
-                        <span className="font-bold">{formatDateString(returnDate).split(',')[0]} {returnDate ? `${returnDate.getDate()} ${returnDate.toLocaleString('default', {month:'short'})}` : ''}</span>
-                        {departDate && returnDate && (
-                          <span className="ml-2 px-2 py-0.5 bg-slate-200/70 text-slate-700 text-[11px] font-bold rounded-md hidden xl:inline-block">
-                            {Math.ceil((returnDate - departDate) / (1000 * 60 * 60 * 24))} nights
-                          </span>
-                        )}
+                      <CalendarDays size={18} className="text-slate-400 group-hover/pkgdates:text-[#E11D48] shrink-0 transition-colors duration-200" />
+                      <div className="flex flex-col flex-1 min-w-0">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Dates</span>
+                        <div className="flex items-center gap-1.5 text-[14px] lg:text-[15px] text-slate-900 whitespace-nowrap overflow-hidden text-ellipsis">
+                          <span className="font-bold">{formatDateString(departDate).split(',')[0]} {departDate.getDate()} {departDate.toLocaleString('default', {month:'short'})}</span>
+                          <span className="text-slate-300 font-normal shrink-0">→</span>
+                          <span className="font-bold">{formatDateString(returnDate).split(',')[0]} {returnDate ? `${returnDate.getDate()} ${returnDate.toLocaleString('default', {month:'short'})}` : ''}</span>
+                          {departDate && returnDate && (
+                            <span className="ml-1 px-2 py-0.5 bg-[#E11D48]/10 text-[#E11D48] text-[11px] font-bold rounded-full hidden xl:inline-block">
+                              {Math.ceil((returnDate - departDate) / (1000 * 60 * 60 * 24))} nights
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
 
-                    <div className="w-full h-[1px] lg:w-[1px] lg:h-8 lg:my-auto bg-slate-200 block shrink-0"></div>
+                    <div className="w-full h-[1px] lg:w-[1px] lg:h-auto bg-slate-200/80 block shrink-0 hidden lg:block"></div>
 
                     {/* Travelers */}
-                    <div className="flex-[0.7] px-5 py-3.5 relative flex items-center transition-colors border-2 border-transparent hover:bg-slate-200/60 cursor-pointer group"
+                    <div className="flex-[0.7] px-5 py-4 relative flex items-center transition-colors duration-200 hover:bg-white cursor-pointer group/pkgtrav"
                          onClick={() => setActiveDropdown(activeDropdown?.type === 'package-travelers' ? null : { type: 'package-travelers' })}
                          onMouseDown={(e) => e.stopPropagation()}
                     >
                       <div className="flex items-center gap-3 text-[14px] lg:text-[15px] text-slate-800 whitespace-nowrap w-full">
-                        <User size={22} className="text-slate-500 group-hover:text-slate-700 transition-colors shrink-0" />
-                        <span className="font-bold text-slate-800 w-full truncate">
-                          {packageAdults + packageChildren} traveler{packageAdults + packageChildren > 1 ? 's' : ''}
-                        </span>
+                        <User size={18} className="text-slate-400 group-hover/pkgtrav:text-[#E11D48] transition-colors duration-200 shrink-0" />
+                        <div className="flex flex-col flex-1 min-w-0">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Travelers</span>
+                          <span className="font-bold text-slate-900 tracking-tight w-full truncate">
+                            {packageAdults + packageChildren} traveler{packageAdults + packageChildren > 1 ? 's' : ''}
+                          </span>
+                        </div>
                       </div>
                       
                       <AnimatePresence>
@@ -1805,10 +1830,14 @@ function App() {
 
 
               {/* Bottom row: Search Button Area */}
-              <div className="mt-6 flex flex-col md:flex-row md:items-center justify-end gap-3 z-20 relative">
-                <button className="w-full md:w-auto px-10 py-3 bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[15px] rounded-[4px] shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer relative group">
-                  <Search size={18} strokeWidth={2.5} />
-                  <span>Search</span>
+              <div className="mt-5 flex flex-col md:flex-row md:items-center justify-end gap-3 z-20 relative">
+                <button className="w-full md:w-auto group relative px-12 py-3.5 bg-[#E11D48] hover:bg-[#C81040] text-white font-extrabold text-[15px] rounded-xl shadow-[0_4px_20px_rgba(225,29,72,0.35)] hover:shadow-[0_6px_28px_rgba(225,29,72,0.5)] transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer overflow-hidden active:scale-[0.98]">
+                  <span className="relative z-10 flex items-center gap-2.5">
+                    <Search size={18} strokeWidth={2.5} />
+                    <span>Search</span>
+                    <ArrowLeftRight size={16} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 rotate-90" />
+                  </span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                 </button>
               </div>
 
@@ -1830,13 +1859,17 @@ function App() {
                         {activeCategory !== 'cars' && (
                           <>
                             <button onClick={() => setCalendarTarget({ type: 'depart', index: null })} className={`flex-1 text-left px-5 py-4 transition-all ${calendarTarget.type === 'depart' ? 'border-b-[3px] border-[#E11D48]' : 'border-b-[3px] border-transparent hover:bg-slate-50'}`}>
-                              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Depart</div>
+                              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
+                                {activeCategory === 'stays' ? 'Check-in' : 'Depart'}
+                              </div>
                               <div className={`text-[15px] font-extrabold ${calendarTarget.type === 'depart' ? 'text-[#E11D48]' : 'text-slate-800'}`}>{formatDateString(departDate)}</div>
                             </button>
                             <div className="w-px bg-slate-100 my-3" />
-                            {tripType !== 'one-way' && (
+                            {(tripType !== 'one-way' || activeCategory === 'stays') && (
                               <button onClick={() => setCalendarTarget({ type: 'return', index: null })} className={`flex-1 text-left px-5 py-4 transition-all ${calendarTarget.type === 'return' ? 'border-b-[3px] border-[#E11D48]' : 'border-b-[3px] border-transparent hover:bg-slate-50'}`}>
-                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Return</div>
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
+                                  {activeCategory === 'stays' ? 'Check-out' : 'Return'}
+                                </div>
                                 <div className={`text-[15px] font-extrabold ${calendarTarget.type === 'return' ? 'text-[#E11D48]' : 'text-slate-800'}`}>
                                   {returnDate ? formatDateString(returnDate) : <span className="text-slate-300">Select date</span>}
                                 </div>
