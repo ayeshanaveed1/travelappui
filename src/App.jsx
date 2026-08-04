@@ -23,11 +23,12 @@ import {
   Trees,
   Route,
   Lightbulb,
+  Minus,
+  Plus,
   Map as MapIcon,
   Award,
   Smartphone,
   User,
-  Plus,
   Sparkles,
   Globe2,
   Compass,
@@ -110,6 +111,20 @@ function App() {
     { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ' }
   ];
 
+  const carLocationSuggestions = [
+    { type: 'city', name: 'Denver, Colorado, United States', subtitle: 'United States', searchStr: 'denver colorado usa' },
+    { type: 'city', name: 'Dallas, Texas, United States', subtitle: 'United States', searchStr: 'dallas texas usa' },
+    { type: 'city', name: 'Lahore, Pakistan', subtitle: 'Pakistan', searchStr: 'lahore pakistan' },
+    { type: 'city', name: 'Dubai, United Arab Emirates', subtitle: 'United Arab Emirates', searchStr: 'dubai uae united arab emirates' },
+    { type: 'city', name: 'London, United Kingdom', subtitle: 'United Kingdom', searchStr: 'london uk united kingdom' },
+    
+    { type: 'airport', name: 'Denver Intl', code: 'DEN', subtitle: 'Denver, Colorado, United States', searchStr: 'denver intl den' },
+    { type: 'airport', name: 'Dallas/Fort Worth', code: 'DFW', subtitle: 'Dallas, Texas, United States', searchStr: 'dallas fort worth dfw' },
+    { type: 'airport', name: 'Allama Iqbal Intl', code: 'LHE', subtitle: 'Lahore, Pakistan', searchStr: 'allama iqbal lhe lahore' },
+    { type: 'airport', name: 'Dubai Intl', code: 'DXB', subtitle: 'Dubai, United Arab Emirates', searchStr: 'dubai dxb' },
+    { type: 'airport', name: 'Heathrow', code: 'LHR', subtitle: 'London, United Kingdom', searchStr: 'heathrow lhr london' }
+  ];
+
   const [tripType, setTripType] = useState('round-trip') // one-way, round-trip, multi-city
   const [isHeartHovered, setIsHeartHovered] = useState(false)
 
@@ -124,6 +139,29 @@ function App() {
   const [infants, setInfants] = useState(0)
   const [travelClass, setTravelClass] = useState('Economy')
   const [paymentType, setPaymentType] = useState('5 Payment Types')
+  const [rooms, setRooms] = useState(1)
+  const [petFriendly, setPetFriendly] = useState(false)
+  const [nationality, setNationality] = useState('United Arab Emirates')
+  const [nationalitySearch, setNationalitySearch] = useState('')
+  const [carDropoffMode, setCarDropoffMode] = useState('same') // 'same' or 'different'
+  const [carPickupLocation, setCarPickupLocation] = useState('')
+  const [carDropoffLocation, setCarDropoffLocation] = useState('')
+  const [carActiveDropdown, setCarActiveDropdown] = useState(null)
+  const [carPickupTime, setCarPickupTime] = useState('Noon')
+  const [carDropoffTime, setCarDropoffTime] = useState('Noon')
+  
+  // Packages states
+  const [packageFrom, setPackageFrom] = useState('')
+  const [packageTo, setPackageTo] = useState('')
+  const [packageAdults, setPackageAdults] = useState(2)
+  const [packageChildren, setPackageChildren] = useState(1)
+  const [packageChildAges, setPackageChildAges] = useState(['10 years'])
+
+  const carTimeOptions = [
+    '9:00 am', '9:30 am', '10:00 am', '10:30 am', '11:00 am', '11:30 am', 'Noon', 
+    '12:30 pm', '1:00 pm', '1:30 pm', '2:00 pm', '2:30 pm', '3:00 pm', '3:30 pm',
+    '4:00 pm', '4:30 pm', '5:00 pm', '5:30 pm'
+  ];
 
   // Date selection states
   const [departDate, setDepartDate] = useState(new Date(2026, 7, 1)) // Aug 1, 2026
@@ -145,6 +183,35 @@ function App() {
     "Dubai", "Faisalabad", "Dammam", "Al Madinah",
     "Doha", "Muscat", "Abu Dhabi", "Sharjah"
   ];
+
+  const alphabetCities = [
+    { name: 'Amsterdam', code: 'AMS', country: 'Netherlands' },
+    { name: 'Berlin', code: 'BER', country: 'Germany' },
+    { name: 'Chicago', code: 'ORD', country: 'United States' },
+    { name: 'Dubai', code: 'DXB', country: 'United Arab Emirates' },
+    { name: 'Edinburgh', code: 'EDI', country: 'United Kingdom' },
+    { name: 'Frankfurt', code: 'FRA', country: 'Germany' },
+    { name: 'Geneva', code: 'GVA', country: 'Switzerland' },
+    { name: 'Helsinki', code: 'HEL', country: 'Finland' },
+    { name: 'Istanbul', code: 'IST', country: 'Turkey' },
+    { name: 'Jakarta', code: 'CGK', country: 'Indonesia' },
+    { name: 'Kyoto', code: 'UKY', country: 'Japan' },
+    { name: 'London', code: 'LHR', country: 'United Kingdom' },
+    { name: 'Madrid', code: 'MAD', country: 'Spain' },
+    { name: 'New York', code: 'JFK', country: 'United States' },
+    { name: 'Oslo', code: 'OSL', country: 'Norway' },
+    { name: 'Paris', code: 'CDG', country: 'France' },
+    { name: 'Quito', code: 'UIO', country: 'Ecuador' },
+    { name: 'Rome', code: 'FCO', country: 'Italy' },
+    { name: 'Seoul', code: 'ICN', country: 'South Korea' },
+    { name: 'Tokyo', code: 'HND', country: 'Japan' },
+    { name: 'Ushuaia', code: 'USH', country: 'Argentina' },
+    { name: 'Vienna', code: 'VIE', country: 'Austria' },
+    { name: 'Warsaw', code: 'WAW', country: 'Poland' },
+    { name: 'Xiamen', code: 'XMN', country: 'China' },
+    { name: 'Yangon', code: 'RGN', country: 'Myanmar' },
+    { name: 'Zurich', code: 'ZRH', country: 'Switzerland' }
+  ];
   
   // Calendar UI navigation
   const [currentYear, setCurrentYear] = useState(2026)
@@ -158,7 +225,10 @@ function App() {
       if (calendarRef.current && !calendarRef.current.contains(event.target)) {
         setIsCalendarOpen(false);
       }
+      
+      // Close dropdowns if clicking anywhere outside
       setActiveDropdown(null);
+      setCarActiveDropdown(null);
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -475,27 +545,63 @@ function App() {
           {/* Right side: Actions */}
           <div className="flex items-center gap-1.5 sm:gap-5">
             
-            {/* Currency Button */}
-            <button 
-              onClick={() => { setIsSettingsModalOpen(true); setSettingsTab('Currency'); }}
-              className="flex items-center gap-1 px-1.5 sm:px-2 py-2 bg-transparent hover:bg-slate-200/70 text-slate-800 font-extrabold text-[13px] sm:text-[15px] rounded-[10px] transition-all cursor-pointer"
-            >
-              {selectedCurrency.code}
-            </button>
-
-            {/* Language Button */}
-            <button 
-              onClick={() => { setIsSettingsModalOpen(true); setSettingsTab('Languages'); }}
-              className="flex items-center gap-1 px-2 py-2 bg-transparent hover:bg-slate-200/70 text-slate-700 font-bold text-[14px] rounded-[10px] transition-all cursor-pointer"
-            >
-              <div className="w-[24px] h-[24px] rounded-full overflow-hidden flex items-center justify-center shrink-0 border border-slate-300 shadow-sm bg-white">
-                {selectedLanguage.isGlobe ? (
-                  <Globe2 size={16} className="text-blue-600" strokeWidth={2.5} />
-                ) : (
-                  <Flag code={selectedLanguage.code} className="w-full h-full object-cover" />
-                )}
+            {/* Currency Dropdown */}
+            <div className="relative group/curr flex items-center h-full">
+              <button className="flex items-center gap-1 px-1.5 sm:px-2 py-2 bg-transparent group-hover/curr:bg-slate-200/70 text-slate-800 font-extrabold text-[13px] sm:text-[15px] rounded-[10px] transition-all cursor-pointer">
+                {selectedCurrency.code}
+              </button>
+              
+              <div className="absolute top-full right-0 pt-2 w-[340px] opacity-0 scale-95 pointer-events-none group-hover/curr:opacity-100 group-hover/curr:scale-100 group-hover/curr:pointer-events-auto transition-all duration-200 z-[100] origin-top-right">
+                <div className="bg-white rounded-[16px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-slate-100 p-4">
+                  <div className="text-sm font-bold text-slate-900 mb-3 px-2">Select Currency</div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {currenciesList.map(curr => (
+                      <button 
+                        key={curr.code}
+                        onClick={() => setSelectedCurrency(curr)}
+                        className={`flex flex-col justify-center px-3 py-2 rounded-lg transition-colors text-left ${selectedCurrency.code === curr.code ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
+                      >
+                        <span className={`text-[13px] ${selectedCurrency.code === curr.code ? 'font-bold text-[#E11D48]' : 'font-bold text-slate-800'}`}>{curr.code} - {curr.symbol}</span>
+                        <span className="text-[11px] text-slate-500 font-medium">{curr.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </button>
+            </div>
+
+            {/* Language Dropdown */}
+            <div className="relative group/lang flex items-center h-full">
+              <button className="flex items-center gap-1 px-2 py-2 bg-transparent group-hover/lang:bg-slate-200/70 text-slate-700 font-bold text-[14px] rounded-[10px] transition-all cursor-pointer">
+                <div className="w-[24px] h-[24px] rounded-full overflow-hidden flex items-center justify-center shrink-0 border border-slate-300 shadow-sm bg-white">
+                  {selectedLanguage.isGlobe ? (
+                    <Globe2 size={16} className="text-blue-600" strokeWidth={2.5} />
+                  ) : (
+                    <Flag code={selectedLanguage.code} className="w-full h-full object-cover" />
+                  )}
+                </div>
+              </button>
+
+              <div className="absolute top-full right-0 pt-2 w-[480px] opacity-0 scale-95 pointer-events-none group-hover/lang:opacity-100 group-hover/lang:scale-100 group-hover/lang:pointer-events-auto transition-all duration-200 z-[100] origin-top-right">
+                <div className="bg-white rounded-[16px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-slate-100 p-4">
+                  <div className="text-sm font-bold text-slate-900 mb-3 px-2">Select Language</div>
+                  <div className="grid grid-cols-3 gap-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200">
+                    {languagesList.map(lang => (
+                      <button 
+                        key={lang.code}
+                        onClick={() => setSelectedLanguage(lang)}
+                        className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-left ${selectedLanguage.code === lang.code ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
+                      >
+                        <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-slate-200 shadow-sm bg-white flex items-center justify-center">
+                          {lang.isGlobe ? <Globe2 size={12} className="text-blue-600" /> : <Flag code={lang.code} className="w-full h-full object-cover" />}
+                        </div>
+                        <span className={`text-[12px] ${selectedLanguage.code === lang.code ? 'font-bold text-[#E11D48]' : 'font-medium text-slate-700'}`}>{lang.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Sign In Button */}
             <button 
@@ -542,12 +648,12 @@ function App() {
                   onClick={() => setActiveCategory(cat.id)}
                   className="flex flex-col items-center gap-2 group cursor-pointer focus:outline-none"
                 >
-                  <div className={`w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] rounded-[16px] flex items-center justify-center transition-all duration-200 cursor-pointer ${
+                  <div className={`w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] rounded-[16px] flex items-center justify-center transition-all duration-300 cursor-pointer group-hover:rounded-full ${
                     isSel 
                       ? 'bg-[#E11D48] text-white shadow-sm' 
                       : 'bg-[#eaeaec] text-slate-800 shadow-sm hover:bg-[#dfdfdf]'
                   }`}>
-                    <IconComponent size={24} className="stroke-[2.5] fill-none" />
+                    <IconComponent size={24} className="stroke-[2.5] fill-none transition-transform duration-300 group-hover:rotate-[15deg]" />
                   </div>
                   <span className={`text-[12px] sm:text-[14px] transition-all duration-200 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] ${
                     isSel ? 'font-bold' : 'font-medium'
@@ -579,7 +685,7 @@ function App() {
               <div className="flex flex-wrap items-center gap-6 mb-4 px-2">
                 <div className="flex items-center gap-5">
                   {[
-                    { id: 'round-trip', label: 'Return' },
+                    { id: 'round-trip', label: 'Roundtrip' },
                     { id: 'one-way', label: 'One-way' },
                     { id: 'multi-city', label: 'Multi-city' }
                   ].map((t) => {
@@ -790,94 +896,96 @@ function App() {
                              <ChevronDown size={14} className="text-slate-400 group-hover/passclass:rotate-180 transition-transform ml-2" />
                            </div>
                            
-                           <div className="absolute right-0 mt-2 w-[300px] sm:w-[340px] bg-[#eaeaec] border border-slate-200 rounded-xl shadow-xl p-0 opacity-0 scale-95 pointer-events-none group-hover/passclass:opacity-100 group-hover/passclass:scale-100 group-hover/passclass:pointer-events-auto transition-all duration-200 z-50 overflow-hidden">
-                             <div className="p-5 pb-4">
-                               <div className="text-[14px] font-bold text-slate-900 mb-4">Travelers</div>
-                               
-                               <div className="flex items-center justify-between mb-4">
-                                 <div>
-                                   <div className="text-[14px] text-slate-700">Adults <span className="text-slate-500">18+</span></div>
+                           <div className="absolute right-0 top-full pt-2 w-[300px] sm:w-[340px] z-50 opacity-0 scale-95 pointer-events-none group-hover/passclass:opacity-100 group-hover/passclass:scale-100 group-hover/passclass:pointer-events-auto transition-all duration-200 origin-top-right">
+                             <div className="bg-white border border-slate-200 rounded-xl shadow-xl p-0 overflow-hidden">
+                               <div className="p-5 pb-4">
+                                 <div className="text-[14px] font-bold text-slate-900 mb-4">Travelers</div>
+                                 
+                                 <div className="flex items-center justify-between mb-4">
+                                   <div>
+                                     <div className="text-[14px] text-slate-700">Adults <span className="text-slate-500">18+</span></div>
+                                   </div>
+                                   <div className="flex items-center gap-3">
+                                     <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
+                                     <span className="w-4 text-center font-bold text-[15px]">{adults}</span>
+                                     <button onClick={() => setAdults(adults + 1)} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
+                                   </div>
                                  </div>
-                                 <div className="flex items-center gap-3">
-                                   <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
-                                   <span className="w-4 text-center font-bold text-[15px]">{adults}</span>
-                                   <button onClick={() => setAdults(adults + 1)} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
+                                 
+                                 <div className="flex items-center justify-between mb-4">
+                                   <div>
+                                     <div className="text-[14px] text-slate-700">Children <span className="text-slate-500">0-17</span></div>
+                                   </div>
+                                   <div className="flex items-center gap-3">
+                                     <button onClick={() => {
+                                        const newCount = Math.max(0, children - 1);
+                                        setChildren(newCount);
+                                        setChildAges(prev => prev.slice(0, newCount));
+                                     }} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
+                                     <span className="w-4 text-center font-bold text-[15px]">{children}</span>
+                                     <button onClick={() => {
+                                        const newCount = children + 1;
+                                        setChildren(newCount);
+                                        setChildAges(prev => [...prev, '']);
+                                     }} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
+                                   </div>
                                  </div>
-                               </div>
-                               
-                               <div className="flex items-center justify-between mb-4">
-                                 <div>
-                                   <div className="text-[14px] text-slate-700">Children <span className="text-slate-500">0-17</span></div>
-                                 </div>
-                                 <div className="flex items-center gap-3">
-                                   <button onClick={() => {
-                                      const newCount = Math.max(0, children - 1);
-                                      setChildren(newCount);
-                                      setChildAges(prev => prev.slice(0, newCount));
-                                   }} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
-                                   <span className="w-4 text-center font-bold text-[15px]">{children}</span>
-                                   <button onClick={() => {
-                                      const newCount = children + 1;
-                                      setChildren(newCount);
-                                      setChildAges(prev => [...prev, '']);
-                                   }} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
-                                 </div>
-                               </div>
-
-                               {/* Child Ages Dropdowns */}
-                               {children > 0 && (
-                                 <div className="mb-4">
-                                   {childAges.map((age, idx) => (
-                                     <div key={idx} className="flex items-center justify-between mt-3">
-                                       <div className="text-[14px] text-slate-800">Child's age</div>
-                                       <div className="relative">
-                                         <select 
-                                           value={age}
-                                           onChange={(e) => {
-                                             const newAges = [...childAges];
-                                             newAges[idx] = e.target.value;
-                                             setChildAges(newAges);
-                                           }}
-                                           className="appearance-none bg-transparent border border-slate-400/80 rounded-[8px] pl-4 pr-10 py-1.5 text-[14px] text-slate-600 focus:outline-none focus:border-slate-500 cursor-pointer min-w-[70px] shadow-sm transition-colors hover:bg-slate-50"
-                                         >
-                                           <option value="" disabled>Age</option>
-                                           {Array.from({length: 18}).map((_, i) => (
-                                             <option key={i} value={i}>{i}</option>
-                                           ))}
-                                         </select>
-                                         <ChevronDown size={16} strokeWidth={2.5} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-800 pointer-events-none" />
+  
+                                 {/* Child Ages Dropdowns */}
+                                 {children > 0 && (
+                                   <div className="mb-4">
+                                     {childAges.map((age, idx) => (
+                                       <div key={idx} className="flex items-center justify-between mt-3">
+                                         <div className="text-[14px] text-slate-800">Child's age</div>
+                                         <div className="relative">
+                                           <select 
+                                             value={age}
+                                             onChange={(e) => {
+                                               const newAges = [...childAges];
+                                               newAges[idx] = e.target.value;
+                                               setChildAges(newAges);
+                                             }}
+                                             className="appearance-none bg-transparent border border-slate-400/80 rounded-[8px] pl-4 pr-10 py-1.5 text-[14px] text-slate-600 focus:outline-none focus:border-slate-500 cursor-pointer min-w-[70px] shadow-sm transition-colors hover:bg-slate-50"
+                                           >
+                                             <option value="" disabled>Age</option>
+                                             {Array.from({length: 18}).map((_, i) => (
+                                               <option key={i} value={i}>{i}</option>
+                                             ))}
+                                           </select>
+                                           <ChevronDown size={16} strokeWidth={2.5} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-800 pointer-events-none" />
+                                         </div>
                                        </div>
-                                     </div>
+                                     ))}
+                                   </div>
+                                 )}
+                             
+                                 <div className="flex items-center justify-between">
+                                   <div>
+                                     <div className="text-[14px] text-slate-700">Infants on lap <span className="text-slate-500">under 2</span></div>
+                                   </div>
+                                   <div className="flex items-center gap-3">
+                                     <button onClick={() => setInfants(Math.max(0, infants - 1))} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
+                                     <span className="w-4 text-center font-bold text-[15px]">{infants}</span>
+                                     <button onClick={() => setInfants(infants + 1)} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
+                                   </div>
+                                 </div>
+                               </div>
+                             
+                               <div className="h-[1px] bg-slate-300 w-full opacity-60"></div>
+                             
+                               <div className="p-5 pt-4">
+                                 <div className="text-[14px] font-bold text-slate-900 mb-3">Cabin Class</div>
+                                 <div className="flex flex-wrap gap-2">
+                                   {['Economy', 'Premium Economy', 'Business', 'First'].map((opt) => (
+                                     <button 
+                                       key={opt} 
+                                       onClick={() => setTravelClass(opt)} 
+                                       className={`px-3 py-1.5 text-[14px] rounded-lg border transition-all cursor-pointer ${travelClass === opt ? 'border-slate-800 text-slate-800 bg-slate-200/50' : 'border-slate-300 text-slate-700 hover:border-slate-400'}`}
+                                     >
+                                       {opt}
+                                     </button>
                                    ))}
                                  </div>
-                               )}
-                           
-                               <div className="flex items-center justify-between">
-                                 <div>
-                                   <div className="text-[14px] text-slate-700">Infants on lap <span className="text-slate-500">under 2</span></div>
-                                 </div>
-                                 <div className="flex items-center gap-3">
-                                   <button onClick={() => setInfants(Math.max(0, infants - 1))} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">-</button>
-                                   <span className="w-4 text-center font-bold text-[15px]">{infants}</span>
-                                   <button onClick={() => setInfants(infants + 1)} className="w-7 h-7 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors">+</button>
-                                 </div>
-                               </div>
-                             </div>
-                           
-                             <div className="h-[1px] bg-slate-300 w-full opacity-60"></div>
-                           
-                             <div className="p-5 pt-4">
-                               <div className="text-[14px] font-bold text-slate-900 mb-3">Cabin Class</div>
-                               <div className="flex flex-wrap gap-2">
-                                 {['Economy', 'Premium Economy', 'Business', 'First'].map((opt) => (
-                                   <button 
-                                     key={opt} 
-                                     onClick={() => setTravelClass(opt)} 
-                                     className={`px-3 py-1.5 text-[14px] rounded-lg border transition-all cursor-pointer ${travelClass === opt ? 'border-slate-800 text-slate-800 bg-slate-200/50' : 'border-slate-300 text-slate-700 hover:border-slate-400'}`}
-                                   >
-                                     {opt}
-                                   </button>
-                                 ))}
                                </div>
                              </div>
                            </div>
@@ -911,14 +1019,61 @@ function App() {
               )}
 
               {activeCategory === 'stays' && (
-                <div className="relative z-30 flex flex-col lg:flex-row items-stretch bg-slate-50 border border-slate-200 hover:border-[#E11D48]/50 focus-within:border-[#E11D48]/60 rounded-[4px] transition-all w-full shadow-sm">
+                <>
+                  {/* Top row: Nationality Selector */}
+                  <div className="flex flex-wrap items-center gap-6 mb-4 px-2">
+                    <div className="relative group/nat z-50">
+                      <button className="flex items-center gap-2 px-4 py-2 bg-transparent hover:bg-slate-50 border border-slate-200 rounded-full text-[14px] font-bold text-slate-800 transition-all cursor-pointer shadow-sm">
+                        {nationality}
+                        <ChevronDown size={16} className="text-slate-500" />
+                      </button>
+                      
+                      <div className="absolute top-full left-0 pt-2 w-[320px] opacity-0 scale-95 pointer-events-none group-hover/nat:opacity-100 group-hover/nat:scale-100 group-hover/nat:pointer-events-auto transition-all duration-200 origin-top-left">
+                        <div className="bg-[#EBEBEB] rounded-[16px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-slate-200/60 p-2 flex flex-col">
+                          <div className="px-3 py-3 border-b border-slate-300/50 mb-2">
+                            <input 
+                              type="text" 
+                              placeholder="Search nationality" 
+                              value={nationalitySearch}
+                              onChange={(e) => setNationalitySearch(e.target.value)}
+                              className="w-full bg-transparent text-[14px] font-bold text-slate-700 placeholder-slate-400 focus:outline-none" 
+                            />
+                          </div>
+                          <div className="max-h-[250px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-400/50 flex flex-col gap-1 px-1">
+                            {[
+                              { name: 'United Arab Emirates', code: 'AE' },
+                              { name: 'Singapore', code: 'SG' },
+                              { name: 'Malaysia', code: 'MY' },
+                              { name: 'Thailand', code: 'TH' },
+                              { name: 'Australia', code: 'AU' },
+                              { name: 'Canada', code: 'CA' },
+                              { name: 'Brazil', code: 'BR' },
+                              { name: 'South Africa', code: 'ZA' }
+                            ].filter(n => n.name.toLowerCase().includes(nationalitySearch.toLowerCase())).map(nat => (
+                              <button 
+                                key={nat.code} 
+                                onClick={() => setNationality(nat.name)} 
+                                className="w-full flex items-center justify-between px-3 py-2.5 text-[14px] rounded-lg transition-colors cursor-pointer text-left hover:bg-slate-200/70"
+                              >
+                                <span className={`font-medium ${nationality === nat.name ? 'text-[#E11D48] font-bold' : 'text-slate-700'}`}>{nat.name}</span>
+                                <span className="text-[12px] text-slate-400">{nat.code}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="relative z-30 flex flex-col lg:flex-row items-stretch bg-[#F0F2F4] border border-slate-200 transition-all w-full shadow-sm p-1.5 lg:p-2 gap-1 lg:gap-2">
                   {/* Destination */}
                   <div 
-                    className="flex-1 lg:flex-[1.2] px-4 py-3 relative cursor-text hover:bg-white rounded-t-[4px] lg:rounded-l-[4px] lg:rounded-tr-none flex items-center gap-3"
+                    className="flex-1 lg:flex-[1.2] px-5 py-3.5 relative cursor-text hover:bg-slate-200/60 flex items-center gap-3 transition-colors border-2 border-transparent focus-within:border-slate-300 dropdown-container"
                     onClick={(e) => {
                       e.stopPropagation();
                       setActiveDropdown({ type: 'stays-to', index: 'single' });
                     }}
+                    onMouseDown={(e) => e.stopPropagation()}
                   >
                     <MapPin size={22} className="text-slate-500 shrink-0" />
                     <input 
@@ -939,6 +1094,7 @@ function App() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 10 }}
                           onClick={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.stopPropagation()}
                           className="absolute top-[110%] left-0 w-[300px] sm:w-[420px] bg-white rounded-[16px] shadow-[0_15px_50px_rgba(0,0,0,0.15)] p-5 z-[100] border border-slate-100"
                         >
                           <div className="text-sm font-bold text-slate-800 mb-3 px-1">
@@ -971,12 +1127,12 @@ function App() {
                     </AnimatePresence>
                   </div>
 
-                  <div className="w-full h-[1px] lg:w-[1px] lg:h-auto lg:my-3 bg-slate-200 block"></div>
+                  <div className="w-full h-[1px] lg:w-[1px] lg:h-10 lg:my-auto bg-slate-200 block shrink-0 hidden lg:block"></div>
 
                   {/* Dates */}
                   <div 
                     onClick={() => { setCalendarTarget({ type: 'depart', index: null }); setIsCalendarOpen(true); }}
-                    className="flex-[1.2] lg:flex-[1.6] px-4 py-3 relative cursor-pointer hover:bg-white flex items-center gap-3 overflow-hidden"
+                    className="flex-[1.2] lg:flex-[1.6] px-5 py-3.5 relative cursor-pointer hover:bg-slate-200/60 flex items-center gap-3 overflow-hidden transition-colors"
                   >
                     <CalendarDays size={22} className="text-slate-500 shrink-0" />
                     <div className="flex items-center gap-2 text-[14px] lg:text-[15px] font-bold text-slate-800 w-full whitespace-nowrap overflow-hidden">
@@ -989,56 +1145,706 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="w-full h-[1px] lg:w-[1px] lg:h-auto lg:my-3 bg-slate-200 block"></div>
+                  <div className="w-full h-[1px] lg:w-[1px] lg:h-10 lg:my-auto bg-slate-200 block shrink-0 hidden lg:block"></div>
 
                   {/* Guests / Rooms */}
-                  <div className="flex-1 px-4 py-3 relative cursor-pointer hover:bg-white rounded-b-[4px] lg:rounded-b-none lg:rounded-r-[4px] flex items-center gap-3 overflow-hidden">
-                    <User size={22} className="text-slate-500 shrink-0" />
-                    <div className="text-[14px] lg:text-[15px] font-bold text-slate-800 whitespace-nowrap truncate flex-1">
-                      1 room, {(adults + children)} traveler{(adults + children) !== 1 ? 's' : ''}
+                  <div className="flex-1 relative group/stayspass">
+                    <div className="px-5 py-3.5 h-full cursor-pointer hover:bg-slate-200/60 flex items-center gap-3 overflow-hidden transition-colors">
+                      <User size={22} className="text-slate-500 shrink-0" />
+                      <div className="text-[14px] lg:text-[15px] font-bold text-slate-800 whitespace-nowrap truncate flex-1">
+                        {rooms} room{rooms > 1 ? 's' : ''}, {(adults + children)} traveler{(adults + children) !== 1 ? 's' : ''}
+                      </div>
+                    </div>
+                    
+                    <div className="absolute right-0 top-full pt-2 w-[300px] sm:w-[340px] z-50 opacity-0 scale-95 pointer-events-none group-hover/stayspass:opacity-100 group-hover/stayspass:scale-100 group-hover/stayspass:pointer-events-auto transition-all duration-200 origin-top-right">
+                      <div className="bg-white border border-slate-200 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] p-0 overflow-hidden">
+                        <div className="p-5 pb-4">
+                          
+                          <div className="flex items-center justify-between mb-4">
+                            <div>
+                              <div className="text-[15px] text-slate-800">Adults</div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">-</button>
+                              <span className="w-4 text-center font-bold text-[15px]">{adults}</span>
+                              <button onClick={() => setAdults(adults + 1)} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">+</button>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center justify-between mb-4">
+                            <div>
+                              <div className="text-[15px] text-slate-800">Children</div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <button onClick={() => {
+                                 const newCount = Math.max(0, children - 1);
+                                 setChildren(newCount);
+                                 setChildAges(prev => prev.slice(0, newCount));
+                              }} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">-</button>
+                              <span className="w-4 text-center font-bold text-[15px]">{children}</span>
+                              <button onClick={() => {
+                                 const newCount = children + 1;
+                                 setChildren(newCount);
+                                 setChildAges(prev => [...prev, '']);
+                              }} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">+</button>
+                            </div>
+                          </div>
+
+                          {/* Child Ages Dropdowns */}
+                          {children > 0 && (
+                            <div className="mb-4">
+                              {childAges.map((age, idx) => (
+                                <div key={idx} className="flex items-center justify-between mt-3">
+                                  <div className="text-[15px] text-slate-800">Age of child {idx + 1}</div>
+                                  <div className="relative">
+                                    <select 
+                                      value={age}
+                                      onChange={(e) => {
+                                        const newAges = [...childAges];
+                                        newAges[idx] = e.target.value;
+                                        setChildAges(newAges);
+                                      }}
+                                      className="appearance-none bg-transparent border border-slate-400/80 rounded-[8px] pl-4 pr-10 py-1.5 text-[15px] text-slate-700 focus:outline-none focus:border-slate-500 cursor-pointer min-w-[70px] shadow-sm transition-colors hover:bg-slate-50"
+                                    >
+                                      <option value="" disabled>0</option>
+                                      {Array.from({length: 18}).map((_, i) => (
+                                        <option key={i} value={i}>{i}</option>
+                                      ))}
+                                    </select>
+                                    <ChevronDown size={16} strokeWidth={2.5} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-800 pointer-events-none" />
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <div className="text-[15px] text-slate-800">Rooms</div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <button onClick={() => setRooms(Math.max(1, rooms - 1))} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">-</button>
+                              <span className="w-4 text-center font-bold text-[15px]">{rooms}</span>
+                              <button onClick={() => setRooms(rooms + 1)} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">+</button>
+                            </div>
+                          </div>
+                          
+                        </div>
+                      
+                        <div className="h-[1px] bg-slate-200 w-full mx-5 w-[calc(100%-40px)]"></div>
+                      
+                        <div className="p-5 flex items-center justify-between">
+                          <div>
+                            <div className="text-[15px] text-slate-800">Pet-friendly</div>
+                            <div className="text-[13px] text-slate-500">Only show stays that allow pets</div>
+                          </div>
+                          <button 
+                            onClick={() => setPetFriendly(!petFriendly)}
+                            className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${petFriendly ? 'bg-slate-700' : 'bg-slate-400'}`}
+                          >
+                            <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${petFriendly ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-
+              </>
               )}
 
-              {/* Bottom row: Search Button Area */}
-                <div className="mt-6 flex flex-col md:flex-row md:items-center justify-end gap-3 z-20 relative">
-                  <button className="w-full md:w-auto px-10 py-3 bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[15px] rounded-[4px] shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer relative group">
-                    <Search size={18} strokeWidth={2.5} />
-                    <span>Search</span>
-                  </button>
-                </div>
+              {activeCategory === 'cars' && (
+                <div className="w-full flex flex-col gap-3 relative z-30">
+                  
+                  {/* Top row */}
+                  <div className="flex items-center px-2 mb-0.5 relative dropdown-container">
+                    <button 
+                      onClick={() => setCarActiveDropdown(carActiveDropdown === 'mode' ? null : 'mode')}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      className="flex items-center gap-1.5 text-[14px] text-slate-700 hover:text-slate-900 transition-colors cursor-pointer group"
+                    >
+                      {carDropoffMode === 'same' ? 'Same drop-off' : 'Different drop-off'}
+                      <ChevronDown size={14} className="text-slate-600 group-hover:text-slate-800 mt-0.5" />
+                    </button>
+                    
+                    <AnimatePresence>
+                      {carActiveDropdown === 'mode' && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 5 }}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          className="absolute top-[120%] left-2 bg-[#EBEBEB] border border-slate-200 shadow-md rounded-[8px] overflow-hidden z-50 w-[200px]"
+                        >
+                          <button 
+                            onClick={() => { setCarDropoffMode('same'); setCarActiveDropdown(null); }}
+                            className={`w-full text-left px-4 py-3 text-[14px] transition-colors ${carDropoffMode === 'same' ? 'font-bold bg-slate-200/50' : 'text-slate-700 hover:bg-slate-200'}`}
+                          >
+                            Same drop-off
+                          </button>
+                          <button 
+                            onClick={() => { setCarDropoffMode('different'); setCarActiveDropdown(null); }}
+                            className={`w-full text-left px-4 py-3 text-[14px] transition-colors ${carDropoffMode === 'different' ? 'font-bold bg-slate-200/50' : 'text-slate-700 hover:bg-slate-200'}`}
+                          >
+                            Different drop-off
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
 
-                {/* Calendar - part of hero section, scrolls with the page */}
+                  {/* Main search bar */}
+                  <div className="flex flex-col md:flex-row items-stretch bg-[#F0F2F4] border border-slate-200 p-1.5 transition-all w-full shadow-sm">
+                    
+                    <div className="flex-1 relative flex flex-col md:flex-row items-stretch w-full dropdown-container">
+                      {carDropoffMode === 'same' ? (
+                        <div className="flex-1 relative cursor-text">
+                          <div 
+                            className={`w-full h-full px-4 py-2 relative flex items-center transition-colors border ${carActiveDropdown === 'pickup' ? 'bg-[#E5E7EB] border-slate-300' : 'border-transparent hover:bg-slate-200/60'}`}
+                            onClick={() => setCarActiveDropdown(carActiveDropdown === 'pickup' ? null : 'pickup')}
+                            onMouseDown={(e) => e.stopPropagation()}
+                          >
+                            <input 
+                              type="text" 
+                              placeholder="Location" 
+                              value={carPickupLocation}
+                              onChange={(e) => { setCarPickupLocation(e.target.value); setCarActiveDropdown('pickup'); }}
+                              className="bg-transparent text-[15px] font-medium text-slate-800 w-full focus:outline-none placeholder-slate-500 truncate" 
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex-1 flex flex-col md:flex-row items-stretch relative">
+                          <div className="flex-1 relative w-full">
+                            <div 
+                              className={`w-full h-full px-4 py-2 relative md:pr-8 flex items-center transition-colors border ${carActiveDropdown === 'pickup' ? 'bg-[#E5E7EB] border-slate-400' : 'border-slate-300 bg-[#E5E7EB]'}`}
+                              onClick={() => setCarActiveDropdown(carActiveDropdown === 'pickup' ? null : 'pickup')}
+                              onMouseDown={(e) => e.stopPropagation()}
+                            >
+                              <input 
+                                type="text" 
+                                placeholder="From" 
+                                value={carPickupLocation}
+                                onChange={(e) => { setCarPickupLocation(e.target.value); setCarActiveDropdown('pickup'); }}
+                                className="bg-transparent text-[15px] font-medium text-slate-800 w-full focus:outline-none placeholder-slate-500 truncate" 
+                              />
+                            </div>
+                          </div>
+                          
+                          <button 
+                            onClick={() => {
+                              const temp = carPickupLocation;
+                              setCarPickupLocation(carDropoffLocation);
+                              setCarDropoffLocation(temp);
+                            }}
+                            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-[8px] border border-slate-300 bg-[#F0F2F4] hover:bg-slate-200 flex items-center justify-center shadow-sm cursor-pointer"
+                          >
+                            <ArrowLeftRight size={14} className="text-slate-600" />
+                          </button>
+                          
+                          <div className="flex-1 relative w-full mt-2 md:mt-0">
+                            <div 
+                              className={`w-full h-full px-4 py-2 md:pl-8 relative flex items-center transition-colors border ${carActiveDropdown === 'dropoff' ? 'bg-[#E5E7EB] border-slate-400' : 'border-transparent hover:bg-slate-200/60'}`}
+                              onClick={() => setCarActiveDropdown(carActiveDropdown === 'dropoff' ? null : 'dropoff')}
+                              onMouseDown={(e) => e.stopPropagation()}
+                            >
+                              <input 
+                                type="text" 
+                                placeholder="To?" 
+                                value={carDropoffLocation}
+                                onChange={(e) => setCarDropoffLocation(e.target.value)}
+                                className="bg-transparent text-[15px] font-medium text-slate-800 w-full focus:outline-none placeholder-slate-500 truncate" 
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Autocomplete Dropdown */}
+                      <AnimatePresence>
+                        {(carActiveDropdown === 'pickup' || carActiveDropdown === 'dropoff') && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            className={`absolute top-[calc(100%+4px)] ${carActiveDropdown === 'dropoff' ? 'left-auto right-0' : 'left-0'} w-full md:w-[450px] bg-[#EBEBEB] rounded-[12px] shadow-lg border border-slate-200 z-[100] overflow-hidden`}
+                          >
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); setCarActiveDropdown(null); }}
+                              className="absolute top-2 right-2 p-1.5 hover:bg-slate-300 rounded-full text-slate-500 hover:text-slate-700 transition-colors z-10 cursor-pointer"
+                            >
+                              <X size={16} />
+                            </button>
+                            <div className="max-h-[400px] overflow-y-auto pb-2 relative z-0">
+                              {/* Cities Section */}
+                              {carLocationSuggestions.filter(item => item.type === 'city' && item.searchStr.includes((carActiveDropdown === 'pickup' ? carPickupLocation : carDropoffLocation).toLowerCase())).length > 0 && (
+                                <div className="px-4 pt-4 pb-2">
+                                  <div className="text-[13px] font-bold text-slate-800 mb-2">Cities (including airports)</div>
+                                  
+                                  {carLocationSuggestions.filter(item => item.type === 'city' && item.searchStr.includes((carActiveDropdown === 'pickup' ? carPickupLocation : carDropoffLocation).toLowerCase())).map(item => (
+                                    <button 
+                                      key={item.name}
+                                      onClick={() => { 
+                                        if (carActiveDropdown === 'pickup') setCarPickupLocation(item.name); 
+                                        else setCarDropoffLocation(item.name); 
+                                        setCarActiveDropdown(null); 
+                                      }} 
+                                      className="w-full flex items-center gap-4 px-2 py-2 hover:bg-slate-200 rounded-lg cursor-pointer transition-colors text-left group"
+                                    >
+                                      <div className="w-12 h-12 rounded-xl bg-slate-300/60 flex items-center justify-center shrink-0">
+                                        <MapPin size={22} className="text-slate-600" />
+                                      </div>
+                                      <div className="flex-1">
+                                        <div className="text-[14px] font-bold text-slate-900 group-hover:text-black">{item.name}</div>
+                                        <div className="text-[13px] text-slate-500 mt-0.5">{item.subtitle}</div>
+                                      </div>
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                              
+                              {/* Airports Section */}
+                              {carLocationSuggestions.filter(item => item.type === 'airport' && item.searchStr.includes((carActiveDropdown === 'pickup' ? carPickupLocation : carDropoffLocation).toLowerCase())).length > 0 && (
+                                <div className="px-4 pt-2 pb-2">
+                                  <div className="text-[13px] font-bold text-slate-800 mb-2">Airports</div>
+                                  
+                                  {carLocationSuggestions.filter(item => item.type === 'airport' && item.searchStr.includes((carActiveDropdown === 'pickup' ? carPickupLocation : carDropoffLocation).toLowerCase())).map(item => (
+                                    <button 
+                                      key={item.code}
+                                      onClick={() => { 
+                                        if (carActiveDropdown === 'pickup') setCarPickupLocation(`${item.name} ${item.code}`); 
+                                        else setCarDropoffLocation(`${item.name} ${item.code}`); 
+                                        setCarActiveDropdown(null); 
+                                      }} 
+                                      className="w-full flex items-center gap-4 px-2 py-2 hover:bg-slate-200 rounded-lg cursor-pointer transition-colors text-left group"
+                                    >
+                                      <div className="w-12 h-12 rounded-xl bg-slate-300/60 flex items-center justify-center shrink-0">
+                                        <Plane size={22} className="text-slate-600 rotate-45" />
+                                      </div>
+                                      <div className="flex-1">
+                                        <div className="text-[14px] font-bold text-slate-900 group-hover:text-black">
+                                          {item.name} <span className="text-slate-500 font-normal ml-1">{item.code}</span>
+                                        </div>
+                                        <div className="text-[13px] text-slate-500 mt-0.5">{item.subtitle}</div>
+                                      </div>
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                              
+                              {carLocationSuggestions.filter(item => item.searchStr.includes((carActiveDropdown === 'pickup' ? carPickupLocation : carDropoffLocation).toLowerCase())).length === 0 && (
+                                <div className="px-6 py-8 text-center text-slate-500 text-[14px]">
+                                  No matches found
+                                </div>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                    
+                    <div className="w-full h-[1px] md:w-[1px] md:h-7 md:my-auto bg-slate-300 block shrink-0 mx-1 mt-2 md:mt-0"></div>
+
+                    {/* Dates */}
+                    <div className="flex-[1.2] px-4 py-2 relative flex items-center gap-5 transition-colors">
+                      <div className="flex items-center gap-3 text-[15px] text-slate-800 whitespace-nowrap">
+                        <span 
+                          className="font-medium cursor-pointer hover:text-slate-500 transition-colors"
+                          onClick={() => { setCalendarTarget({ type: 'depart', index: null }); setIsCalendarOpen(true); }}
+                        >
+                          {formatDateString(departDate).split(',')[0]} {departDate.getDate()}/{departDate.getMonth() + 1}
+                        </span>
+                        <div 
+                          className="relative"
+                          onMouseEnter={() => setCarActiveDropdown('pickup-time')}
+                          onMouseLeave={() => setCarActiveDropdown(null)}
+                        >
+                          <span 
+                            className="font-medium cursor-pointer hover:text-slate-500 transition-colors py-2"
+                          >
+                            {carPickupTime}
+                          </span>
+                          
+                          <AnimatePresence>
+                            {carActiveDropdown === 'pickup-time' && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                className="absolute top-full pt-2 left-1/2 -translate-x-1/2 w-[320px] z-[100]"
+                              >
+                                <div className="bg-white rounded-[12px] shadow-lg border border-slate-200 overflow-hidden">
+                                  <div className="px-4 py-3 border-b border-slate-200/60 text-[14px] font-bold text-black">
+                                    Select pick-up time
+                                  </div>
+                                  <div className="p-3 grid grid-cols-2 gap-2 max-h-[300px] overflow-y-auto">
+                                    {carTimeOptions.map(time => (
+                                      <button
+                                        key={time}
+                                        onClick={(e) => { e.stopPropagation(); setCarPickupTime(time); setCarActiveDropdown(null); }}
+                                        className={`py-2 text-center rounded-[8px] text-[13px] font-bold transition-colors ${carPickupTime === time ? 'bg-[#3A4045] text-white' : 'bg-[#DDE0E3] text-[#1A1F24] hover:bg-slate-300'}`}
+                                      >
+                                        {time}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </div>
+                      
+                      <span className="text-slate-400 font-normal shrink-0">-</span>
+                      
+                      <div className="flex items-center gap-3 text-[15px] text-slate-800 whitespace-nowrap">
+                        <span 
+                          className="font-medium cursor-pointer hover:text-slate-500 transition-colors"
+                          onClick={() => { setCalendarTarget({ type: 'return', index: null }); setIsCalendarOpen(true); }}
+                        >
+                          {formatDateString(returnDate).split(',')[0]} {returnDate ? `${returnDate.getDate()}/${returnDate.getMonth() + 1}` : ''}
+                        </span>
+                        <div 
+                          className="relative"
+                          onMouseEnter={() => setCarActiveDropdown('dropoff-time')}
+                          onMouseLeave={() => setCarActiveDropdown(null)}
+                        >
+                          <span 
+                            className="font-medium cursor-pointer hover:text-slate-500 transition-colors py-2"
+                          >
+                            {carDropoffTime}
+                          </span>
+                          
+                          <AnimatePresence>
+                            {carActiveDropdown === 'dropoff-time' && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                className="absolute top-full pt-2 left-1/2 -translate-x-1/2 w-[320px] z-[100]"
+                              >
+                                <div className="bg-white rounded-[12px] shadow-lg border border-slate-200 overflow-hidden">
+                                  <div className="px-4 py-3 border-b border-slate-200/60 text-[14px] font-bold text-black">
+                                    Select drop-off time
+                                  </div>
+                                  <div className="p-3 grid grid-cols-2 gap-2 max-h-[300px] overflow-y-auto">
+                                    {carTimeOptions.map(time => (
+                                      <button
+                                        key={time}
+                                        onClick={(e) => { e.stopPropagation(); setCarDropoffTime(time); setCarActiveDropdown(null); }}
+                                        className={`py-2 text-center rounded-[8px] text-[13px] font-bold transition-colors ${carDropoffTime === time ? 'bg-[#3A4045] text-white' : 'bg-[#DDE0E3] text-[#1A1F24] hover:bg-slate-300'}`}
+                                      >
+                                        {time}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom row checkboxes */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end px-2 mt-1">
+                    <div className="mt-3 sm:mt-0">
+                      <label className="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" className="w-[15px] h-[15px] rounded-[3px] border-slate-300 text-[#006CE4] focus:ring-0 cursor-pointer accent-[#006CE4]" />
+                        <span className="text-[13px] text-slate-700 group-hover:text-slate-900 transition-colors">SUVs only</span>
+                      </label>
+                    </div>
+                  </div>
+
+                </div>
+              )}
+              {activeCategory === 'packages' && (
+                <div className="w-full flex flex-col gap-3 relative z-30">
+                  {/* Main search bar */}
+                  <div className="relative z-30 flex flex-col lg:flex-row items-stretch bg-[#F0F2F4] border border-slate-200 transition-all w-full shadow-sm p-1.5 lg:p-2 gap-1 lg:gap-2">
+                    
+                    {/* Location fields */}
+                    <div className="flex-1 flex flex-col md:flex-row items-stretch relative">
+                      <div className="flex-1 relative w-full">
+                        <div 
+                          className="w-full h-full px-5 py-3.5 relative cursor-text hover:bg-slate-200/60 flex items-center gap-3 transition-colors border-2 border-transparent focus-within:border-slate-300"
+                          onClick={() => setActiveDropdown(activeDropdown?.type === 'package-from' ? null : { type: 'package-from' })}
+                          onMouseDown={(e) => e.stopPropagation()}
+                        >
+                          <MapPin size={22} className="text-slate-500 shrink-0" />
+                          <input 
+                            type="text" 
+                            placeholder="From" 
+                            value={packageFrom}
+                            onChange={(e) => { setPackageFrom(e.target.value); setActiveDropdown({ type: 'package-from' }); }}
+                            className="bg-transparent text-[14px] lg:text-[15px] font-bold text-slate-800 w-full focus:outline-none placeholder-slate-400 truncate" 
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-40">
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const temp = packageFrom;
+                            setPackageFrom(packageTo);
+                            setPackageTo(temp);
+                          }}
+                          className="w-8 h-8 rounded-full bg-white border border-slate-200 shadow-sm hover:bg-slate-50 flex items-center justify-center text-slate-600 transition-all cursor-pointer group/swap"
+                        >
+                          <ArrowLeftRight size={14} className="group-hover/swap:rotate-180 transition-transform duration-300" />
+                        </button>
+                      </div>
+
+                      <div className="w-full h-[1px] md:w-[1px] md:h-8 md:my-auto bg-slate-200 block shrink-0 hidden md:block"></div>
+                      
+                      <div className="flex-1 relative w-full mt-2 md:mt-0">
+                        <div 
+                          className="w-full h-full px-5 py-3.5 pl-8 relative cursor-text hover:bg-slate-200/60 flex items-center gap-3 transition-colors border-2 border-transparent focus-within:border-slate-300"
+                          onClick={() => setActiveDropdown(activeDropdown?.type === 'package-to' ? null : { type: 'package-to' })}
+                          onMouseDown={(e) => e.stopPropagation()}
+                        >
+                          <MapPin size={22} className="text-slate-500 shrink-0" />
+                          <input 
+                            type="text" 
+                            placeholder="To?" 
+                            value={packageTo}
+                            onChange={(e) => { setPackageTo(e.target.value); setActiveDropdown({ type: 'package-to' }) }}
+                            className="bg-transparent text-[14px] lg:text-[15px] font-bold text-slate-800 w-full focus:outline-none placeholder-slate-400 truncate" 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Autocomplete Dropdown for Packages */}
+                    <AnimatePresence>
+                      {(activeDropdown?.type === 'package-from' || activeDropdown?.type === 'package-to') && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          className={`absolute top-[calc(100%+4px)] ${activeDropdown?.type === 'package-to' ? 'left-auto right-[35%]' : 'left-0'} w-full md:w-[450px] bg-[#EBEBEB] rounded-[12px] shadow-lg border border-slate-200 z-[100] overflow-hidden`}
+                        >
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); setActiveDropdown(null); }}
+                            className="absolute top-2 right-2 p-1.5 hover:bg-slate-300 rounded-full text-slate-500 hover:text-slate-700 transition-colors z-10 cursor-pointer"
+                          >
+                            <X size={16} />
+                          </button>
+                          <div className="max-h-[400px] overflow-y-auto pb-2 relative z-0">
+                            {/* Cities Section */}
+                            {alphabetCities.filter(item => item.name.toLowerCase().includes((activeDropdown?.type === 'package-from' ? packageFrom : packageTo).toLowerCase())).length > 0 && (
+                              <div className="px-4 pt-4 pb-2">
+                                <div className="text-[13px] font-bold text-slate-800 mb-2">Cities</div>
+                                
+                                {alphabetCities.filter(item => item.name.toLowerCase().includes((activeDropdown?.type === 'package-from' ? packageFrom : packageTo).toLowerCase())).map(item => (
+                                  <button 
+                                    key={item.name}
+                                    onClick={() => { 
+                                      if (activeDropdown?.type === 'package-from') setPackageFrom(item.name); 
+                                      else setPackageTo(item.name); 
+                                      setActiveDropdown(null); 
+                                    }} 
+                                    className="w-full flex items-center gap-4 px-2 py-2 hover:bg-slate-200 rounded-lg cursor-pointer transition-colors text-left group"
+                                  >
+                                    <div className="w-12 h-12 rounded-xl bg-slate-300/60 flex items-center justify-center shrink-0">
+                                      <MapPin size={22} className="text-slate-600" />
+                                    </div>
+                                    <div className="flex-1">
+                                      <div className="text-[14px] font-bold text-slate-900 group-hover:text-black">{item.name}</div>
+                                      <div className="text-[13px] text-slate-500 mt-0.5">{item.country}</div>
+                                    </div>
+                                    <div className="text-[12px] font-bold text-slate-400">{item.code}</div>
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {alphabetCities.filter(item => item.name.toLowerCase().includes((activeDropdown?.type === 'package-from' ? packageFrom : packageTo).toLowerCase())).length === 0 && (
+                              <div className="px-6 py-8 text-center text-slate-500 text-[14px]">
+                                No matches found
+                              </div>
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <div className="w-full h-[1px] lg:w-[1px] lg:h-8 lg:my-auto bg-slate-200 block shrink-0"></div>
+
+                    {/* Dates */}
+                    <div 
+                      className="flex-[0.8] px-5 py-3.5 relative flex items-center gap-3 transition-colors border-2 border-transparent hover:bg-slate-200/60 cursor-pointer"
+                      onClick={() => { setCalendarTarget({ type: 'depart', index: null }); setIsCalendarOpen(true); }}
+                    >
+                      <CalendarDays size={22} className="text-slate-500 shrink-0" />
+                      <div className="flex items-center gap-2 text-[14px] lg:text-[15px] text-slate-800 whitespace-nowrap overflow-hidden text-ellipsis">
+                        <span className="font-bold">{formatDateString(departDate).split(',')[0]} {departDate.getDate()} {departDate.toLocaleString('default', {month:'short'})}</span>
+                        <span className="text-slate-400 font-normal shrink-0">-</span>
+                        <span className="font-bold">{formatDateString(returnDate).split(',')[0]} {returnDate ? `${returnDate.getDate()} ${returnDate.toLocaleString('default', {month:'short'})}` : ''}</span>
+                        {departDate && returnDate && (
+                          <span className="ml-2 px-2 py-0.5 bg-slate-200/70 text-slate-700 text-[11px] font-bold rounded-md hidden xl:inline-block">
+                            {Math.ceil((returnDate - departDate) / (1000 * 60 * 60 * 24))} nights
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="w-full h-[1px] lg:w-[1px] lg:h-8 lg:my-auto bg-slate-200 block shrink-0"></div>
+
+                    {/* Travelers */}
+                    <div className="flex-[0.7] px-5 py-3.5 relative flex items-center transition-colors border-2 border-transparent hover:bg-slate-200/60 cursor-pointer group"
+                         onClick={() => setActiveDropdown(activeDropdown?.type === 'package-travelers' ? null : { type: 'package-travelers' })}
+                         onMouseDown={(e) => e.stopPropagation()}
+                    >
+                      <div className="flex items-center gap-3 text-[14px] lg:text-[15px] text-slate-800 whitespace-nowrap w-full">
+                        <User size={22} className="text-slate-500 group-hover:text-slate-700 transition-colors shrink-0" />
+                        <span className="font-bold text-slate-800 w-full truncate">
+                          {packageAdults + packageChildren} traveler{packageAdults + packageChildren > 1 ? 's' : ''}
+                        </span>
+                      </div>
+                      
+                      <AnimatePresence>
+                        {activeDropdown?.type === 'package-travelers' && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            className="absolute top-[calc(100%+4px)] right-0 w-[300px] bg-[#EBEBEB] rounded-[8px] shadow-lg border border-slate-300 z-[100] overflow-hidden"
+                          >
+                            <div className="p-4 flex flex-col gap-4">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[15px] text-slate-800">Adults</span>
+                                <div className="flex items-center gap-3">
+                                  <button 
+                                    onClick={(e) => { e.stopPropagation(); setPackageAdults(Math.max(1, packageAdults - 1)) }}
+                                    className="w-7 h-7 rounded-[4px] border border-slate-400 flex items-center justify-center bg-transparent hover:bg-slate-200 disabled:opacity-40"
+                                    disabled={packageAdults <= 1}
+                                  >
+                                    <Minus size={16} className="text-slate-900" />
+                                  </button>
+                                  <span className="text-[15px] font-bold text-slate-900 w-4 text-center">{packageAdults}</span>
+                                  <button 
+                                    onClick={(e) => { e.stopPropagation(); setPackageAdults(packageAdults + 1) }}
+                                    className="w-7 h-7 rounded-[4px] border border-slate-400 flex items-center justify-center bg-transparent hover:bg-slate-200"
+                                  >
+                                    <Plus size={16} className="text-slate-900" />
+                                  </button>
+                                </div>
+                              </div>
+                              
+                              <div className="flex items-center justify-between">
+                                <span className="text-[15px] text-slate-800">Children</span>
+                                <div className="flex items-center gap-3">
+                                  <button 
+                                    onClick={(e) => { 
+                                      e.stopPropagation(); 
+                                      if (packageChildren > 0) {
+                                        setPackageChildren(packageChildren - 1);
+                                        setPackageChildAges(prev => prev.slice(0, -1));
+                                      }
+                                    }}
+                                    className="w-7 h-7 rounded-[4px] border border-slate-400 flex items-center justify-center bg-transparent hover:bg-slate-200 disabled:opacity-40"
+                                    disabled={packageChildren <= 0}
+                                  >
+                                    <Minus size={16} className="text-slate-900" />
+                                  </button>
+                                  <span className="text-[15px] font-bold text-slate-900 w-4 text-center">{packageChildren}</span>
+                                  <button 
+                                    onClick={(e) => { 
+                                      e.stopPropagation(); 
+                                      setPackageChildren(packageChildren + 1);
+                                      setPackageChildAges([...packageChildAges, '10 years']);
+                                    }}
+                                    className="w-7 h-7 rounded-[4px] border border-slate-400 flex items-center justify-center bg-transparent hover:bg-slate-200"
+                                  >
+                                    <Plus size={16} className="text-slate-900" />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {packageChildren > 0 && (
+                              <div className="border-t border-slate-300 p-4 flex flex-col gap-3">
+                                {packageChildAges.map((age, i) => (
+                                  <div key={i} className="flex items-center justify-between">
+                                    <span className="text-[15px] text-slate-800">Age of child {i + 1}</span>
+                                    <div className="relative">
+                                      <select 
+                                        value={age}
+                                        onChange={(e) => {
+                                          const newAges = [...packageChildAges];
+                                          newAges[i] = e.target.value;
+                                          setPackageChildAges(newAges);
+                                        }}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="appearance-none bg-transparent border border-slate-400 rounded-[4px] py-1.5 pl-3 pr-8 text-[14px] text-slate-800 focus:outline-none focus:border-slate-500 cursor-pointer"
+                                      >
+                                        <option value="Under 1">Under 1</option>
+                                        {[...Array(17)].map((_, idx) => (
+                                          <option key={idx} value={`${idx + 1} years`}>{idx + 1} years</option>
+                                        ))}
+                                      </select>
+                                      <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-800 pointer-events-none" />
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                  </div>
+                </div>
+              )}
+
+
+              {/* Bottom row: Search Button Area */}
+              <div className="mt-6 flex flex-col md:flex-row md:items-center justify-end gap-3 z-20 relative">
+                <button className="w-full md:w-auto px-10 py-3 bg-[#E11D48] hover:bg-rose-600 text-white font-extrabold text-[15px] rounded-[4px] shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer relative group">
+                  <Search size={18} strokeWidth={2.5} />
+                  <span>Search</span>
+                </button>
+              </div>
+
+                {/* Calendar - perfectly centered over the search panel without fixed positioning */}
                 <AnimatePresence>
                   {isCalendarOpen && (
                     <motion.div
                       key="cal-panel"
                       ref={calendarRef}
-                      initial={{ opacity: 0, y: -8, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                      transition={{ duration: 0.18, ease: 'easeOut' }}
+                      initial={{ opacity: 0, y: '-45%', x: '-50%', scale: 0.98 }}
+                      animate={{ opacity: 1, y: '-50%', x: '-50%', scale: 1 }}
+                      exit={{ opacity: 0, y: '-45%', x: '-50%', scale: 0.98 }}
+                      transition={{ duration: 0.2, ease: 'easeOut' }}
                       onClick={(e) => e.stopPropagation()}
-                      className="absolute top-0 left-0 right-0 z-[60] bg-white rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.15),0_4px_16px_rgba(0,0,0,0.08)] border border-slate-200 flex flex-col overflow-hidden"
+                      className="absolute top-1/2 left-1/2 z-[60] w-[95%] lg:w-[850px] bg-white rounded-[2rem] shadow-[0_30px_100px_rgba(0,0,0,0.25)] border border-slate-200 flex flex-col overflow-hidden"
                     >
                       {/* Top bar: Depart / Return chips + Close */}
                       <div className="flex items-stretch border-b border-slate-100">
-                        <button onClick={() => setCalendarTarget({ type: 'depart', index: null })} className={`flex-1 text-left px-5 py-4 transition-all ${calendarTarget.type === 'depart' ? 'border-b-[3px] border-[#E11D48]' : 'border-b-[3px] border-transparent hover:bg-slate-50'}`}>
-                          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Depart</div>
-                          <div className={`text-[15px] font-extrabold ${calendarTarget.type === 'depart' ? 'text-[#E11D48]' : 'text-slate-800'}`}>{formatDateString(departDate)}</div>
-                        </button>
-                        <div className="w-px bg-slate-100 my-3" />
-                        {tripType !== 'one-way' && (
-                          <button onClick={() => setCalendarTarget({ type: 'return', index: null })} className={`flex-1 text-left px-5 py-4 transition-all ${calendarTarget.type === 'return' ? 'border-b-[3px] border-[#E11D48]' : 'border-b-[3px] border-transparent hover:bg-slate-50'}`}>
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Return</div>
-                            <div className={`text-[15px] font-extrabold ${calendarTarget.type === 'return' ? 'text-[#E11D48]' : 'text-slate-800'}`}>
-                              {returnDate ? formatDateString(returnDate) : <span className="text-slate-300">Select date</span>}
-                            </div>
-                          </button>
+                        {activeCategory !== 'cars' && (
+                          <>
+                            <button onClick={() => setCalendarTarget({ type: 'depart', index: null })} className={`flex-1 text-left px-5 py-4 transition-all ${calendarTarget.type === 'depart' ? 'border-b-[3px] border-[#E11D48]' : 'border-b-[3px] border-transparent hover:bg-slate-50'}`}>
+                              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Depart</div>
+                              <div className={`text-[15px] font-extrabold ${calendarTarget.type === 'depart' ? 'text-[#E11D48]' : 'text-slate-800'}`}>{formatDateString(departDate)}</div>
+                            </button>
+                            <div className="w-px bg-slate-100 my-3" />
+                            {tripType !== 'one-way' && (
+                              <button onClick={() => setCalendarTarget({ type: 'return', index: null })} className={`flex-1 text-left px-5 py-4 transition-all ${calendarTarget.type === 'return' ? 'border-b-[3px] border-[#E11D48]' : 'border-b-[3px] border-transparent hover:bg-slate-50'}`}>
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Return</div>
+                                <div className={`text-[15px] font-extrabold ${calendarTarget.type === 'return' ? 'text-[#E11D48]' : 'text-slate-800'}`}>
+                                  {returnDate ? formatDateString(returnDate) : <span className="text-slate-300">Select date</span>}
+                                </div>
+                              </button>
+                            )}
+                          </>
                         )}
-                        <button onClick={() => setIsCalendarOpen(false)} className="px-4 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"><X size={20} /></button>
+                        <button onClick={() => setIsCalendarOpen(false)} className={`px-4 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer ${activeCategory === 'cars' ? 'ml-auto py-4' : ''}`}><X size={20} /></button>
                       </div>
 
                       {/* Calendar body */}
