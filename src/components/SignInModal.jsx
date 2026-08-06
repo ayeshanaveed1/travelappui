@@ -87,13 +87,13 @@ const SignInModal = ({ isOpen, onClose }) => {
             </div>
 
             {/* Right Graphic Section */}
-            <div className="hidden md:block w-[400px] relative overflow-hidden bg-[#0d1b1e] rounded-r-[24px]">
+            <div className="hidden md:block w-[400px] relative overflow-hidden bg-slate-900 rounded-r-[24px]">
               <img 
                 src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=800" 
                 alt="Airplane wing" 
-                className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
+                className="absolute inset-0 w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0d1b1e] via-transparent to-[#0d1b1e]/40"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/30 to-transparent"></div>
               
               <div className="absolute inset-x-0 bottom-0 p-10 flex flex-col gap-4">
                 <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-xl text-white">

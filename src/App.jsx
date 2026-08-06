@@ -33,17 +33,21 @@ import {
   Globe2,
   Compass,
   FileText,
-  Train
+  Train,
+  Home
 } from 'lucide-react'
 import heroVideo from './assets/create_a_video_for_my_website (1).mp4'
+import staysVideo from './assets/create_a_video_of_hotel_stays.mp4'
 import RegisterPage from './RegisterPage';
 import heroImg from './assets/hero_poster.jpg'
 import FeaturedHotels from './FeaturedHotels';
 import FeaturedFlights from './FeaturedFlights';
 import FeaturedTours from './FeaturedTours';
 import Footer from './Footer';
-import SettingsModal from './components/SettingsModal';
 import SignInModal from './components/SignInModal';
+import CurrencyModal from './components/CurrencyModal';
+import CountryModal from './components/CountryModal';
+import LiveBookingWidget from './components/LiveBookingWidget';
 
 const Flag = ({ code, className }) => {
   if (!code) return null;
@@ -115,58 +119,84 @@ const locationSuggestions = [
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [currency, setCurrency] = useState('USD')
-  const [language, setLanguage] = useState('EN')
-  const [region, setRegion] = useState('US')
-  const [country, setCountry] = useState('United States')
   const [activeCategory, setActiveCategory] = useState('flights')
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false)
   const [isRegisterPageOpen, setIsRegisterPageOpen] = useState(false)
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
-  const [settingsTab, setSettingsTab] = useState('Languages') // 'Languages' or 'Currency'
-  const [selectedLanguage, setSelectedLanguage] = useState({ name: 'English (Pakistan)', code: 'PK', isGlobe: false })
+  const [isCurrencyModalOpen, setIsCurrencyModalOpen] = useState(false)
+  const [isCountryModalOpen, setIsCountryModalOpen] = useState(false)
+  const [selectedCountry, setSelectedCountry] = useState({ name: 'Pakistan', code: 'PK' })
   const [selectedCurrency, setSelectedCurrency] = useState({ code: 'PKR', symbol: 'Rs' })
 
-  const languagesList = [
-    { name: 'English (Pakistan)', code: 'PK' },
-    { name: '繁體中文', code: 'TW' },
-    { name: '日本語', code: 'JP' },
-    { name: '한국어', code: 'KR' },
-    { name: 'ภาษาไทย', code: 'TH' },
-    { name: 'Українська', code: 'UA' },
-    { name: 'العربية', code: 'SA', isGlobe: true },
-    { name: 'Bahasa Indonesia', code: 'ID' },
-    { name: 'Bahasa Melayu', code: 'MY' },
-    { name: 'Dansk', code: 'DK' },
-    { name: 'Deutsch', code: 'DE' },
-    { name: 'English', code: 'GB', isGlobe: true },
-    { name: 'Español', code: 'ES' },
-    { name: 'Français', code: 'FR' },
-    { name: 'Italiano', code: 'IT' },
-    { name: 'Nederlands', code: 'NL' },
-    { name: 'Polski', code: 'PL' },
-    { name: 'Português (Brasil)', code: 'BR' },
-    { name: 'Suomi', code: 'FI' },
-    { name: 'Svenska', code: 'SE' },
-    { name: 'Tiếng Việt', code: 'VN' },
-    { name: 'Türkçe', code: 'TR' },
-    { name: 'Ελληνικά', code: 'GR' },
-    { name: 'Русский', code: 'RU' }
+  const countriesList = [
+    { name: 'Pakistan', code: 'PK' },
+    { name: 'Algeria', code: 'DZ' },
+    { name: 'Angola', code: 'AO' },
+    { name: 'Argentina', code: 'AR' },
+    { name: 'Australia', code: 'AU' },
+    { name: 'Bahrain', code: 'BH' },
+    { name: 'Bangladesh', code: 'BD' },
+    { name: 'Botswana', code: 'BW' },
+    { name: 'Brazil', code: 'BR' },
+    { name: 'Cameroon', code: 'CM' },
+    { name: 'Canada', code: 'CA' },
+    { name: 'Chile', code: 'CL' },
+    { name: 'China', code: 'CN' },
+    { name: 'Colombia', code: 'CO' },
+    { name: 'Congo, Dem Rep of', code: 'CD' },
+    { name: 'Cote d\'Ivoire', code: 'CI' },
+    { name: 'Egypt', code: 'EG' },
+    { name: 'Ethiopia', code: 'ET' },
+    { name: 'France', code: 'FR' },
+    { name: 'Gabon', code: 'GA' },
+    { name: 'Germany', code: 'DE' },
+    { name: 'Ghana', code: 'GH' },
+    { name: 'Hong Kong', code: 'HK' },
+    { name: 'India', code: 'IN' },
+    { name: 'Indonesia', code: 'ID' },
+    { name: 'Iraq', code: 'IQ' },
+    { name: 'Ireland', code: 'IE' },
+    { name: 'Italy', code: 'IT' },
+    { name: 'Japan', code: 'JP' },
+    { name: 'Jordan', code: 'JO' },
+    { name: 'Kenya', code: 'KE' },
+    { name: 'Kuwait', code: 'KW' },
+    { name: 'Lebanon', code: 'LB' },
+    { name: 'United Kingdom', code: 'GB' },
+    { name: 'United States', code: 'US' }
   ];
 
   const currenciesList = [
-    { code: 'USD', name: 'US Dollar', symbol: '$' },
+    { code: 'PKR', name: 'Pakistani Rupee', symbol: 'Rs' },
+    { code: 'AED', name: 'Emirates Dirham', symbol: 'د.إ' },
+    { code: 'AOA', name: 'Angolan Kwanza', symbol: 'Kz' },
+    { code: 'ARS', name: 'Argentine Peso', symbol: '$' },
+    { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
+    { code: 'AZN', name: 'Azerbaijani Manat', symbol: '₼' },
+    { code: 'BDT', name: 'Bangladeshi Taka', symbol: '৳' },
+    { code: 'BHD', name: 'Bahraini Dinar', symbol: '.د.ب' },
+    { code: 'BRL', name: 'Brazilian Real', symbol: 'R$' },
+    { code: 'BWP', name: 'Botswana Pula', symbol: 'P' },
+    { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
+    { code: 'CDF', name: 'Congolese Franc', symbol: 'FC' },
+    { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
+    { code: 'CLP', name: 'Chilean Peso', symbol: '$' },
+    { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
+    { code: 'COP', name: 'Colombian Peso', symbol: '$' },
+    { code: 'DZD', name: 'Algerian Dinar', symbol: 'د.ج' },
+    { code: 'EGP', name: 'Egyptian Pound', symbol: '£' },
+    { code: 'ETB', name: 'Ethiopian Birr', symbol: 'Br' },
     { code: 'EUR', name: 'Euro', symbol: '€' },
     { code: 'GBP', name: 'British Pound', symbol: '£' },
-    { code: 'PKR', name: 'Pakistani Rupee', symbol: 'Rs' },
-    { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
-    { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
-    { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
-    { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
-    { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
+    { code: 'GHS', name: 'Ghana Cedi', symbol: 'GH₵' },
     { code: 'HKD', name: 'Hong Kong Dollar', symbol: 'HK$' },
-    { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$' },
-    { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ' }
+    { code: 'IDR', name: 'Indonesian Rupiah', symbol: 'Rp' },
+    { code: 'INR', name: 'Indian Rupee', symbol: '₹' },
+    { code: 'IQD', name: 'Iraqi Dinar', symbol: 'ع.د' },
+    { code: 'IRR', name: 'Iranian Rial', symbol: '﷼' },
+    { code: 'JOD', name: 'Jordanian Dinar', symbol: 'د.ا' },
+    { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
+    { code: 'KES', name: 'Kenyan Shilling', symbol: 'KSh' },
+    { code: 'USD', name: 'US Dollar', symbol: '$' }
   ];
 
   const carLocationSuggestions = [
@@ -189,16 +219,12 @@ function App() {
   // Search form states
   const [fromCity, setFromCity] = useState('Lahore (All)')
   const [toCity, setToCity] = useState('')
-  const [directOnly, setDirectOnly] = useState(false)
   const [passengers, setPassengers] = useState('1 Adult')
   const [adults, setAdults] = useState(1)
   const [children, setChildren] = useState(0)
   const [childAges, setChildAges] = useState([])
-  const [infants, setInfants] = useState(0)
   const [travelClass, setTravelClass] = useState('Economy')
-  const [paymentType, setPaymentType] = useState('5 Payment Types')
   const [rooms, setRooms] = useState(1)
-  const [petFriendly, setPetFriendly] = useState(false)
   const [nationality, setNationality] = useState('United Arab Emirates')
   const [nationalitySearch, setNationalitySearch] = useState('')
   const [carDropoffMode, setCarDropoffMode] = useState('same') // 'same' or 'different'
@@ -332,30 +358,6 @@ function App() {
     { title: 'Stays', subtitle: 'Booking', icon: BedDouble },
   ];
 
-  const sidebarSections = [
-    [
-      { id: 'hotels', label: 'Hotels & Homes', icon: BedDouble },
-      { id: 'flights', label: 'Flights', icon: Plane },
-      { id: 'flight_hotel', label: 'Flight + Hotel', icon: Building2 },
-      { id: 'cars', label: 'Cars', icon: Car },
-      { id: 'attractions', label: 'Attractions & Tours', icon: Ticket },
-    ],
-    [
-      { id: 'private_tours', label: 'Private Tours', icon: Luggage },
-      { id: 'group_tours', label: 'Group Tours', icon: Trees },
-      { id: 'cruises', label: 'Cruises', icon: Ship },
-    ],
-    [
-      { id: 'planner', label: 'Trip.Planner', icon: Route, badge: 'New' },
-      { id: 'inspiration', label: 'Travel Inspiration', icon: Lightbulb },
-      { id: 'map', label: 'Map', icon: MapIcon },
-    ],
-    [
-      { id: 'rewards', label: 'TravelIQ Rewards', icon: Award },
-      { id: 'app', label: 'App', icon: Smartphone },
-    ]
-  ];
-
   // Date helpers
   const formatDateString = (date) => {
     if (!date) return 'Select Date';
@@ -463,10 +465,10 @@ function App() {
           {isDepart && returnDate && <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-rose-50" />}
           {isReturn && departDate && <div className="absolute left-0 top-0 bottom-0 w-1/2 bg-rose-50" />}
           
-          {/* Magical Flight Animation using layoutId */}
+          {/* Magical Icon Animation using layoutId */}
           {((!returnDate && isDepart) || (returnDate && isReturn)) && (
             <motion.div
-              layoutId="flight-plane"
+              layoutId="calendar-active-icon"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, type: 'spring', bounce: 0.3 }}
@@ -476,7 +478,13 @@ function App() {
                 animate={{ y: [0, -3, 0] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               >
-                <Plane size={18} className="rotate-45" fill="currentColor" />
+                {activeCategory === 'stays' ? (
+                  <Home size={18} fill="currentColor" />
+                ) : activeCategory === 'cars' ? (
+                  <Car size={18} fill="currentColor" />
+                ) : (
+                  <Plane size={18} className="rotate-45" fill="currentColor" />
+                )}
               </motion.div>
             </motion.div>
           )}
@@ -518,65 +526,6 @@ function App() {
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-[#E11D48] selection:text-white flex relative overflow-x-hidden">
       {isRegisterPageOpen && <RegisterPage onClose={() => setIsRegisterPageOpen(false)} />}
 
-      {/* Mobile Sidebar */}
-      <AnimatePresence>
-        {isSidebarOpen && (
-          <>
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsSidebarOpen(false)}
-              className="fixed inset-0 bg-black/50 z-[200] md:hidden backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-[320px] bg-white z-[210] md:hidden shadow-2xl flex flex-col"
-            >
-              <div className="flex items-center justify-between p-5 border-b border-slate-100">
-                <span className="text-xl font-black tracking-[0.15em] text-[#E11D48]">
-                  TRAVEL<span className="text-slate-900">IQ</span>
-                </span>
-                <button onClick={() => setIsSidebarOpen(false)} className="p-2 text-slate-400 hover:text-slate-700 bg-slate-100 rounded-full transition-colors cursor-pointer">
-                  <X size={20} strokeWidth={2.5} />
-                </button>
-              </div>
-              <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-6">
-                {/* Mobile Services */}
-                <div>
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Services</div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {servicesDropdown.map((item, idx) => {
-                      const Icon = item.icon;
-                      return (
-                        <a key={idx} href="#" className="flex flex-col items-center gap-2 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-[#E11D48]/30 transition-colors">
-                          <Icon size={20} className="text-[#E11D48]" />
-                          <span className="text-[13px] font-bold text-slate-700">{item.title}</span>
-                        </a>
-                      )
-                    })}
-                  </div>
-                </div>
-                {/* Other Links */}
-                <div className="flex flex-col gap-2">
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Company</div>
-                  {['Blog', 'About Us'].map(link => (
-                    <a key={link} href="#" className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors font-bold text-slate-700">
-                      {link}
-                      <ChevronRight size={16} className="text-slate-300" />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-
       {/* Main Content Wrapper */}
       <div className="flex-1 w-full min-w-0 flex flex-col min-h-screen">
 
@@ -584,8 +533,9 @@ function App() {
       <header className="relative w-full min-h-[600px] flex flex-col z-[100] transition-all duration-500 pb-12">
         <div className="absolute inset-0 overflow-hidden">
           <video 
-            className="absolute inset-0 w-full h-full object-cover object-top"
-            src={heroVideo}
+            key={activeCategory === 'stays' ? 'stays' : 'default'}
+            className="absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-500"
+            src={activeCategory === 'stays' ? staysVideo : heroVideo}
             poster={heroImg}
             autoPlay
             loop
@@ -597,15 +547,10 @@ function App() {
         </div>
 
         {/* Solid Navbar matching screenshot */}
-        <nav className="relative z-50 px-2 sm:px-4 md:px-8 py-3 sm:py-4 flex items-center justify-between mx-auto w-full shrink-0 bg-[#EBEBEB] shadow-sm border-b border-slate-200/60">
+        <nav className="relative z-50 px-2 sm:px-4 md:px-8 py-3 sm:py-4 w-full shrink-0 bg-[#EBEBEB] shadow-sm border-b border-slate-200/60">
+          <div className="max-w-[1200px] mx-auto w-full flex items-center justify-between">
           {/* Left side: Menu & Logo */}
           <div className="flex items-center gap-2 sm:gap-4">
-            <button 
-              className="md:hidden p-2 -ml-2 text-slate-700 hover:text-[#E11D48] transition-colors cursor-pointer"
-              onClick={() => setIsSidebarOpen(true)}
-            >
-              <Menu size={24} strokeWidth={2.5} />
-            </button>
             <span className="text-xl sm:text-2xl font-black tracking-[0.15em] text-[#E11D48] cursor-pointer hover:scale-[1.02] transition-transform duration-300">
               TRAVEL<span className="text-slate-900 tracking-[0.15em]">IQ</span>
             </span>
@@ -615,7 +560,7 @@ function App() {
           <div className="hidden md:flex items-center gap-12">
             
             {/* Services Dropdown */}
-            <div className="relative group py-4">
+            <div className="group py-4">
               <a href="#" className="text-[15px] font-extrabold tracking-wide text-slate-700 group-hover:text-[#E11D48] transition-colors flex items-center gap-1.5 relative">
                 Services
                 <ChevronDown size={16} className="text-slate-500 group-hover:text-[#E11D48] transition-transform duration-300 group-hover:rotate-180" strokeWidth={3} />
@@ -623,27 +568,27 @@ function App() {
               </a>
 
               {/* Hover Dropdown Menu */}
-              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[750px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                <div className="bg-white rounded-[20px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-slate-100 p-5">
-                  <div className="grid grid-cols-3 gap-3">
+              <div className="absolute top-full left-1/2 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 w-max">
+                <div className="bg-white/95 backdrop-blur-xl rounded-[24px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-slate-200/80 border-t border-t-slate-300 p-3">
+                  <div className="flex flex-wrap justify-center max-w-[1200px] gap-2">
                     {servicesDropdown.map((item, idx) => {
                       const Icon = item.icon;
                       return (
-                        <a key={idx} href="#" className="flex items-center gap-4 p-3.5 rounded-[14px] hover:bg-slate-50 transition-colors group/item relative overflow-hidden">
-                          {/* Animated background on hover */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-rose-50/0 via-rose-50/50 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity duration-300"></div>
+                        <a key={idx} href="#" className="flex items-center gap-3 py-2.5 pl-2.5 pr-5 rounded-full hover:bg-slate-50 transition-all duration-300 group/item relative overflow-hidden hover:shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-transparent hover:border-slate-200/60">
                           
-                          <div className="w-[46px] h-[46px] rounded-[12px] bg-slate-100 text-slate-600 flex justify-center items-center group-hover/item:bg-[#E11D48] group-hover/item:text-white transition-all duration-300 shadow-sm group-hover/item:shadow-[0_4px_12px_rgba(225,29,72,0.3)] z-10 shrink-0">
-                            <Icon size={22} strokeWidth={2} />
+                          <div className="w-[40px] h-[40px] rounded-full bg-slate-50 border border-slate-100 text-slate-600 flex justify-center items-center group-hover/item:bg-[#E11D48] group-hover/item:border-[#E11D48] group-hover/item:text-white transition-all duration-300 shadow-sm group-hover/item:shadow-[0_6px_16px_rgba(225,29,72,0.4)] z-10 shrink-0 group-hover/item:scale-105">
+                            <Icon size={18} strokeWidth={1.5} />
                           </div>
                           
-                          <div className="flex flex-col z-10">
-                            <span className="font-extrabold text-slate-800 text-[15px] group-hover/item:text-[#E11D48] transition-colors">
+                          <div className="flex flex-col z-10 justify-center">
+                            <span className="font-extrabold text-slate-800 text-[14px] leading-tight group-hover/item:text-[#E11D48] transition-colors">
                               {item.title}
                             </span>
-                            <span className="font-bold text-slate-400 text-[12px]">
-                              {item.subtitle}
-                            </span>
+                            {item.subtitle && (
+                              <span className="font-bold text-slate-400 text-[10px] uppercase tracking-wider group-hover/item:text-[#E11D48]/70">
+                                {item.subtitle}
+                              </span>
+                            )}
                           </div>
                         </a>
                       );
@@ -667,62 +612,26 @@ function App() {
           {/* Right side: Actions */}
           <div className="flex items-center gap-1.5 sm:gap-5">
             
-            {/* Currency Dropdown */}
-            <div className="relative group/curr flex items-center h-full">
-              <button className="flex items-center gap-1 px-3 sm:px-4 py-2 bg-white border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 text-slate-800 font-extrabold text-[13px] sm:text-[14px] rounded-full transition-all duration-200 cursor-pointer">
+            {/* Currency Button */}
+            <div className="flex items-center h-full">
+              <button 
+                onClick={() => setIsCurrencyModalOpen(true)}
+                className="flex items-center gap-1 px-3 sm:px-4 py-2 bg-white border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 text-slate-800 font-extrabold text-[13px] sm:text-[14px] rounded-full transition-all duration-200 cursor-pointer"
+              >
                 {selectedCurrency.code}
               </button>
-              
-              <div className="absolute top-full right-0 pt-2 w-[300px] sm:w-[340px] opacity-0 scale-95 pointer-events-none group-hover/curr:opacity-100 group-hover/curr:scale-100 group-hover/curr:pointer-events-auto transition-all duration-200 z-[100] origin-top-right">
-                <div className="bg-white rounded-[16px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-slate-100 p-4">
-                  <div className="text-sm font-bold text-slate-900 mb-3 px-2">Select Currency</div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {currenciesList.map(curr => (
-                      <button 
-                        key={curr.code}
-                        onClick={() => setSelectedCurrency(curr)}
-                        className={`flex flex-col justify-center px-3 py-2 rounded-lg transition-colors text-left ${selectedCurrency.code === curr.code ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
-                      >
-                        <span className={`text-[13px] ${selectedCurrency.code === curr.code ? 'font-bold text-[#E11D48]' : 'font-bold text-slate-800'}`}>{curr.code} - {curr.symbol}</span>
-                        <span className="text-[11px] text-slate-500 font-medium">{curr.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
             </div>
 
-            {/* Language Dropdown */}
-            <div className="relative group/lang flex items-center h-full">
-              <button className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 text-slate-700 font-bold text-[14px] rounded-full transition-all duration-200 cursor-pointer">
+            {/* Country Button */}
+            <div className="flex items-center h-full">
+              <button 
+                onClick={() => setIsCountryModalOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 text-slate-700 font-bold text-[14px] rounded-full transition-all duration-200 cursor-pointer"
+              >
                 <div className="w-[20px] h-[20px] rounded-full overflow-hidden flex items-center justify-center shrink-0">
-                  {selectedLanguage.isGlobe ? (
-                    <Globe2 size={16} className="text-blue-600" strokeWidth={2.5} />
-                  ) : (
-                    <Flag code={selectedLanguage.code} className="w-full h-full object-cover" />
-                  )}
+                  <Flag code={selectedCountry.code} className="w-full h-full object-cover" />
                 </div>
               </button>
-
-              <div className="absolute top-full right-0 pt-2 w-[300px] sm:w-[480px] opacity-0 scale-95 pointer-events-none group-hover/lang:opacity-100 group-hover/lang:scale-100 group-hover/lang:pointer-events-auto transition-all duration-200 z-[100] origin-top-right">
-                <div className="bg-white rounded-[16px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-slate-100 p-4">
-                  <div className="text-sm font-bold text-slate-900 mb-3 px-2">Select Language</div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200">
-                    {languagesList.map(lang => (
-                      <button 
-                        key={lang.code}
-                        onClick={() => setSelectedLanguage(lang)}
-                        className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-left ${selectedLanguage.code === lang.code ? 'bg-slate-100' : 'hover:bg-slate-50'}`}
-                      >
-                        <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-slate-200 shadow-sm bg-white flex items-center justify-center">
-                          {lang.isGlobe ? <Globe2 size={12} className="text-blue-600" /> : <Flag code={lang.code} className="w-full h-full object-cover" />}
-                        </div>
-                        <span className={`text-[12px] ${selectedLanguage.code === lang.code ? 'font-bold text-[#E11D48]' : 'font-medium text-slate-700'}`}>{lang.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Sign In Button */}
@@ -742,21 +651,30 @@ function App() {
             </button>
             
           </div>
+          </div>
         </nav>
 
         {/* Main Content Wrapper */}
         <div className="relative z-20 flex-1 flex flex-col items-center justify-center w-full pb-8 pt-10">
           
           {/* Hero Content overlaid on video */}
-          <div className="flex flex-col items-center justify-center text-center px-4 mb-10">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="text-3xl sm:text-5xl lg:text-[54px] font-black tracking-tighter w-full sm:whitespace-nowrap text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
-            >
-              Find the <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-rose-500 to-rose-700">perfect flight</span> from 100s of sites.
-            </motion.h1>
+          <div className="flex flex-col items-center justify-center text-center px-4 mb-10 h-[80px] sm:h-[100px]">
+            <AnimatePresence mode="wait">
+              <motion.h1 
+                key={activeCategory}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="text-3xl sm:text-5xl lg:text-[54px] font-black tracking-tighter w-full sm:whitespace-nowrap text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
+              >
+                {activeCategory === 'flights' && <>Unlock the <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-rose-500 to-rose-700">best flight deals</span> across the globe.</>}
+                {activeCategory === 'stays' && <>Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-rose-500 to-rose-700">extraordinary stays</span> for your next trip.</>}
+                {activeCategory === 'cars' && <>Hit the road with the <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-rose-500 to-rose-700">perfect rental car</span>.</>}
+                {activeCategory === 'packages' && <>Book <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-rose-500 to-rose-700">unbeatable packages</span> for your dream vacation.</>}
+                {activeCategory === 'cruises' && <>Sail away on the <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-rose-500 to-rose-700">ultimate ocean getaway</span>.</>}
+              </motion.h1>
+            </AnimatePresence>
           </div>
             
           {/* Category Icons Selection */}
@@ -770,12 +688,12 @@ function App() {
                   onClick={() => setActiveCategory(cat.id)}
                   className="flex flex-col items-center gap-2 group cursor-pointer focus:outline-none"
                 >
-                  <div className={`w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] rounded-[16px] flex items-center justify-center transition-all duration-300 cursor-pointer group-hover:rounded-full ${
+                  <div className={`w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] rounded-[18px] flex items-center justify-center transition-all duration-300 cursor-pointer group-hover:rounded-full ${
                     isSel 
-                      ? 'bg-[#E11D48] text-white shadow-sm' 
-                      : 'bg-[#eaeaec] text-slate-800 shadow-sm hover:bg-[#dfdfdf]'
+                      ? 'bg-[#E11D48] text-white shadow-[0_8px_20px_rgba(225,29,72,0.3)]' 
+                      : 'bg-white/90 backdrop-blur-md text-slate-700 shadow-[0_4px_16px_rgba(0,0,0,0.08)] border border-white/60 hover:bg-white hover:text-[#E11D48] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:-translate-y-0.5'
                   }`}>
-                    <IconComponent size={24} className="stroke-[2.5] fill-none transition-transform duration-300 group-hover:rotate-[15deg]" />
+                    <IconComponent size={26} strokeWidth={1.5} className="fill-none transition-transform duration-300 group-hover:scale-110" />
                   </div>
                   <span className={`text-[12px] sm:text-[14px] transition-all duration-200 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] ${
                     isSel ? 'font-bold' : 'font-medium'
@@ -853,16 +771,30 @@ function App() {
                           }}
                         >
                           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Leaving from</div>
-                          <input 
-                            type="text" 
-                            placeholder="From" 
-                            value={tripType === 'multi-city' ? flight.from : fromCity}
-                            onChange={(e) => {
-                              tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', e.target.value) : setFromCity(e.target.value);
-                              setActiveDropdown({ type: 'from', index: tripType === 'multi-city' ? index : 'single' });
-                            }}
-                            className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight" 
-                          />
+                          <div className="relative flex items-center w-full pr-4">
+                            <input 
+                              type="text" 
+                              placeholder="From" 
+                              value={tripType === 'multi-city' ? flight.from : fromCity}
+                              onChange={(e) => {
+                                tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', e.target.value) : setFromCity(e.target.value);
+                                setActiveDropdown({ type: 'from', index: tripType === 'multi-city' ? index : 'single' });
+                              }}
+                              className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight" 
+                            />
+                            {(tripType === 'multi-city' ? flight.from : fromCity) && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  tripType === 'multi-city' ? handleUpdateMultiCity(index, 'from', '') : setFromCity('');
+                                  setActiveDropdown({ type: 'from', index: tripType === 'multi-city' ? index : 'single' });
+                                }}
+                                className="absolute right-0 w-[18px] h-[18px] bg-slate-400 hover:bg-slate-500 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer"
+                              >
+                                <X size={12} strokeWidth={2.5} />
+                              </button>
+                            )}
+                          </div>
                           {/* FROM Dropdown */}
                           <AnimatePresence>
                             {activeDropdown?.type === 'from' && activeDropdown?.index === (tripType === 'multi-city' ? index : 'single') && (
@@ -965,16 +897,30 @@ function App() {
                           }}
                         >
                           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Going to</div>
-                          <input 
-                            type="text" 
-                            placeholder="To" 
-                            value={tripType === 'multi-city' ? flight.to : toCity}
-                            onChange={(e) => {
-                              tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', e.target.value) : setToCity(e.target.value);
-                              setActiveDropdown({ type: 'to', index: tripType === 'multi-city' ? index : 'single' });
-                            }}
-                            className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight" 
-                          />
+                          <div className="relative flex items-center w-full pr-4">
+                            <input 
+                              type="text" 
+                              placeholder="To" 
+                              value={tripType === 'multi-city' ? flight.to : toCity}
+                              onChange={(e) => {
+                                tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', e.target.value) : setToCity(e.target.value);
+                                setActiveDropdown({ type: 'to', index: tripType === 'multi-city' ? index : 'single' });
+                              }}
+                              className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight" 
+                            />
+                            {(tripType === 'multi-city' ? flight.to : toCity) && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  tripType === 'multi-city' ? handleUpdateMultiCity(index, 'to', '') : setToCity('');
+                                  setActiveDropdown({ type: 'to', index: tripType === 'multi-city' ? index : 'single' });
+                                }}
+                                className="absolute right-0 w-[18px] h-[18px] bg-slate-400 hover:bg-slate-500 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer"
+                              >
+                                <X size={12} strokeWidth={2.5} />
+                              </button>
+                            )}
+                          </div>
                           {/* TO Dropdown */}
                           <AnimatePresence>
                             {activeDropdown?.type === 'to' && activeDropdown?.index === (tripType === 'multi-city' ? index : 'single') && (
@@ -1081,12 +1027,12 @@ function App() {
                            <div className="flex items-center justify-between hover:bg-white rounded-r-xl px-5 py-4 h-full transition-all duration-200 cursor-pointer">
                              <div className="flex flex-col justify-center">
                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Travelers</span>
-                               <span className="text-[14px] font-bold text-slate-900 tracking-tight whitespace-nowrap">{(adults + children + infants)} {(adults + children + infants) === 1 ? 'traveler' : 'travelers'} · {travelClass}</span>
+                               <span className="text-[14px] font-bold text-slate-900 tracking-tight whitespace-nowrap">{(adults + children)} {(adults + children) === 1 ? 'traveler' : 'travelers'} · {travelClass}</span>
                              </div>
                              <ChevronDown size={14} className="text-slate-300 group-hover/passclass:text-[#E11D48] group-hover/passclass:rotate-180 transition-all duration-200 ml-3 shrink-0" />
                            </div>
                            
-                           <div className="absolute right-0 bottom-full pb-2 w-[280px] sm:w-[320px] z-[99] opacity-0 scale-95 pointer-events-none group-hover/passclass:opacity-100 group-hover/passclass:scale-100 group-hover/passclass:pointer-events-auto transition-all duration-200 origin-bottom-right">
+                           <div className="absolute right-0 top-full pt-2 w-[280px] sm:w-[320px] z-[99] opacity-0 scale-95 pointer-events-none group-hover/passclass:opacity-100 group-hover/passclass:scale-100 group-hover/passclass:pointer-events-auto transition-all duration-200 origin-top-right">
                              <div className="bg-white border border-slate-200 rounded-xl shadow-xl p-0 overflow-hidden">
                                <div className="p-3">
                                  <div className="text-[13px] font-bold text-slate-900 mb-2">Travelers</div>
@@ -1098,7 +1044,7 @@ function App() {
                                    <div className="flex items-center gap-2">
                                      <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">-</button>
                                      <span className="w-4 text-center font-bold text-[14px]">{adults}</span>
-                                     <button onClick={() => setAdults(adults + 1)} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">+</button>
+                                     <button onClick={() => setAdults(Math.min(8, adults + 1))} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">+</button>
                                    </div>
                                  </div>
                                  
@@ -1114,6 +1060,7 @@ function App() {
                                      }} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">-</button>
                                      <span className="w-4 text-center font-bold text-[14px]">{children}</span>
                                      <button onClick={() => {
+                                        if (children >= 6) return;
                                         const newCount = children + 1;
                                         setChildren(newCount);
                                         setChildAges(prev => [...prev, '']);
@@ -1148,17 +1095,6 @@ function App() {
                                      ))}
                                    </div>
                                  )}
-                             
-                                 <div className="flex items-center justify-between">
-                                   <div>
-                                     <div className="text-[13px] text-slate-700">Infants on lap <span className="text-slate-500">under 2</span></div>
-                                   </div>
-                                   <div className="flex items-center gap-2">
-                                     <button onClick={() => setInfants(Math.max(0, infants - 1))} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">-</button>
-                                     <span className="w-4 text-center font-bold text-[14px]">{infants}</span>
-                                     <button onClick={() => setInfants(infants + 1)} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">+</button>
-                                   </div>
-                                 </div>
                                </div>
                              
                                <div className="h-[1px] bg-slate-300 w-full opacity-60"></div>
@@ -1266,18 +1202,32 @@ function App() {
                     onMouseDown={(e) => e.stopPropagation()}
                   >
                     <MapPin size={18} className="text-slate-400 group-hover/dest:text-[#E11D48] shrink-0 transition-colors duration-200" />
-                    <div className="flex flex-col flex-1 min-w-0">
+                    <div className="flex flex-col flex-1 min-w-0 pr-4 relative">
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Where to?</span>
-                    <input 
-                      type="text" 
-                      placeholder="Search destinations" 
-                      value={toCity}
-                      onChange={(e) => {
-                        setToCity(e.target.value);
-                        setActiveDropdown({ type: 'stays-to', index: 'single' });
-                      }}
-                      className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight" 
-                    />
+                      <div className="relative flex items-center w-full">
+                        <input 
+                          type="text" 
+                          placeholder="Search destinations" 
+                          value={toCity}
+                          onChange={(e) => {
+                            setToCity(e.target.value);
+                            setActiveDropdown({ type: 'stays-to', index: 'single' });
+                          }}
+                          className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight" 
+                        />
+                        {toCity && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setToCity('');
+                              setActiveDropdown({ type: 'stays-to', index: 'single' });
+                            }}
+                            className="absolute right-0 w-[18px] h-[18px] bg-slate-400 hover:bg-slate-500 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer"
+                          >
+                            <X size={12} strokeWidth={2.5} />
+                          </button>
+                        )}
+                      </div>
                     </div>
                     {/* TO Dropdown */}
                     <AnimatePresence>
@@ -1355,46 +1305,47 @@ function App() {
                       </div>
                     </div>
                     
-                    <div className="absolute right-0 bottom-full pb-2 w-[300px] sm:w-[340px] z-[99] opacity-0 scale-95 pointer-events-none group-hover/stayspass:opacity-100 group-hover/stayspass:scale-100 group-hover/stayspass:pointer-events-auto transition-all duration-200 origin-bottom-right">
+                    <div className="absolute right-0 top-full pt-2 w-[300px] sm:w-[340px] z-[99] opacity-0 scale-95 pointer-events-none group-hover/stayspass:opacity-100 group-hover/stayspass:scale-100 group-hover/stayspass:pointer-events-auto transition-all duration-200 origin-top-right">
                       <div className="bg-white border border-slate-200 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] p-0 overflow-x-hidden overflow-y-auto max-h-[240px] sm:max-h-[300px]">
                         <div className="p-5 pb-4">
                           
-                          <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center justify-between mb-2">
                             <div>
-                              <div className="text-[15px] text-slate-800">Adults</div>
+                              <div className="text-[13px] text-slate-700">Adults <span className="text-slate-500">18+</span></div>
                             </div>
-                            <div className="flex items-center gap-3">
-                              <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">-</button>
-                              <span className="w-4 text-center font-bold text-[15px]">{adults}</span>
-                              <button onClick={() => setAdults(adults + 1)} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">+</button>
+                            <div className="flex items-center gap-2">
+                              <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">-</button>
+                              <span className="w-4 text-center font-bold text-[14px]">{adults}</span>
+                              <button onClick={() => setAdults(Math.min(8, adults + 1))} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">+</button>
                             </div>
                           </div>
                           
-                          <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center justify-between mb-2">
                             <div>
-                              <div className="text-[15px] text-slate-800">Children</div>
+                              <div className="text-[13px] text-slate-700">Children <span className="text-slate-500">0-17</span></div>
                             </div>
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2">
                               <button onClick={() => {
                                  const newCount = Math.max(0, children - 1);
                                  setChildren(newCount);
                                  setChildAges(prev => prev.slice(0, newCount));
-                              }} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">-</button>
-                              <span className="w-4 text-center font-bold text-[15px]">{children}</span>
+                              }} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">-</button>
+                              <span className="w-4 text-center font-bold text-[14px]">{children}</span>
                               <button onClick={() => {
+                                 if (children >= 6) return;
                                  const newCount = children + 1;
                                  setChildren(newCount);
                                  setChildAges(prev => [...prev, '']);
-                              }} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">+</button>
+                              }} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">+</button>
                             </div>
                           </div>
 
                           {/* Child Ages Dropdowns */}
                           {children > 0 && (
-                            <div className="mb-4">
+                            <div className="mb-2">
                               {childAges.map((age, idx) => (
-                                <div key={idx} className="flex items-center justify-between mt-3">
-                                  <div className="text-[15px] text-slate-800">Age of child {idx + 1}</div>
+                                <div key={idx} className="flex items-center justify-between mt-2">
+                                  <div className="text-[12px] text-slate-800">Child's age</div>
                                   <div className="relative">
                                     <select 
                                       value={age}
@@ -1403,46 +1354,34 @@ function App() {
                                         newAges[idx] = e.target.value;
                                         setChildAges(newAges);
                                       }}
-                                      className="appearance-none bg-transparent border border-slate-400/80 rounded-[8px] pl-4 pr-10 py-1.5 text-[15px] text-slate-700 focus:outline-none focus:border-slate-500 cursor-pointer min-w-[70px] shadow-sm transition-colors hover:bg-slate-50"
+                                      className="appearance-none bg-transparent border border-slate-400/80 rounded-[6px] pl-3 pr-8 py-1 text-[12px] text-slate-600 focus:outline-none focus:border-slate-500 cursor-pointer min-w-[60px] shadow-sm transition-colors hover:bg-slate-50"
                                     >
-                                      <option value="" disabled>0</option>
+                                      <option value="" disabled>Age</option>
                                       {Array.from({length: 18}).map((_, i) => (
                                         <option key={i} value={i}>{i}</option>
                                       ))}
                                     </select>
-                                    <ChevronDown size={16} strokeWidth={2.5} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-800 pointer-events-none" />
+                                    <ChevronDown size={14} strokeWidth={2.5} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-800 pointer-events-none" />
                                   </div>
                                 </div>
                               ))}
+                              <div className="text-[11px] text-slate-500 mt-3 leading-relaxed">
+                                Please select your child's age at the time of check-in. This will help us find the room types and discounts best suited to your needs.
+                              </div>
                             </div>
                           )}
                           
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between mb-2">
                             <div>
-                              <div className="text-[15px] text-slate-800">Rooms</div>
+                              <div className="text-[13px] text-slate-700">Rooms</div>
                             </div>
-                            <div className="flex items-center gap-3">
-                              <button onClick={() => setRooms(Math.max(1, rooms - 1))} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">-</button>
-                              <span className="w-4 text-center font-bold text-[15px]">{rooms}</span>
-                              <button onClick={() => setRooms(rooms + 1)} className="w-8 h-8 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:border-slate-400 cursor-pointer transition-colors font-medium text-lg pb-0.5">+</button>
+                            <div className="flex items-center gap-2">
+                              <button onClick={() => setRooms(Math.max(1, rooms - 1))} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">-</button>
+                              <span className="w-4 text-center font-bold text-[14px]">{rooms}</span>
+                              <button onClick={() => setRooms(Math.min(10, rooms + 1))} className="w-6 h-6 rounded border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-200 cursor-pointer transition-colors text-sm">+</button>
                             </div>
                           </div>
                           
-                        </div>
-                      
-                        <div className="h-[1px] bg-slate-200 w-full mx-5 w-[calc(100%-40px)]"></div>
-                      
-                        <div className="p-5 flex items-center justify-between">
-                          <div>
-                            <div className="text-[15px] text-slate-800">Pet-friendly</div>
-                            <div className="text-[13px] text-slate-500">Only show stays that allow pets</div>
-                          </div>
-                          <button 
-                            onClick={() => setPetFriendly(!petFriendly)}
-                            className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${petFriendly ? 'bg-slate-700' : 'bg-slate-400'}`}
-                          >
-                            <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${petFriendly ? 'translate-x-5' : 'translate-x-0'}`}></div>
-                          </button>
                         </div>
                       </div>
                     </div>
@@ -1486,15 +1425,29 @@ function App() {
                             onMouseDown={(e) => e.stopPropagation()}
                           >
                             <MapPin size={18} className={`shrink-0 transition-colors duration-200 ${carActiveDropdown === 'pickup' ? 'text-[#E11D48]' : 'text-slate-400'}`} />
-                            <div className="flex flex-col flex-1 min-w-0">
+                            <div className="flex flex-col flex-1 min-w-0 pr-4 relative">
                               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pick-up location</span>
-                            <input 
-                              type="text" 
-                              placeholder="Search city or airport" 
-                              value={carPickupLocation}
-                              onChange={(e) => { setCarPickupLocation(e.target.value); setCarActiveDropdown('pickup'); }}
-                              className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
-                            />
+                              <div className="relative flex items-center w-full">
+                                <input 
+                                  type="text" 
+                                  placeholder="Search city or airport" 
+                                  value={carPickupLocation}
+                                  onChange={(e) => { setCarPickupLocation(e.target.value); setCarActiveDropdown('pickup'); }}
+                                  className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
+                                />
+                                {carPickupLocation && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setCarPickupLocation('');
+                                      setCarActiveDropdown('pickup');
+                                    }}
+                                    className="absolute right-0 w-[18px] h-[18px] bg-slate-400 hover:bg-slate-500 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer"
+                                  >
+                                    <X size={12} strokeWidth={2.5} />
+                                  </button>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1507,15 +1460,29 @@ function App() {
                               onMouseDown={(e) => e.stopPropagation()}
                             >
                               <MapPin size={18} className={`shrink-0 transition-colors duration-200 ${carActiveDropdown === 'pickup' ? 'text-[#E11D48]' : 'text-slate-400'}`} />
-                              <div className="flex flex-col flex-1 min-w-0">
+                              <div className="flex flex-col flex-1 min-w-0 pr-4 relative">
                                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pick-up</span>
-                              <input 
-                                type="text" 
-                                placeholder="City or airport" 
-                                value={carPickupLocation}
-                                onChange={(e) => { setCarPickupLocation(e.target.value); setCarActiveDropdown('pickup'); }}
-                                className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
-                              />
+                                <div className="relative flex items-center w-full">
+                                  <input 
+                                    type="text" 
+                                    placeholder="City or airport" 
+                                    value={carPickupLocation}
+                                    onChange={(e) => { setCarPickupLocation(e.target.value); setCarActiveDropdown('pickup'); }}
+                                    className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
+                                  />
+                                  {carPickupLocation && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCarPickupLocation('');
+                                        setCarActiveDropdown('pickup');
+                                      }}
+                                      className="absolute right-0 w-[18px] h-[18px] bg-slate-400 hover:bg-slate-500 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer"
+                                    >
+                                      <X size={12} strokeWidth={2.5} />
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -1538,15 +1505,28 @@ function App() {
                               onMouseDown={(e) => e.stopPropagation()}
                             >
                               <MapPin size={18} className={`shrink-0 transition-colors duration-200 ${carActiveDropdown === 'dropoff' ? 'text-[#E11D48]' : 'text-slate-400'}`} />
-                              <div className="flex flex-col flex-1 min-w-0">
+                              <div className="flex flex-col flex-1 min-w-0 pr-4 relative">
                                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Drop-off</span>
-                              <input 
-                                type="text" 
-                                placeholder="City or airport" 
-                                value={carDropoffLocation}
-                                onChange={(e) => setCarDropoffLocation(e.target.value)}
-                                className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
-                              />
+                                <div className="relative flex items-center w-full">
+                                  <input 
+                                    type="text" 
+                                    placeholder="City or airport" 
+                                    value={carDropoffLocation}
+                                    onChange={(e) => setCarDropoffLocation(e.target.value)}
+                                    className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
+                                  />
+                                  {carDropoffLocation && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCarDropoffLocation('');
+                                      }}
+                                      className="absolute right-0 w-[18px] h-[18px] bg-slate-400 hover:bg-slate-500 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer"
+                                    >
+                                      <X size={12} strokeWidth={2.5} />
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -1770,15 +1750,29 @@ function App() {
                           onMouseDown={(e) => e.stopPropagation()}
                         >
                           <MapPin size={18} className="text-slate-400 group-hover/pkgfrom:text-[#E11D48] shrink-0 transition-colors duration-200" />
-                          <div className="flex flex-col flex-1 min-w-0">
+                          <div className="flex flex-col flex-1 min-w-0 pr-4 relative">
                             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">From</span>
-                          <input 
-                            type="text" 
-                            placeholder="Origin city" 
-                            value={packageFrom}
-                            onChange={(e) => { setPackageFrom(e.target.value); setActiveDropdown({ type: 'package-from' }); }}
-                            className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
-                          />
+                            <div className="relative flex items-center w-full">
+                              <input 
+                                type="text" 
+                                placeholder="Origin city" 
+                                value={packageFrom}
+                                onChange={(e) => { setPackageFrom(e.target.value); setActiveDropdown({ type: 'package-from' }); }}
+                                className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
+                              />
+                              {packageFrom && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setPackageFrom('');
+                                    setActiveDropdown({ type: 'package-from' });
+                                  }}
+                                  className="absolute right-0 w-[18px] h-[18px] bg-slate-400 hover:bg-slate-500 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer"
+                                >
+                                  <X size={12} strokeWidth={2.5} />
+                                </button>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1806,15 +1800,29 @@ function App() {
                           onMouseDown={(e) => e.stopPropagation()}
                         >
                           <MapPin size={18} className="text-slate-400 group-hover/pkgto:text-[#E11D48] shrink-0 transition-colors duration-200" />
-                          <div className="flex flex-col flex-1 min-w-0">
+                          <div className="flex flex-col flex-1 min-w-0 pr-4 relative">
                             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">To</span>
-                          <input 
-                            type="text" 
-                            placeholder="Destination city" 
-                            value={packageTo}
-                            onChange={(e) => { setPackageTo(e.target.value); setActiveDropdown({ type: 'package-to' }) }}
-                            className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
-                          />
+                            <div className="relative flex items-center w-full">
+                              <input 
+                                type="text" 
+                                placeholder="Destination city" 
+                                value={packageTo}
+                                onChange={(e) => { setPackageTo(e.target.value); setActiveDropdown({ type: 'package-to' }) }}
+                                className="bg-transparent text-[15px] font-bold text-slate-900 w-full focus:outline-none placeholder-slate-300 tracking-tight truncate" 
+                              />
+                              {packageTo && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setPackageTo('');
+                                    setActiveDropdown({ type: 'package-to' });
+                                  }}
+                                  className="absolute right-0 w-[18px] h-[18px] bg-slate-400 hover:bg-slate-500 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer"
+                                >
+                                  <X size={12} strokeWidth={2.5} />
+                                </button>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1937,7 +1945,7 @@ function App() {
                                   </button>
                                   <span className="text-[15px] font-bold text-slate-900 w-4 text-center">{packageAdults}</span>
                                   <button 
-                                    onClick={(e) => { e.stopPropagation(); setPackageAdults(packageAdults + 1) }}
+                                    onClick={(e) => { e.stopPropagation(); setPackageAdults(Math.min(8, packageAdults + 1)) }}
                                     className="w-7 h-7 rounded-[4px] border border-slate-400 flex items-center justify-center bg-transparent hover:bg-slate-200"
                                   >
                                     <Plus size={16} className="text-slate-900" />
@@ -1965,6 +1973,7 @@ function App() {
                                   <button 
                                     onClick={(e) => { 
                                       e.stopPropagation(); 
+                                      if (packageChildren >= 6) return;
                                       setPackageChildren(packageChildren + 1);
                                       setPackageChildAges([...packageChildAges, '10 years']);
                                     }}
@@ -2108,25 +2117,33 @@ function App() {
         <FeaturedTours />
       </main>
 
-            {/* Settings (Language/Currency) Modal */}
-      <SettingsModal 
-        isOpen={isSettingsModalOpen}
-        onClose={() => setIsSettingsModalOpen(false)}
-        tab={settingsTab}
-        setTab={setSettingsTab}
-        languagesList={languagesList}
-        currenciesList={currenciesList}
-        selectedLanguage={selectedLanguage}
-        setSelectedLanguage={setSelectedLanguage}
-        selectedCurrency={selectedCurrency}
-        setSelectedCurrency={setSelectedCurrency}
-      />
-
       {/* Sign In Modal */}
       <SignInModal 
         isOpen={isSignInModalOpen} 
         onClose={() => setIsSignInModalOpen(false)} 
+        onOpenRegister={() => {
+          setIsSignInModalOpen(false);
+          setIsRegisterPageOpen(true);
+        }}
       />
+      
+      <CurrencyModal
+        isOpen={isCurrencyModalOpen}
+        onClose={() => setIsCurrencyModalOpen(false)}
+        selectedCurrency={selectedCurrency}
+        setSelectedCurrency={setSelectedCurrency}
+        currenciesList={currenciesList}
+      />
+
+      <CountryModal
+        isOpen={isCountryModalOpen}
+        onClose={() => setIsCountryModalOpen(false)}
+        selectedCountry={selectedCountry}
+        setSelectedCountry={setSelectedCountry}
+        countriesList={countriesList}
+      />
+
+      <LiveBookingWidget />
 
       <Footer />
 

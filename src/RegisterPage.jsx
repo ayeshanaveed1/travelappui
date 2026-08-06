@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronLeft, 
@@ -17,11 +17,18 @@ const RegisterPage = ({ onClose }) => {
   const [accountType, setAccountType] = useState('Customer');
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 z-[200] bg-white w-full h-full overflow-y-auto font-sans">
-      <div className="flex w-full min-h-full">
+    <div className="fixed inset-0 z-[200] bg-white w-full h-screen overflow-hidden font-sans">
+      <div className="flex w-full h-full">
       {/* Left Column - Form */}
-      <div className="w-full lg:w-1/2 min-h-full bg-[#F3F4F6] flex flex-col relative">
+      <div className="w-full lg:w-1/2 h-full bg-[#F3F4F6] flex flex-col relative overflow-y-auto">
         <div className="p-5 sm:p-8 lg:px-12 w-full max-w-[600px] mx-auto flex-1 flex flex-col">
           
           <button 
@@ -147,7 +154,7 @@ const RegisterPage = ({ onClose }) => {
       </div>
 
       {/* Right Column - Aesthetic Image & Gradient */}
-      <div className="hidden lg:flex w-1/2 min-h-full relative overflow-hidden bg-slate-900 flex-col items-center justify-center py-12">
+      <div className="hidden lg:flex w-1/2 h-full relative overflow-hidden bg-slate-900 flex-col items-center justify-center py-12">
         
         {/* Full Background Animated Image */}
         <motion.div 
