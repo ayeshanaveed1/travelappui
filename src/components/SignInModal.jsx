@@ -52,36 +52,49 @@ const SignInModal = ({ isOpen, onClose }) => {
                   Continue
                 </button>
                 
-                <div className="flex items-center gap-4 my-1.5">
-                  <div className="h-px bg-slate-300 flex-1"></div>
-                  <span className="text-[12px] text-slate-500 font-medium">or</span>
-                  <div className="h-px bg-slate-300 flex-1"></div>
+                <div className="flex items-center gap-4 mt-6 mb-4">
+                  <div className="h-px bg-slate-200 flex-1"></div>
+                  <span className="text-[12px] text-slate-400 font-bold uppercase tracking-wider">or</span>
+                  <div className="h-px bg-slate-200 flex-1"></div>
                 </div>
 
                 {/* Social Buttons */}
                 <div className="grid grid-cols-3 gap-3">
-                  <button className="flex justify-center items-center py-2 bg-slate-200/60 hover:bg-slate-300/80 rounded-lg transition-colors cursor-pointer">
-                    <span className="font-extrabold text-slate-700 text-base">G</span>
+                  <button className="group flex justify-center items-center py-3 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">
+                    <svg className="w-[18px] h-[18px] transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
                   </button>
-                  <button className="flex justify-center items-center py-2 bg-slate-200/60 hover:bg-slate-300/80 rounded-lg transition-colors cursor-pointer">
-                    <span className="font-extrabold text-slate-700 text-xs">Apple</span>
+                  <button className="group flex justify-center items-center py-3 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">
+                    <svg className="w-5 h-5 text-slate-900 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M16.365 14.544c-.035-3.328 2.887-4.992 3.018-5.076-1.543-2.146-3.882-2.42-4.664-2.457-1.956-.192-3.834 1.109-4.838 1.109-.997 0-2.55-1.082-4.168-1.054-2.115.028-4.064 1.168-5.155 2.97-2.217 3.659-.57 9.074 1.583 12.012 1.053 1.442 2.296 3.045 3.928 2.988 1.564-.061 2.155-.968 4.043-.968 1.879 0 2.427.968 4.061.94 1.679-.028 2.766-1.456 3.805-2.898 1.196-1.657 1.688-3.262 1.714-3.344-.038-.016-3.292-1.2-3.327-4.222M14.938 3.82c.866-1.002 1.447-2.398 1.288-3.791-1.238.048-2.75 1.009-3.642 2.025-.796.892-1.492 2.333-1.298 3.7.199.183 1.433.094 2.65-.91 3.652 1.025" />
+                    </svg>
                   </button>
-                  <button className="flex justify-center items-center py-2 bg-slate-200/60 hover:bg-slate-300/80 rounded-lg transition-colors cursor-pointer">
-                    <span className="font-extrabold text-[#1877F2] text-base">f</span>
+                  <button className="group flex justify-center items-center py-3 bg-white border border-slate-200 hover:border-[#1877F2]/30 hover:bg-[#1877F2]/5 rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">
+                    <svg className="w-5 h-5 text-[#1877F2] transition-transform group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
                   </button>
                 </div>
 
                 {/* Remember me */}
-                <div className="mt-4 flex items-center gap-3">
-                  <div className="relative flex items-center justify-center w-5 h-5 rounded border-2 border-[#E11D48] bg-[#E11D48] transition-colors shrink-0">
-                    <input type="checkbox" defaultChecked className="absolute opacity-0 w-full h-full cursor-pointer z-10" />
-                    <div className="w-2.5 h-2.5 rounded-sm bg-white" />
-                  </div>
-                  <label className="text-[15px] font-bold text-slate-800 cursor-pointer">Remember me</label>
+                <div className="mt-6 flex items-center gap-3">
+                  <label className="relative flex items-center justify-center w-[22px] h-[22px] cursor-pointer group">
+                    <input type="checkbox" defaultChecked className="peer sr-only" />
+                    <div className="w-full h-full rounded-[6px] border-[2px] border-slate-300 peer-checked:border-[#E11D48] peer-checked:bg-[#E11D48] transition-all duration-300 bg-white shadow-sm flex items-center justify-center group-hover:border-[#E11D48]/50">
+                      <svg className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  </label>
+                  <span className="text-[14px] font-bold text-slate-800 cursor-pointer select-none">Remember me</span>
                 </div>
 
-                <p className="text-[11px] text-slate-500 leading-relaxed mt-2 max-w-sm">
-                  By continuing, you agree to TravelIQ's <a href="#" className="underline hover:text-slate-800">Terms of Service</a> and acknowledge that you have read our <a href="#" className="underline hover:text-slate-800">Privacy Policy</a>.
+                <p className="text-[12px] text-slate-500 leading-relaxed mt-4">
+                  By continuing, you agree to TravelIQ's <a href="#" className="font-semibold text-slate-700 hover:text-[#E11D48] hover:underline transition-colors">Terms of Service</a> and acknowledge that you have read our <a href="#" className="font-semibold text-slate-700 hover:text-[#E11D48] hover:underline transition-colors">Privacy Policy</a>.
                 </p>
               </div>
             </div>

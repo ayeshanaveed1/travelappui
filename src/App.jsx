@@ -48,6 +48,7 @@ import SignInModal from './components/SignInModal';
 import CurrencyModal from './components/CurrencyModal';
 import CountryModal from './components/CountryModal';
 import LiveBookingWidget from './components/LiveBookingWidget';
+import { countriesList } from './data/countries';
 
 const Flag = ({ code, className }) => {
   if (!code) return null;
@@ -56,6 +57,8 @@ const Flag = ({ code, className }) => {
       src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`} 
       alt={`${code} flag`} 
       className={className} 
+      loading="lazy"
+      decoding="async"
     />
   );
 }
@@ -126,44 +129,6 @@ function App() {
   const [isCountryModalOpen, setIsCountryModalOpen] = useState(false)
   const [selectedCountry, setSelectedCountry] = useState({ name: 'Pakistan', code: 'PK' })
   const [selectedCurrency, setSelectedCurrency] = useState({ code: 'PKR', symbol: 'Rs' })
-
-  const countriesList = [
-    { name: 'Pakistan', code: 'PK' },
-    { name: 'Algeria', code: 'DZ' },
-    { name: 'Angola', code: 'AO' },
-    { name: 'Argentina', code: 'AR' },
-    { name: 'Australia', code: 'AU' },
-    { name: 'Bahrain', code: 'BH' },
-    { name: 'Bangladesh', code: 'BD' },
-    { name: 'Botswana', code: 'BW' },
-    { name: 'Brazil', code: 'BR' },
-    { name: 'Cameroon', code: 'CM' },
-    { name: 'Canada', code: 'CA' },
-    { name: 'Chile', code: 'CL' },
-    { name: 'China', code: 'CN' },
-    { name: 'Colombia', code: 'CO' },
-    { name: 'Congo, Dem Rep of', code: 'CD' },
-    { name: 'Cote d\'Ivoire', code: 'CI' },
-    { name: 'Egypt', code: 'EG' },
-    { name: 'Ethiopia', code: 'ET' },
-    { name: 'France', code: 'FR' },
-    { name: 'Gabon', code: 'GA' },
-    { name: 'Germany', code: 'DE' },
-    { name: 'Ghana', code: 'GH' },
-    { name: 'Hong Kong', code: 'HK' },
-    { name: 'India', code: 'IN' },
-    { name: 'Indonesia', code: 'ID' },
-    { name: 'Iraq', code: 'IQ' },
-    { name: 'Ireland', code: 'IE' },
-    { name: 'Italy', code: 'IT' },
-    { name: 'Japan', code: 'JP' },
-    { name: 'Jordan', code: 'JO' },
-    { name: 'Kenya', code: 'KE' },
-    { name: 'Kuwait', code: 'KW' },
-    { name: 'Lebanon', code: 'LB' },
-    { name: 'United Kingdom', code: 'GB' },
-    { name: 'United States', code: 'US' }
-  ];
 
   const currenciesList = [
     { code: 'PKR', name: 'Pakistani Rupee', symbol: 'Rs' },
@@ -658,7 +623,7 @@ function App() {
         <div className="relative z-20 flex-1 flex flex-col items-center justify-center w-full pb-8 pt-10">
           
           {/* Hero Content overlaid on video */}
-          <div className="flex flex-col items-center justify-center text-center px-4 mb-10 h-[80px] sm:h-[100px]">
+          <div className="flex flex-col items-center justify-center text-center px-4 mb-4 h-[80px] sm:h-[100px]">
             <AnimatePresence mode="wait">
               <motion.h1 
                 key={activeCategory}
@@ -678,7 +643,7 @@ function App() {
           </div>
             
           {/* Category Icons Selection */}
-          <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 flex justify-start items-center gap-3 sm:gap-6 z-30 mb-2 overflow-x-auto scrollbar-none pb-2 sm:pb-0">
+          <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 flex justify-start items-center gap-3 sm:gap-6 z-30 mb-2 overflow-x-auto scrollbar-none pt-4 pb-4 sm:pt-4 sm:pb-2">
             {categories.map((cat) => {
               const IconComponent = cat.icon;
               const isSel = activeCategory === cat.id;
@@ -686,14 +651,15 @@ function App() {
                 <button 
                   key={cat.id} 
                   onClick={() => setActiveCategory(cat.id)}
-                  className="flex flex-col items-center gap-2 group cursor-pointer focus:outline-none"
+                  className="flex flex-col items-center gap-1 group cursor-pointer focus:outline-none"
                 >
-                  <div className={`w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] rounded-[18px] flex items-center justify-center transition-all duration-300 cursor-pointer group-hover:rounded-full ${
+                  <div className={`w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] rounded-[20px] flex items-center justify-center transition-all duration-400 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] cursor-pointer group-hover:-translate-y-1.5 relative overflow-hidden ${
                     isSel 
-                      ? 'bg-[#E11D48] text-white shadow-[0_8px_20px_rgba(225,29,72,0.3)]' 
-                      : 'bg-white/90 backdrop-blur-md text-slate-700 shadow-[0_4px_16px_rgba(0,0,0,0.08)] border border-white/60 hover:bg-white hover:text-[#E11D48] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:-translate-y-0.5'
+                      ? 'bg-[#E11D48] text-white shadow-[0_8px_24px_rgba(225,29,72,0.35)] scale-105' 
+                      : 'bg-white/90 backdrop-blur-md text-slate-700 shadow-[0_4px_16px_rgba(0,0,0,0.08)] border border-white/60 group-hover:bg-white group-hover:text-[#E11D48] group-hover:shadow-[0_12px_28px_rgba(225,29,72,0.15)] group-hover:border-[#E11D48]/30'
                   }`}>
-                    <IconComponent size={26} strokeWidth={1.5} className="fill-none transition-transform duration-300 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <IconComponent size={26} strokeWidth={1.75} className={`fill-none transition-all duration-400 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] relative z-10 ${isSel ? 'scale-110' : 'group-hover:scale-[1.15] group-hover:-rotate-3'}`} />
                   </div>
                   <span className={`text-[12px] sm:text-[14px] transition-all duration-200 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] ${
                     isSel ? 'font-bold' : 'font-medium'
@@ -1275,15 +1241,15 @@ function App() {
                   {/* Dates */}
                   <div 
                     onClick={() => { setCalendarTarget({ type: 'depart', index: null }); setIsCalendarOpen(true); }}
-                    className="flex-[1.2] lg:flex-[1.6] px-5 py-4 relative cursor-pointer hover:bg-white flex items-center gap-3 overflow-hidden transition-colors duration-200 border-b lg:border-b-0 lg:border-r border-slate-200/80 group/staysdates"
+                    className="flex-[1.5] lg:flex-[2.2] px-4 sm:px-5 py-4 relative cursor-pointer hover:bg-white flex items-center gap-3 overflow-hidden transition-colors duration-200 border-b lg:border-b-0 lg:border-r border-slate-200/80 group/staysdates"
                   >
                     <CalendarDays size={18} className="text-slate-400 group-hover/staysdates:text-[#E11D48] shrink-0 transition-colors duration-200" />
                     <div className="flex flex-col flex-1 min-w-0">
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Check-in — Check-out</span>
-                      <div className="flex items-center gap-2 text-[14px] font-bold text-slate-900 tracking-tight w-full whitespace-nowrap overflow-hidden">
-                        <span className="truncate">{formatDateString(departDate)}</span>
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-[13px] sm:text-[14px] font-bold text-slate-900 tracking-tight w-full whitespace-nowrap overflow-hidden">
+                        <span>{formatDateString(departDate)}</span>
                         <span className="text-slate-300 font-normal shrink-0">→</span>
-                        <span className="truncate">{formatDateString(returnDate)}</span>
+                        <span>{formatDateString(returnDate)}</span>
                         <span className="ml-auto text-[11px] bg-[#E11D48]/10 text-[#E11D48] px-2 py-0.5 rounded-full font-bold shrink-0">
                           {Math.max(1, Math.ceil((returnDate - departDate) / (1000 * 60 * 60 * 24)))} night{Math.max(1, Math.ceil((returnDate - departDate) / (1000 * 60 * 60 * 24))) > 1 ? 's' : ''}
                         </span>

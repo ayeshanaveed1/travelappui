@@ -9,6 +9,8 @@ const Flag = ({ code, className }) => {
       src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`} 
       alt={`${code} flag`} 
       className={className} 
+      loading="lazy"
+      decoding="async"
     />
   );
 };
@@ -71,7 +73,7 @@ const CountryModal = ({ isOpen, onClose, selectedCountry, setSelectedCountry, co
               </div>
               
               {/* Country List */}
-              <div className="flex-1 overflow-y-auto px-6 pb-6 pt-2 scrollbar-thin scrollbar-thumb-slate-200">
+              <div className="flex-1 overflow-y-auto px-6 pb-6 pt-2 scrollbar-thin scrollbar-thumb-slate-200 scroll-smooth will-change-scroll">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-1">
                   {filteredCountries.map((country) => {
                     const isSelected = selectedCountry.code === country.code;
